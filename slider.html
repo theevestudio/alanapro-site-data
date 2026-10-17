@@ -1,0 +1,336 @@
+<!-- ===== ALANA PRO — CLIENT REELS SLIDER =====
+  Paste this whole thing into a Squarespace Code Block.
+  To add your videos: replace each VIDEO_URL_HERE with the link to that reel's .mp4 file.
+  To edit a client: change the text inside the CLIENTS list near the bottom.
+-->
+<div id="ap-reels">
+  <style>
+    #ap-reels{
+      --ap-accent:#fd0182;
+      --ap-accent-soft:rgba(253,1,130,.1);
+      --ap-text:#1a1a1a;
+      --ap-muted:#6b6b76;
+      --ap-card:#ffffff;
+      --ap-border:rgba(0,0,0,.08);
+      font-family:"pragmatica","Pragmatica","Pragmatica Black","Helvetica Neue",Arial,sans-serif;font-weight:900;color:var(--ap-text);
+      max-width:1040px;margin:0 auto;padding:24px 16px;box-sizing:border-box;
+    }
+    #ap-reels *{box-sizing:border-box}
+    #ap-reels, #ap-reels *{font-family:"pragmatica","Pragmatica","Pragmatica Black","Helvetica Neue",Arial,sans-serif !important;font-weight:900 !important;font-style:normal}
+    #ap-reels .ap-eyebrow{
+      text-align:center;font-size:clamp(18px,2.6vw,26px) !important;letter-spacing:.2em;text-transform:uppercase;
+      color:var(--ap-accent) !important;margin:0 0 10px !important;line-height:1.2 !important;
+    }
+    #ap-reels .ap-title{
+      text-align:center;font-size:clamp(26px,4vw,40px);font-weight:800;margin:0 0 28px;
+      line-height:1.15;min-height:1.2em;color:#ffffff;transition:opacity .25s ease, transform .25s ease;
+    }
+    #ap-reels .ap-title.ap-fade{opacity:0;transform:translateY(6px)}
+
+    #ap-reels .ap-stage{
+      display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:28px;
+    }
+    #ap-reels .ap-phone-row{display:flex;align-items:center;gap:18px;justify-content:center}
+
+    /* Arrows */
+    #ap-reels .ap-arrow{
+      width:52px;height:52px;border-radius:50%;border:1px solid var(--ap-border);
+      background:var(--ap-card);color:var(--ap-text);cursor:pointer;flex:none;
+      display:grid;place-items:center;box-shadow:0 6px 18px rgba(0,0,0,.35);
+      transition:transform .15s ease, background .15s ease, color .15s ease;
+    }
+    #ap-reels .ap-arrow:hover{background:var(--ap-accent);color:#fff;transform:scale(1.06)}
+    #ap-reels .ap-arrow svg{width:22px;height:22px}
+
+    /* Phone */
+    #ap-reels .ap-phone{
+      position:relative;width:290px;aspect-ratio:9/19.5;flex:none;
+      border-radius:46px;background:#0d0d0f;padding:11px;
+      box-shadow:0 30px 70px rgba(0,0,0,.6), 0 0 60px rgba(253,1,130,.18), inset 0 0 0 2px #3a3a40;
+    }
+    #ap-reels .ap-island{
+      position:absolute;top:20px;left:50%;transform:translateX(-50%);
+      width:92px;height:26px;border-radius:20px;background:#000;z-index:4;
+    }
+    #ap-reels .ap-screen{
+      position:relative;width:100%;height:100%;border-radius:36px;overflow:hidden;background:#111;
+    }
+    #ap-reels .ap-track{display:flex;height:100%;transition:transform .5s cubic-bezier(.65,0,.35,1)}
+    #ap-reels .ap-slide{position:relative;flex:0 0 100%;height:100%}
+    #ap-reels .ap-slide video{width:100%;height:100%;object-fit:cover;display:block;background:#111}
+    #ap-reels .ap-placeholder{
+      position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+      color:#fff;text-align:center;padding:24px;gap:8px;
+      background:linear-gradient(160deg,#5c0030,#fd0182 60%,#ff8fc7);
+    }
+    #ap-reels .ap-placeholder b{font-size:20px}
+    #ap-reels .ap-placeholder span{font-size:13px;opacity:.8}
+    #ap-reels .ap-tag{
+      position:absolute;left:14px;bottom:18px;z-index:3;color:#fff;font-size:13px;font-weight:700;
+      text-shadow:0 1px 6px rgba(0,0,0,.6);
+    }
+    #ap-reels .ap-sound{
+      position:absolute;right:14px;bottom:14px;z-index:5;width:38px;height:38px;border-radius:50%;
+      border:none;background:rgba(0,0,0,.5);color:#fff;cursor:pointer;display:grid;place-items:center;
+    }
+    #ap-reels .ap-sound svg{width:18px;height:18px}
+
+    /* Info bubbles */
+    #ap-reels .ap-side{display:flex;flex-direction:column;gap:14px;transition:opacity .3s ease, transform .3s ease}
+    #ap-reels .ap-side.ap-fade{opacity:0;transform:translateY(8px)}
+    #ap-reels .ap-bubble{
+      background:var(--ap-card);border:1px solid var(--ap-border);border-radius:22px;padding:18px 20px;
+      box-shadow:0 10px 30px rgba(0,0,0,.3);
+    }
+    #ap-reels .ap-pill{
+      display:inline-block;background:var(--ap-accent-soft);color:var(--ap-accent);
+      font-size:12px;font-weight:700;border-radius:999px;padding:5px 12px;margin-bottom:10px;
+    }
+    #ap-reels .ap-bubble h4{margin:0 0 6px;font-size:18px;line-height:1.25;color:#fd0182 !important}
+    #ap-reels .ap-bubble p{margin:0;font-size:14px;line-height:1.55;color:var(--ap-muted) !important}
+    #ap-reels .ap-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    #ap-reels .ap-stat{background:var(--ap-card);border:1px solid var(--ap-border);border-radius:18px;padding:14px 16px;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+    #ap-reels .ap-stat .ap-num{font-size:24px;font-weight:800;line-height:1.1;color:#fd0182 !important}
+    #ap-reels .ap-stat .ap-lbl{font-size:12px;color:var(--ap-muted) !important;margin-top:4px}
+    #ap-reels .ap-platforms{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+    #ap-reels .ap-platforms span{font-size:12px;border:1px solid var(--ap-border);border-radius:999px;padding:4px 10px;color:var(--ap-muted) !important}
+    #ap-reels .ap-note{font-size:11px;color:rgba(255,255,255,.6);text-align:center;margin-top:6px}
+
+    /* Dots */
+    #ap-reels .ap-dots{display:flex;justify-content:center;gap:8px;margin-top:22px}
+    #ap-reels .ap-dots button{width:9px;height:9px;border-radius:50%;border:none;padding:0;background:rgba(255,255,255,.25);cursor:pointer;transition:width .25s ease, background .25s ease}
+    #ap-reels .ap-dots button.ap-on{width:26px;border-radius:6px;background:var(--ap-accent)}
+
+    /* Phone-width layout */
+    @media (max-width:860px){
+      #ap-reels .ap-stage{grid-template-columns:1fr;gap:20px}
+      #ap-reels .ap-left{order:2}
+      #ap-reels .ap-phone-row{order:1}
+      #ap-reels .ap-right{order:3}
+      #ap-reels .ap-phone{width:250px}
+      #ap-reels .ap-arrow{width:44px;height:44px}
+      #ap-reels .ap-phone-row{gap:10px}
+    }
+  </style>
+
+  <p class="ap-eyebrow">Client Work</p>
+  <h2 class="ap-title" id="ap-title">&nbsp;</h2>
+
+  <div class="ap-stage">
+    <div class="ap-side ap-left" id="ap-left"></div>
+
+    <div class="ap-phone-row">
+      <button class="ap-arrow" id="ap-prev" aria-label="Previous client">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div class="ap-phone">
+        <div class="ap-island"></div>
+        <div class="ap-screen">
+          <div class="ap-track" id="ap-track"></div>
+          <button class="ap-sound" id="ap-sound" aria-label="Turn sound on"></button>
+        </div>
+      </div>
+      <button class="ap-arrow" id="ap-next" aria-label="Next client">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+
+    <div class="ap-side ap-right" id="ap-right"></div>
+  </div>
+
+  <div class="ap-dots" id="ap-dots"></div>
+
+  <script>
+  (function(){
+    /* ====== EDIT YOUR CLIENTS HERE ====== */
+    var CLIENTS = [
+      {
+        name: "Rainbow Reef Dive Center",
+        type: "Dive Shop · Key Largo",
+        about: "One of the Keys' top dive centers. Reels that show the reef the way divers actually feel it, built to turn scrollers into bookings.",
+        video: "VIDEO_URL_HERE",
+        followers: 32283,
+        views: 38856,
+        engagements: 1024,
+        engagementRate: 3.8,
+        growth: 147,
+        platforms: ["Instagram", "Facebook"]
+      },
+      {
+        name: "Shell World",
+        type: "Coastal Gift Shop · Key Largo",
+        about: "A Keys landmark for gifts and island style. Fun, bright product reels that bring tourists and locals through the door.",
+        video: "VIDEO_URL_HERE",
+        followers: 6330,
+        views: 23635,
+        engagements: 897,
+        engagementRate: 11.8,
+        growth: 58,
+        platforms: ["Instagram", "TikTok"]
+      },
+      {
+        name: "Kahu Tribe",
+        type: "Apparel & Conservation Brand",
+        about: "Apparel with a purpose. Story-driven content that connects the brand to ocean conservation and the people who wear it.",
+        video: "VIDEO_URL_HERE",
+        followers: 2339,
+        views: 20803,
+        engagements: 749,
+        engagementRate: 12.5,
+        growth: 14,
+        platforms: ["Instagram", "Facebook", "TikTok"]
+      },
+      {
+        name: "Island Community Church",
+        type: "Church · Islamorada",
+        about: "Community-first reels that welcome new faces and share what's happening at ICC each week.",
+        video: "VIDEO_URL_HERE",
+        followers: 2771,
+        views: 14765,
+        engagements: 1679,
+        engagementRate: 29.6,
+        growth: 32,
+        platforms: ["Instagram", "Facebook"]
+      }
+    ];
+    var STATS_NOTE = "Stats: last 30 days across connected accounts. Engagement rate is Instagram engagement ÷ reach.";
+    /* Live stats file — updated automatically on the 1st of each month. Leave as is. */
+    var STATS_URL = "https://raw.githubusercontent.com/theevestudio/alanapro-site-data/main/stats.json";
+    /* ==================================== */
+
+    var root = document.getElementById("ap-reels");
+    var track = root.querySelector("#ap-track");
+    var title = root.querySelector("#ap-title");
+    var left = root.querySelector("#ap-left");
+    var right = root.querySelector("#ap-right");
+    var dots = root.querySelector("#ap-dots");
+    var soundBtn = root.querySelector("#ap-sound");
+    var i = 0, muted = true;
+
+    var ICON_OFF = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M23 9l-6 6M17 9l6 6"/></svg>';
+    var ICON_ON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 010 7M19 5a10 10 0 010 14"/></svg>';
+
+    function fmt(n){
+      if(n >= 1000000) return (n/1000000).toFixed(1).replace(/\.0$/,"") + "M";
+      if(n >= 1000) return (n/1000).toFixed(1).replace(/\.0$/,"") + "K";
+      return String(n);
+    }
+    function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+    function hasVideo(c){ return c.video && c.video.indexOf("VIDEO_URL_HERE") === -1; }
+    /* GitHub-hosted reels: try the jsDelivr CDN first (fast, correct video type for Safari), then GitHub directly */
+    function videoSources(u){
+      var m = /^https:\/\/raw\.githubusercontent\.com\/([^\/]+)\/([^\/]+)\/([^\/]+)\/(.+)$/.exec(u);
+      return m ? ["https://cdn.jsdelivr.net/gh/" + m[1] + "/" + m[2] + "@" + m[3] + "/" + m[4], u] : [u];
+    }
+    function fillSlide(slide, c){
+      if(hasVideo(c)){
+        var srcs = videoSources(c.video).map(function(u){ return '<source src="' + esc(u) + '" type="video/mp4">'; }).join("");
+        slide.innerHTML = '<video muted loop playsinline preload="metadata">' + srcs + '</video>';
+      } else {
+        slide.innerHTML = '<div class="ap-placeholder"><b>' + esc(c.name) + '</b><span>Reel coming soon</span></div>';
+      }
+      slide.insertAdjacentHTML("beforeend", '<div class="ap-tag">' + esc(c.name) + '</div>');
+    }
+
+    CLIENTS.forEach(function(c, n){
+      var slide = document.createElement("div");
+      slide.className = "ap-slide";
+      fillSlide(slide, c);
+      track.appendChild(slide);
+
+      var d = document.createElement("button");
+      d.setAttribute("aria-label", "Show " + c.name);
+      d.addEventListener("click", function(){ go(n); });
+      dots.appendChild(d);
+    });
+
+    function render(){
+      var c = CLIENTS[i];
+      left.innerHTML =
+        '<div class="ap-bubble"><span class="ap-pill">' + esc(c.type) + '</span>' +
+        '<h4>' + esc(c.name) + '</h4><p>' + esc(c.about) + '</p>' +
+        '<div class="ap-platforms">' + c.platforms.map(function(p){return "<span>" + esc(p) + "</span>";}).join("") + '</div></div>';
+      right.innerHTML =
+        '<div class="ap-stats">' +
+          '<div class="ap-stat"><div class="ap-num">' + fmt(c.followers) + '</div><div class="ap-lbl">Followers</div></div>' +
+          '<div class="ap-stat"><div class="ap-num">' + fmt(c.views) + '</div><div class="ap-lbl">Views / 30 days</div></div>' +
+          '<div class="ap-stat"><div class="ap-num">' + c.engagementRate + '%</div><div class="ap-lbl">Engagement rate</div></div>' +
+          '<div class="ap-stat"><div class="ap-num">+' + fmt(c.growth) + '</div><div class="ap-lbl">New followers / 30 days</div></div>' +
+        '</div><div class="ap-note">' + esc(STATS_NOTE) + '</div>';
+      title.textContent = c.name;
+      Array.prototype.forEach.call(dots.children, function(b, n){ b.classList.toggle("ap-on", n === i); });
+    }
+
+    function playCurrent(){
+      Array.prototype.forEach.call(track.querySelectorAll("video"), function(v){ v.pause(); });
+      var v = track.children[i].querySelector("video");
+      soundBtn.style.display = v ? "grid" : "none";
+      if(v){
+        v.muted = muted;
+        try { v.currentTime = 0; } catch(e){}
+        var p = v.play(); if(p && p.catch) p.catch(function(){});
+      }
+    }
+
+    function go(n){
+      i = (n + CLIENTS.length) % CLIENTS.length;
+      track.style.transform = "translateX(" + (-100 * i) + "%)";
+      [title, left, right].forEach(function(el){ el.classList.add("ap-fade"); });
+      setTimeout(function(){
+        render();
+        [title, left, right].forEach(function(el){ el.classList.remove("ap-fade"); });
+      }, 220);
+      playCurrent();
+    }
+
+    root.querySelector("#ap-prev").addEventListener("click", function(){ go(i - 1); });
+    root.querySelector("#ap-next").addEventListener("click", function(){ go(i + 1); });
+    soundBtn.addEventListener("click", function(){
+      muted = !muted;
+      soundBtn.innerHTML = muted ? ICON_OFF : ICON_ON;
+      soundBtn.setAttribute("aria-label", muted ? "Turn sound on" : "Turn sound off");
+      var v = track.children[i].querySelector("video"); if(v) v.muted = muted;
+    });
+
+    /* Swipe on phones */
+    var startX = null;
+    track.addEventListener("touchstart", function(e){ startX = e.touches[0].clientX; }, {passive:true});
+    track.addEventListener("touchend", function(e){
+      if(startX === null) return;
+      var dx = e.changedTouches[0].clientX - startX;
+      if(Math.abs(dx) > 40) go(dx < 0 ? i + 1 : i - 1);
+      startX = null;
+    });
+
+    soundBtn.innerHTML = ICON_OFF;
+    render();
+    playCurrent();
+
+    /* Pull the latest monthly stats; if anything fails, the numbers above stay up */
+    if (/^https?:\/\//.test(STATS_URL) && window.fetch) {
+      fetch(STATS_URL + (STATS_URL.indexOf("?") === -1 ? "?" : "&") + "t=" + Date.now())
+        .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+        .then(function(data){
+          if (!data || !data.clients) return;
+          var videoChanged = false;
+          CLIENTS.forEach(function(c, n){
+            var live = data.clients[c.name];
+            if (!live) return;
+            if (typeof live.video === "string" && /^https?:\/\//.test(live.video) && live.video !== c.video) {
+              c.video = live.video;
+              fillSlide(track.children[n], c);
+              videoChanged = true;
+            }
+            ["followers","views","engagements","engagementRate","growth"].forEach(function(k){
+              if (typeof live[k] === "number") c[k] = live[k];
+            });
+          });
+          if (data.note) STATS_NOTE = data.note;
+          render();
+          if (videoChanged) playCurrent();
+        })
+        .catch(function(){});
+    }
+  })();
+  </script>
+</div>
