@@ -237,6 +237,7 @@
     btn.disabled = true; btn.textContent = "Sending...";
     var fd = new FormData(form);
     fd.set("_replyto", val("Email"));
+    fd.set("_cc", ["alana.productions.co", "gmail.com"].join("@"));   /* copy that gets logged into Notion */
     fetch("https://formsubmit.co/ajax/" + ["malia", "alanapro.com"].join("@"), { method:"POST", headers:{ "Accept":"application/json" }, body: fd })
       .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(j){ return { ok: r.ok, j: j }; }); })
       .then(function(res){ if (res.ok && String(res.j.success) === "true") return finish(); throw new Error("send failed"); })

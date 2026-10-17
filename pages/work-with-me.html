@@ -443,6 +443,7 @@
     var fd = new FormData(form);
     fd.set("_subject", "AlanaPro Application");
     fd.set("_replyto", val("Email"));
+    fd.set("_cc", ["alana.productions.co", "gmail.com"].join("@"));   /* copy that gets logged into Notion */
     fetch("https://formsubmit.co/ajax/" + to, { method: "POST", headers: { "Accept": "application/json" }, body: fd })
       .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(j){ return { ok: r.ok, j: j }; }); })
       .then(function(res){
