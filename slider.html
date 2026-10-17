@@ -1,4 +1,4 @@
-<!-- ===== ALANA PRO — CLIENT REELS SLIDER =====
+<!-- ===== ALANA PRO &mdash; CLIENT REELS SLIDER =====
   Paste this whole thing into a Squarespace Code Block.
   To add your videos: replace each VIDEO_URL_HERE with the link to that reel's .mp4 file.
   To edit a client: change the text inside the CLIENTS list near the bottom.
@@ -44,16 +44,16 @@
 
     /* Phone */
     #ap-reels .ap-phone{
-      position:relative;width:290px;aspect-ratio:9/19.5;flex:none;
+      position:relative;width:320px;flex:none;
       border-radius:46px;background:#0d0d0f;padding:11px;
       box-shadow:0 30px 70px rgba(0,0,0,.6), 0 0 60px rgba(253,1,130,.18), inset 0 0 0 2px #3a3a40;
     }
     #ap-reels .ap-island{
       position:absolute;top:20px;left:50%;transform:translateX(-50%);
-      width:92px;height:26px;border-radius:20px;background:#000;z-index:4;
+      width:84px;height:24px;border-radius:20px;background:#000;z-index:4;
     }
     #ap-reels .ap-screen{
-      position:relative;width:100%;height:100%;border-radius:36px;overflow:hidden;background:#111;
+      position:relative;width:100%;aspect-ratio:9/16;border-radius:36px;overflow:hidden;background:#111;
     }
     #ap-reels .ap-track{display:flex;height:100%;transition:transform .5s cubic-bezier(.65,0,.35,1)}
     #ap-reels .ap-slide{position:relative;flex:0 0 100%;height:100%}
@@ -107,7 +107,7 @@
       #ap-reels .ap-left{order:2}
       #ap-reels .ap-phone-row{order:1}
       #ap-reels .ap-right{order:3}
-      #ap-reels .ap-phone{width:250px}
+      #ap-reels .ap-phone{width:min(280px,calc(100vw - 140px))}
       #ap-reels .ap-arrow{width:44px;height:44px}
       #ap-reels .ap-phone-row{gap:10px}
     }
@@ -146,7 +146,7 @@
     var CLIENTS = [
       {
         name: "Rainbow Reef Dive Center",
-        type: "Dive Shop · Key Largo",
+        type: "Dive Shop \u00b7 Key Largo",
         about: "One of the Keys' top dive centers. Reels that show the reef the way divers actually feel it, built to turn scrollers into bookings.",
         video: "VIDEO_URL_HERE",
         followers: 32283,
@@ -158,7 +158,7 @@
       },
       {
         name: "Shell World",
-        type: "Coastal Gift Shop · Key Largo",
+        type: "Coastal Gift Shop \u00b7 Key Largo",
         about: "A Keys landmark for gifts and island style. Fun, bright product reels that bring tourists and locals through the door.",
         video: "VIDEO_URL_HERE",
         followers: 6330,
@@ -182,7 +182,7 @@
       },
       {
         name: "Island Community Church",
-        type: "Church · Islamorada",
+        type: "Church \u00b7 Islamorada",
         about: "Community-first reels that welcome new faces and share what's happening at ICC each week.",
         video: "VIDEO_URL_HERE",
         followers: 2771,
@@ -193,8 +193,8 @@
         platforms: ["Instagram", "Facebook"]
       }
     ];
-    var STATS_NOTE = "Stats: last 30 days across connected accounts. Engagement rate is Instagram engagement ÷ reach.";
-    /* Live stats file — updated automatically on the 1st of each month. Leave as is. */
+    var STATS_NOTE = "Stats: last 30 days across connected accounts. Engagement rate is Instagram engagement \u00f7 reach.";
+    /* Live stats file \u2014 updated automatically on the 1st of each month. Leave as is. */
     var STATS_URL = "https://raw.githubusercontent.com/theevestudio/alanapro-site-data/main/stats.json";
     /* ==================================== */
 
