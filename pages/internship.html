@@ -1,0 +1,254 @@
+<!-- ALANA PRO — INTERNSHIP. Loaded automatically by the snippet in your Squarespace Code Block. -->
+<div id="api">
+<style>
+  #api{
+    --pink:#fd0182; --blush:#ffe3f0; --night:#141416; --ink:#1a1a1a; --paper:#fff;
+    --mist:#b4b4bc; --muted:#6b6b76; --line:rgba(255,255,255,.12); --field:#f4f4f7; --edge:#e3e3e8;
+    --display:"pragmatica","Pragmatica","Pragmatica Black","Helvetica Neue",Arial,sans-serif;
+    position:relative; width:100vw; margin-left:calc(50% - 50vw); background:var(--night); color:#fff;
+    font-family:var(--display) !important; -webkit-font-smoothing:antialiased;
+  }
+  #api *{box-sizing:border-box; font-family:var(--display) !important}
+  #api h1,#api h2,#api h3,#api p{margin:0; text-transform:none !important; letter-spacing:normal}
+  #api h1,#api h2,#api h3{font-weight:900 !important; line-height:1.04; color:#fff !important}
+  #api p{font-weight:400; line-height:1.6}
+  #api a{text-decoration:none}
+  #api .wrap{max-width:1180px; margin:0 auto; padding:0 24px}
+  #api button:focus-visible,#api a:focus-visible,#api input:focus-visible,#api select:focus-visible,#api textarea:focus-visible{outline:3px solid var(--pink); outline-offset:2px}
+
+  #api .top{padding:70px 0 56px; display:grid; grid-template-columns:1.15fr .85fr; gap:56px; align-items:end}
+  #api .tag{display:inline-block; border:1px solid var(--line); border-radius:999px; padding:8px 14px; font-size:14px; color:#fff; margin-bottom:22px}
+  #api .top h1{font-size:clamp(42px,6vw,84px); line-height:.98}
+  #api .top h1 span{color:var(--pink) !important}
+  #api .top .sub{font-size:19px; color:#e3e3e8; margin-top:20px; max-width:48ch}
+  #api .cta{display:inline-flex; align-items:center; height:56px; padding:0 30px; border-radius:999px; background:var(--pink); color:#fff !important; font-weight:900 !important; font-size:17px; margin-top:30px}
+  #api .need{border:1px solid var(--line); border-radius:24px; padding:26px}
+  #api .need h2{font-size:20px}
+  #api .need ul{list-style:none; padding:0; margin:14px 0 0}
+  #api .need li{position:relative; padding:9px 0 9px 26px; color:#e3e3e8; font-size:15px; border-top:1px solid var(--line)}
+  #api .need li:first-child{border-top:none}
+  #api .need li::before{content:""; position:absolute; left:2px; top:17px; width:9px; height:9px; border-radius:50%; background:var(--pink)}
+
+  #api .perks{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; padding-bottom:70px}
+  #api .perk{border:1px solid var(--line); border-radius:22px; padding:24px; background:rgba(255,255,255,.02)}
+  #api .perk h3{font-size:20px}
+  #api .perk p{color:var(--mist); font-size:15px; margin-top:10px}
+
+  #api .card{background:var(--paper); color:var(--ink); border-radius:32px; padding:clamp(24px,4vw,52px); margin:0 0 90px; box-shadow:0 30px 70px rgba(0,0,0,.45)}
+  #api .card > h2{font-size:clamp(30px,3.6vw,46px); color:var(--ink) !important}
+  #api .card > .lead{color:var(--muted); margin-top:8px; font-size:16px}
+  #api fieldset{border:none; padding:0; margin:34px 0 0}
+  #api legend{font-weight:900; font-size:22px; color:var(--ink); padding:0; margin-bottom:4px}
+  #api .grid{display:grid; grid-template-columns:1fr 1fr; gap:18px 20px; margin-top:16px}
+  #api .full{grid-column:1/-1}
+  #api label.l{display:block; font-weight:900; font-size:15px; margin-bottom:8px; color:var(--ink)}
+  #api .req{color:var(--pink)}
+  #api .hint{font-weight:400; color:var(--muted); font-size:13px}
+  #api input[type=text],#api input[type=email],#api input[type=tel],#api input[type=url],#api select,#api textarea{
+    width:100%; border:2px solid var(--edge); background:var(--field); color:var(--ink); border-radius:14px; padding:14px 16px; font-size:16px; font-weight:400 !important; appearance:none; -webkit-appearance:none}
+  #api select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' fill='none' stroke='%23fd0182' stroke-width='2.4'%3E%3Cpath d='M1 1l6 6 6-6'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 16px center; padding-right:44px}
+  #api textarea{min-height:120px; resize:vertical}
+  #api input:focus,#api select:focus,#api textarea:focus{border-color:var(--pink); background:#fff; outline:none}
+  #api .bad{border-color:#e5484d !important; background:#fff5f5 !important}
+  #api .chips{display:flex; flex-wrap:wrap; gap:10px}
+  #api .chip{border:2px solid var(--edge); background:#fff; color:var(--ink); border-radius:16px; padding:12px 16px; font-size:15px; font-weight:900 !important; cursor:pointer}
+  #api .chip:hover{border-color:#ffb3d7}
+  #api .chip[aria-pressed="true"]{border-color:var(--pink); background:var(--blush)}
+  #api .chips.bad-group .chip{border-color:#f3b0b2}
+  #api .note{font-size:13px; color:var(--muted); margin-top:8px}
+  #api .err{display:none; margin-top:22px; color:#c4161c; font-size:15px; font-weight:900}
+  #api .err.on{display:block}
+  #api .send{display:flex; align-items:center; justify-content:center; width:100%; height:60px; margin-top:28px; border:none; border-radius:999px; background:var(--pink); color:#fff; font-size:18px; font-weight:900 !important; cursor:pointer}
+  #api .send:hover{background:#ff2a98}
+  #api .send:disabled{opacity:.6; cursor:wait}
+  #api .fine{margin-top:14px; font-size:13px; color:var(--muted); text-align:center}
+  #api .hp{position:absolute !important; left:-9999px !important; width:1px; height:1px; overflow:hidden}
+
+  #api .done{display:none; padding:70px 0 110px; max-width:760px}
+  #api .done.on{display:block}
+  #api .done h1{font-size:clamp(40px,5.6vw,72px)}
+  #api .done p{color:#e3e3e8; font-size:18px; margin-top:18px}
+  #api .done ol{margin:26px 0 0; padding:0; list-style:none}
+  #api .done li{border-top:1px solid var(--line); padding:14px 0; color:var(--mist); font-size:16px}
+  #api .done li b{color:#fff}
+
+  @media (max-width:900px){
+    #api .top{grid-template-columns:1fr; gap:28px; padding-top:44px}
+    #api .perks{grid-template-columns:1fr 1fr}
+    #api .grid{grid-template-columns:1fr}
+  }
+  @media (max-width:520px){
+    #api .wrap{padding:0 14px}
+    #api .perks{grid-template-columns:1fr}
+    #api .card{border-radius:24px; padding:22px 18px}
+  }
+</style>
+
+<div class="wrap" id="ap-intern-main">
+  <section class="top" aria-label="Junior video editor internship">
+    <div>
+      <span class="tag">Remote and paid per reel</span>
+      <h1>Junior video editor <span>internship.</span></h1>
+      <p class="sub">For reliable, creative students with Adobe Premiere Pro skills who want real-world experience. You'll edit real client reels from home, build a portfolio you can actually show, and get paid for every reel you deliver.</p>
+      <a class="cta" href="#api-apply">Apply now</a>
+    </div>
+    <div class="need">
+      <h2>You'll need</h2>
+      <ul>
+        <li>To be a high school student, grades 9&ndash;12</li>
+        <li>Your own computer with Premiere Pro installed</li>
+        <li>Basic Premiere Pro skills (certification is a plus, not a must)</li>
+        <li>To be reliable with deadlines and communication</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="perks" aria-label="What you get">
+    <div class="perk"><h3>Real client work</h3><p>Edit reels for real Florida Keys businesses, not practice projects.</p></div>
+    <div class="perk"><h3>Get paid</h3><p>You're paid for every reel you deliver.</p></div>
+    <div class="perk"><h3>A real portfolio</h3><p>Leave with published work you can show colleges and future clients.</p></div>
+    <div class="perk"><h3>Work from home</h3><p>Fully remote, on a schedule that fits around school.</p></div>
+  </section>
+
+  <div class="card" id="api-apply">
+    <h2>Internship application</h2>
+    <p class="lead">I review every application and reach out within a few days to schedule your interview.</p>
+
+    <form id="ap-intern-form" novalidate>
+      <input type="hidden" name="_subject" value="Internship Application — Alana Productions">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_template" value="table">
+      <div class="hp" aria-hidden="true"><label>Leave this empty<input type="text" name="_honey" tabindex="-1" autocomplete="off"></label></div>
+
+      <fieldset>
+        <legend>About you</legend>
+        <div class="grid">
+          <div><label class="l" for="i-first">First name <span class="req">*</span></label><input id="i-first" type="text" name="First Name" required autocomplete="given-name" placeholder="First name"></div>
+          <div><label class="l" for="i-last">Last name <span class="req">*</span></label><input id="i-last" type="text" name="Last Name" required autocomplete="family-name" placeholder="Last name"></div>
+          <div><label class="l" for="i-email">Email <span class="req">*</span></label><input id="i-email" type="email" name="Email" required autocomplete="email" placeholder="you@example.com"></div>
+          <div><label class="l" for="i-phone">Phone number <span class="req">*</span></label><input id="i-phone" type="tel" name="Phone Number" required autocomplete="tel" placeholder="(305) 555-0100"></div>
+          <div><label class="l" for="i-school">School <span class="req">*</span></label><input id="i-school" type="text" name="School" required placeholder="Your school" value="Coral Shores High School"></div>
+          <div><label class="l" for="i-grade">Grade <span class="req">*</span></label><select id="i-grade" name="Grade" required><option value="" disabled selected>Select grade</option><option>9th Grade</option><option>10th Grade</option><option>11th Grade</option><option>12th Grade</option></select></div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Your skills</legend>
+        <div class="grid">
+          <div class="full"><label class="l" for="i-level">Premiere Pro experience level <span class="req">*</span></label>
+            <select id="i-level" name="Experience Level" required><option value="" disabled selected>Select your level...</option><option>Beginner — still learning the basics</option><option>Intermediate — comfortable with cuts, color, and audio</option><option>Advanced — confident with effects, multi-cam, and complex timelines</option><option>Certified — I hold my Adobe Premiere Pro certification</option></select></div>
+          <div class="full"><label class="l">Are you Adobe Premiere Pro certified? <span class="req">*</span></label>
+            <div class="chips" id="pills-cert" role="group" aria-label="Premiere Pro certification">
+              <button type="button" class="chip" data-v="Yes — I am certified">Yes, certified</button>
+              <button type="button" class="chip" data-v="No — not yet">Not yet</button>
+              <button type="button" class="chip" data-v="In progress">In progress</button>
+            </div>
+            <input type="hidden" name="Premiere Certified" id="hCert"></div>
+          <div class="full"><label class="l">Do you have your own computer with Premiere Pro installed? <span class="req">*</span></label>
+            <div class="chips" id="pills-comp" role="group" aria-label="Own computer with Premiere Pro">
+              <button type="button" class="chip" data-v="Yes">Yes</button>
+              <button type="button" class="chip" data-v="No">No</button>
+            </div>
+            <input type="hidden" name="Own Computer" id="hComp"></div>
+          <div class="full"><label class="l" for="i-port">Portfolio or work samples <span class="hint">Optional, but encouraged</span></label>
+            <input id="i-port" type="url" name="Portfolio Link" placeholder="Link to your work: Google Drive, YouTube, TikTok, etc.">
+            <p class="note">Past edits, school projects, personal reels. Anything that shows your work.</p></div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Your story</legend>
+        <div class="grid">
+          <div class="full"><label class="l" for="i-why">Why do you want this internship? <span class="req">*</span></label><textarea id="i-why" name="Why This Internship" required placeholder="What excites you about this, what do you want to learn, and where do you want to take your editing skills?"></textarea></div>
+          <div class="full"><label class="l" for="i-edit">Describe a video you've edited. <span class="req">*</span></label><textarea id="i-edit" name="Editing Example" required placeholder="Walk me through a project. What was it, how did you approach it, what tools or techniques did you use?"></textarea></div>
+          <div class="full"><label class="l" for="i-heard">How did you hear about this? <span class="req">*</span></label>
+            <select id="i-heard" name="How They Heard" required><option value="" disabled selected>Select one...</option><option>Coral Shores — teacher or school flyer</option><option>Instagram or social media</option><option>Friend or classmate</option><option>alanapro.com website</option><option>Other</option></select></div>
+        </div>
+      </fieldset>
+
+      <div class="err" id="ap-intern-err" role="alert"></div>
+      <button type="submit" class="send" id="ap-intern-btn">Send my application</button>
+      <p class="fine">Your info only goes to Malia at Alana Pro.</p>
+    </form>
+  </div>
+</div>
+
+<div class="wrap">
+  <section class="done" id="ap-intern-success" aria-live="polite">
+    <h1 id="api-thanks">Application received.</h1>
+    <p>Thanks for applying. I read every application myself and will reach out within a few days to schedule your interview.</p>
+    <ol>
+      <li><b>Check your email and texts.</b> That's where I'll reach out.</li>
+      <li><b>Get your work ready.</b> Have a couple of edits you're proud of to talk through in the interview.</li>
+    </ol>
+  </section>
+</div>
+
+<div data-ap-include="partials/footer.html"></div>
+
+<script>
+(function(){
+  var root = document.getElementById("api");
+  var cw = root.closest(".content-wrapper"); if (cw) { cw.style.paddingTop = "0"; cw.style.paddingBottom = "0"; cw.style.maxWidth = "none"; }
+  var sec = root.closest(".page-section"); if (sec) { sec.style.backgroundColor = "#141416"; var bgx = sec.querySelector(".section-background"); if (bgx) bgx.style.background = "#141416"; }
+
+  var form = document.getElementById("ap-intern-form"), err = document.getElementById("ap-intern-err"), btn = document.getElementById("ap-intern-btn");
+  var loadedAt = Date.now();
+  ["pills-cert","pills-comp"].forEach(function(id){
+    var g = document.getElementById(id), h = document.getElementById(id === "pills-cert" ? "hCert" : "hComp");
+    var cs = [].slice.call(g.querySelectorAll(".chip"));
+    cs.forEach(function(c){
+      c.setAttribute("aria-pressed","false");
+      c.addEventListener("click", function(){
+        cs.forEach(function(o){ o.setAttribute("aria-pressed","false"); });
+        c.setAttribute("aria-pressed","true"); h.value = c.getAttribute("data-v"); g.classList.remove("bad-group");
+      });
+    });
+  });
+  root.querySelectorAll('a[href="#api-apply"]').forEach(function(a){
+    a.addEventListener("click", function(e){ e.preventDefault(); document.getElementById("api-apply").scrollIntoView({ behavior:"smooth", block:"start" }); });
+  });
+
+  function val(n){ var el = form.querySelector('[name="' + n + '"]'); return el ? (el.value || "").trim() : ""; }
+  var REQ = ["First Name","Last Name","Email","Phone Number","School","Grade","Experience Level","Why This Internship","Editing Example","How They Heard"];
+
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    form.querySelectorAll(".bad").forEach(function(x){ x.classList.remove("bad"); });
+    root.querySelectorAll(".bad-group").forEach(function(x){ x.classList.remove("bad-group"); });
+    var missing = REQ.filter(function(n){ return !val(n); });
+    missing.forEach(function(n){ var el = form.querySelector('[name="' + n + '"]'); if (el) el.classList.add("bad"); });
+    if (!document.getElementById("hCert").value) { missing.push("cert"); document.getElementById("pills-cert").classList.add("bad-group"); }
+    if (!document.getElementById("hComp").value) { missing.push("comp"); document.getElementById("pills-comp").classList.add("bad-group"); }
+    var badEmail = val("Email") && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val("Email"));
+    if (badEmail) form.querySelector('[name="Email"]').classList.add("bad");
+    if (missing.length || badEmail) {
+      err.textContent = badEmail && !missing.length ? "Please enter a valid email address." : "Please fill in everything marked with a pink star.";
+      err.classList.add("on");
+      var first = form.querySelector(".bad, .bad-group"); if (first) first.scrollIntoView({ behavior:"smooth", block:"center" });
+      return;
+    }
+    err.classList.remove("on");
+    if (val("_honey") || Date.now() - loadedAt < 4000) return finish();
+    btn.disabled = true; btn.textContent = "Sending...";
+    var fd = new FormData(form);
+    fd.set("_replyto", val("Email"));
+    fetch("https://formsubmit.co/ajax/" + ["malia", "alanapro.com"].join("@"), { method:"POST", headers:{ "Accept":"application/json" }, body: fd })
+      .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(j){ return { ok: r.ok, j: j }; }); })
+      .then(function(res){ if (res.ok && String(res.j.success) === "true") return finish(); throw new Error("send failed"); })
+      .catch(function(){
+        btn.disabled = false; btn.textContent = "Send my application";
+        err.innerHTML = 'Your application didn’t send. Please try again, or email <a href="mailto:malia@alanapro.com" style="color:#fd0182">malia@alanapro.com</a>.';
+        err.classList.add("on");
+      });
+  });
+  function finish(){
+    var first = val("First Name");
+    if (first) document.getElementById("api-thanks").textContent = "Thanks, " + first + ". You're in the running.";
+    document.getElementById("ap-intern-main").style.display = "none";
+    document.getElementById("ap-intern-success").classList.add("on");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+})();
+</script>
+</div>
