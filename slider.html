@@ -44,7 +44,7 @@
 
     /* Phone */
     #ap-reels .ap-phone{
-      position:relative;width:320px;flex:none;
+      position:relative;width:290px;flex:none;
       border-radius:46px;background:#0d0d0f;padding:11px;
       box-shadow:0 30px 70px rgba(0,0,0,.6), 0 0 60px rgba(253,1,130,.18), inset 0 0 0 2px #3a3a40;
     }
@@ -53,11 +53,11 @@
       width:84px;height:24px;border-radius:20px;background:#000;z-index:4;
     }
     #ap-reels .ap-screen{
-      position:relative;width:100%;aspect-ratio:9/16;border-radius:36px;overflow:hidden;background:#111;
+      position:relative;width:100%;aspect-ratio:9/18.5;border-radius:36px;overflow:hidden;background:#111;
     }
     #ap-reels .ap-track{display:flex;height:100%;transition:transform .5s cubic-bezier(.65,0,.35,1)}
     #ap-reels .ap-slide{position:relative;flex:0 0 100%;height:100%}
-    #ap-reels .ap-slide video{width:100%;height:100%;object-fit:cover;display:block;background:#111}
+    #ap-reels .ap-slide video{width:100%;height:100%;object-fit:contain;display:block;background:#000}
     #ap-reels .ap-placeholder{
       position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
       color:#fff;text-align:center;padding:24px;gap:8px;
@@ -107,7 +107,7 @@
       #ap-reels .ap-left{order:2}
       #ap-reels .ap-phone-row{order:1}
       #ap-reels .ap-right{order:3}
-      #ap-reels .ap-phone{width:min(280px,calc(100vw - 140px))}
+      #ap-reels .ap-phone{width:min(255px,calc(100vw - 130px))}
       #ap-reels .ap-arrow{width:44px;height:44px}
       #ap-reels .ap-phone-row{gap:10px}
     }
