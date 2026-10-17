@@ -424,18 +424,11 @@
   var RAW = "https://raw.githubusercontent.com/theevestudio/alanapro-site-data/main/";
   var CDN = "https://cdn.jsdelivr.net/gh/theevestudio/alanapro-site-data@main/";
 
-  /* media paths: CDN first, GitHub as a backup */
-  root.querySelectorAll("[src],[poster]").forEach(function(el){
-    ["src","poster"].forEach(function(a){
-      var v = el.getAttribute(a); if(!v) return;
-      if (v.indexOf("MEDIA/")===0) el.setAttribute(a, CDN + "media/" + v.slice(6));
-      else if (v.indexOf("RAW/")===0) el.setAttribute(a, RAW + v.slice(4));
-    });
-    if (el.tagName === "IMG") el.addEventListener("error", function once(){ el.removeEventListener("error", once); el.src = el.src.replace(CDN, RAW); });
+  /* media links are filled in by the loader; if the CDN ever fails an image, fall back to GitHub */
+  root.querySelectorAll("img").forEach(function(el){
+    el.addEventListener("error", function once(){ el.removeEventListener("error", once); el.src = el.src.replace(CDN, RAW); });
   });
-  var css = root.querySelector("style");
-  css.textContent = css.textContent.split('url("MEDIA/').join('url("' + CDN + 'media/');
-  var v = root.querySelector("#aph-intro"); if (v) v.load();
+  var v = root.querySelector("#aph-intro");
 
   document.getElementById("aph-year").textContent = new Date().getFullYear();
 
