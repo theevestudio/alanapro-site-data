@@ -1,0 +1,539 @@
+<!-- ALANA PRO — HOMEPAGE. Loaded automatically by the snippet in your Squarespace Code Block. -->
+<div id="aph">
+<style>
+  #aph{
+    --pink:#fd0182; --pink-deep:#c4005f; --blush:#ffe3f0;
+    --black:#000; --night:#141416; --ink:#1a1a1a; --paper:#fff;
+    --mist:#b4b4bc; --muted:#6b6b76; --line:rgba(255,255,255,.12);
+    --display:"pragmatica","Pragmatica","Pragmatica Black","Helvetica Neue",Arial,sans-serif;
+    position:relative; width:100vw; margin-left:calc(50% - 50vw); background:var(--night); color:#fff;
+    font-family:var(--display) !important; -webkit-font-smoothing:antialiased; overflow:hidden;
+  }
+  #aph *{box-sizing:border-box; font-family:var(--display) !important}
+  #aph h1,#aph h2,#aph h3,#aph p{margin:0; text-transform:none !important; letter-spacing:normal}
+  #aph h1,#aph h2,#aph h3{font-weight:900 !important; line-height:1.02}
+  #aph p{font-weight:400; line-height:1.6}
+  #aph a{text-decoration:none}
+  #aph .wrap{max-width:1180px; margin:0 auto; padding:0 24px}
+  #aph section{position:relative}
+  #aph .btn{display:inline-flex; align-items:center; justify-content:center; gap:10px; height:56px; padding:0 30px;
+    border-radius:999px; font-weight:900 !important; font-size:17px; cursor:pointer; border:2px solid transparent;
+    transition:transform .15s ease, background .15s ease, color .15s ease}
+  #aph .btn-pink{background:var(--pink); color:#fff !important}
+  #aph .btn-pink:hover{background:#ff2a98; transform:translateY(-1px)}
+  #aph .btn-ghost{background:transparent; color:#fff !important; border-color:rgba(255,255,255,.55)}
+  #aph .btn-ghost:hover{border-color:#fff; background:rgba(255,255,255,.08)}
+  #aph a:focus-visible,#aph button:focus-visible{outline:3px solid #fff; outline-offset:3px}
+  #aph .sec-title{font-size:clamp(34px,5.2vw,64px); color:#fff}
+  #aph .sec-sub{font-size:18px; color:var(--mist); max-width:56ch; margin-top:16px}
+
+  /* ---------- HERO ---------- */
+  #aph .hero{min-height:min(92vh,900px); display:flex; align-items:center; padding:64px 0 120px; isolation:isolate}
+  #aph .hero-bg{position:absolute; inset:0; z-index:-2; background:#000 url("MEDIA/car-wide.jpg") center 62%/cover no-repeat}
+  #aph .hero-bg::after{content:""; position:absolute; inset:0;
+    background:linear-gradient(90deg, rgba(0,0,0,.92) 0%, rgba(0,0,0,.72) 42%, rgba(0,0,0,.25) 75%, rgba(0,0,0,.55) 100%),
+               linear-gradient(0deg, var(--night) 0%, transparent 28%)}
+  #aph .hero .wrap{display:grid; grid-template-columns:1.25fr .75fr; gap:48px; align-items:center; width:100%}
+  #aph .hero h1{font-size:clamp(46px,7.4vw,104px); line-height:.95; max-width:11ch}
+  #aph .hero h1 .pink{color:var(--pink)}
+  #aph .hero-sub{font-size:clamp(18px,1.6vw,21px); color:#e9e9ee; max-width:44ch; margin-top:26px}
+  #aph .hero-cta{display:flex; flex-wrap:wrap; gap:14px; margin-top:36px}
+  #aph .intern-link{display:inline-block; margin-top:26px; color:var(--mist) !important; font-size:15px; border-bottom:1px solid rgba(255,255,255,.3); padding-bottom:2px}
+  #aph .intern-link:hover{color:#fff !important; border-color:#fff}
+  #aph .intro{justify-self:center; position:relative}
+  #aph .intro-phone{width:280px; border-radius:42px; background:#0b0b0d; padding:10px; position:relative;
+    box-shadow:0 30px 80px rgba(0,0,0,.7), 0 0 0 2px #2c2c31 inset, 0 0 90px rgba(253,1,130,.25)}
+  #aph .intro-screen{position:relative; aspect-ratio:9/17.06; border-radius:33px; overflow:hidden; background:#000}
+  #aph .intro-screen video{width:100%; height:100%; object-fit:cover; display:block}
+  #aph .intro-island{position:absolute; top:18px; left:50%; transform:translateX(-50%); width:80px; height:23px; border-radius:20px; background:#000; z-index:3}
+  #aph .intro-sound{position:absolute; left:50%; bottom:18px; transform:translateX(-50%); z-index:3; display:flex; align-items:center; gap:8px;
+    background:rgba(0,0,0,.6); color:#fff; border:1px solid rgba(255,255,255,.25); border-radius:999px; padding:10px 16px;
+    font-weight:900 !important; font-size:13px; cursor:pointer; white-space:nowrap; backdrop-filter:blur(6px)}
+  #aph .intro-sound svg{width:16px; height:16px}
+  #aph .intro-cap{text-align:center; margin-top:16px; color:var(--mist); font-size:14px}
+
+  /* ---------- PROOF BAR ---------- */
+  #aph .proof{margin-top:-64px; z-index:2}
+  #aph .proof-card{background:var(--paper); color:var(--ink); border-radius:28px; padding:28px 32px;
+    display:grid; grid-template-columns:repeat(3,1fr) 1.6fr; gap:24px; align-items:center; box-shadow:0 30px 60px rgba(0,0,0,.45)}
+  #aph .proof-num{font-size:clamp(30px,3.4vw,44px); font-weight:900 !important; color:var(--pink); line-height:1}
+  #aph .proof-lbl{font-size:14px; color:var(--muted); margin-top:6px; line-height:1.35}
+  #aph .proof-clients{border-left:1px solid #ececf0; padding-left:28px}
+  #aph .proof-clients p{font-size:14px; color:var(--muted)}
+  #aph .proof-clients ul{list-style:none; padding:0; margin:8px 0 0; display:flex; flex-wrap:wrap; gap:8px}
+  #aph .proof-clients li{font-size:14px; font-weight:900; color:var(--ink); background:#f3f3f6; border-radius:999px; padding:7px 13px}
+
+  /* ---------- CLIENT WORK ---------- */
+  #aph .work{padding:96px 0 40px}
+  #aph .work-head{text-align:center; margin-bottom:8px}
+  #aph .work-head .sec-sub{margin-left:auto; margin-right:auto}
+
+  /* ---------- HOW IT WORKS ---------- */
+  #aph .how{padding:90px 0}
+  #aph .how-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:48px; counter-reset:step}
+  #aph .step{border:1px solid var(--line); border-radius:24px; padding:30px 28px 32px; position:relative; background:rgba(255,255,255,.02)}
+  #aph .step-n{width:44px; height:44px; border-radius:50%; background:var(--pink); color:#fff; display:grid; place-items:center; font-weight:900; font-size:18px}
+  #aph .step h3{font-size:26px; margin-top:22px}
+  #aph .step p{color:var(--mist); margin-top:12px; font-size:16px}
+  #aph .step-time{display:inline-block; margin-top:18px; font-size:13px; color:#fff; border:1px solid var(--line); border-radius:999px; padding:6px 12px}
+
+  /* ---------- PACKAGE FINDER ---------- */
+  #aph .finder{padding:90px 0}
+  #aph .finder-box{background:var(--paper); color:var(--ink); border-radius:32px; padding:clamp(28px,4vw,56px); display:grid; grid-template-columns:1fr 1fr; gap:48px}
+  #aph .finder-box .sec-title{color:var(--ink); font-size:clamp(32px,4.2vw,52px)}
+  #aph .finder-box .sec-sub{color:var(--muted)}
+  #aph .q{margin-top:30px}
+  #aph .q-label{font-weight:900; font-size:17px}
+  #aph .q-opts{display:flex; flex-wrap:wrap; gap:10px; margin-top:12px}
+  #aph .opt{border:2px solid #e3e3e8; background:#fff; color:var(--ink); border-radius:16px; padding:13px 16px; font-size:15px; font-weight:900 !important;
+    cursor:pointer; text-align:left; transition:border-color .15s ease, background .15s ease}
+  #aph .opt small{display:block; font-weight:400 !important; color:var(--muted); font-size:13px; margin-top:3px}
+  #aph .opt:hover{border-color:#ffb3d7}
+  #aph .opt[aria-pressed="true"]{border-color:var(--pink); background:var(--blush)}
+  #aph .result{background:var(--ink); color:#fff; border-radius:26px; padding:34px; display:flex; flex-direction:column; min-height:100%}
+  #aph .result-empty{margin:auto 0; color:var(--mist); font-size:17px}
+  #aph .result-empty b{display:block; color:#fff; font-size:26px; font-weight:900; margin-bottom:10px; line-height:1.15}
+  #aph .r-for{font-size:14px; color:var(--mist)}
+  #aph .r-name{font-size:clamp(30px,3vw,40px); font-weight:900; margin-top:6px; line-height:1.05}
+  #aph .r-price{font-size:52px; font-weight:900; color:var(--pink); margin-top:14px; line-height:1}
+  #aph .r-price span{font-size:18px; color:var(--mist)}
+  #aph .r-list{list-style:none; padding:0; margin:22px 0 0}
+  #aph .r-list li{position:relative; padding:9px 0 9px 28px; border-top:1px solid rgba(255,255,255,.1); font-size:15px; color:#e6e6ea}
+  #aph .r-list li::before{content:""; position:absolute; left:4px; top:16px; width:10px; height:10px; border-radius:50%; background:var(--pink)}
+  #aph .r-note{font-size:13px; color:var(--mist); margin-top:16px}
+  #aph .r-cta{margin-top:24px}
+  #aph .r-cta .btn{width:100%}
+  #aph .r-help{font-size:13px; color:var(--mist); margin-top:12px; text-align:center}
+  #aph .all-toggle{margin-top:34px; background:none; border:none; color:var(--pink); font-weight:900 !important; font-size:16px; cursor:pointer; padding:0}
+  #aph .all{display:none; margin-top:24px; grid-column:1/-1}
+  #aph .all.open{display:block}
+  #aph .all table{width:100%; border-collapse:collapse; font-size:15px}
+  #aph .all th,#aph .all td{text-align:left; padding:14px 12px; border-bottom:1px solid #ececf0}
+  #aph .all th{font-weight:900; color:var(--ink)}
+  #aph .all td{color:#444}
+  #aph .all td b{color:var(--pink)}
+  #aph .all-extra{margin-top:16px; font-size:14px; color:var(--muted)}
+
+  /* ---------- MEET MALIA ---------- */
+  #aph .meet{padding:100px 0}
+  #aph .meet .wrap{display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center}
+  #aph .meet-photos{position:relative; aspect-ratio:1/1.05}
+  #aph .meet-photos img{position:absolute; object-fit:cover; border-radius:26px; box-shadow:0 30px 60px rgba(0,0,0,.5)}
+  #aph .meet-photos .p1{left:0; top:0; width:72%; height:78%}
+  #aph .meet-photos .p2{right:0; bottom:0; width:52%; height:52%; border:6px solid var(--night)}
+  #aph .meet p{color:#dcdce2; font-size:18px; margin-top:20px; max-width:52ch}
+  #aph .meet-facts{display:flex; flex-wrap:wrap; gap:10px; margin-top:28px}
+  #aph .meet-facts span{border:1px solid var(--line); border-radius:999px; padding:9px 15px; font-size:14px; color:#fff}
+  #aph .sig{font-size:40px; color:var(--pink); margin-top:26px; font-weight:900; font-style:italic}
+
+  /* ---------- TESTIMONIALS (shown only when added) ---------- */
+  #aph .quotes{padding:40px 0 90px; display:none}
+  #aph .quotes.on{display:block}
+  #aph .q-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; margin-top:40px}
+  #aph .quote{background:var(--paper); color:var(--ink); border-radius:24px; padding:30px}
+  #aph .quote p{font-size:18px; line-height:1.5}
+  #aph .quote b{display:block; margin-top:18px; color:var(--pink)}
+  #aph .quote small{color:var(--muted)}
+
+  /* ---------- FAQ ---------- */
+  #aph .faq{padding:60px 0 90px}
+  #aph .faq .wrap{display:grid; grid-template-columns:.8fr 1.2fr; gap:56px}
+  #aph details{border-bottom:1px solid var(--line); padding:22px 0}
+  #aph summary{list-style:none; cursor:pointer; font-weight:900; font-size:19px; display:flex; justify-content:space-between; gap:20px}
+  #aph summary::-webkit-details-marker{display:none}
+  #aph summary::after{content:"+"; color:var(--pink); font-size:26px; line-height:1}
+  #aph details[open] summary::after{content:"\2013"}
+  #aph details p{color:var(--mist); margin-top:12px; font-size:16px; max-width:60ch}
+
+  /* ---------- FINAL CTA ---------- */
+  #aph .final{padding:0 0 100px}
+  #aph .final-box{border-radius:36px; padding:clamp(40px,7vw,90px) clamp(28px,5vw,70px); position:relative; overflow:hidden; isolation:isolate;
+    background:#000 url("MEDIA/car-front.jpg") center 55%/cover no-repeat}
+  #aph .final-box::before{content:""; position:absolute; inset:0; z-index:-1; background:linear-gradient(90deg, rgba(0,0,0,.9) 0%, rgba(0,0,0,.6) 55%, rgba(0,0,0,.15) 100%)}
+  #aph .final h2{font-size:clamp(40px,6vw,80px); max-width:12ch}
+  #aph .final p{color:#e6e6ea; font-size:18px; margin-top:18px; max-width:42ch}
+  #aph .final .btn{margin-top:32px}
+
+  /* ---------- FOOTER ---------- */
+  #aph .foot{border-top:1px solid var(--line); padding:56px 0 40px}
+  #aph .foot .wrap{display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:40px}
+  #aph .foot-brand{font-size:30px; font-weight:900}
+  #aph .foot p{color:var(--mist); font-size:15px; margin-top:10px}
+  #aph .foot h3{font-size:15px; color:var(--mist); font-weight:900 !important}
+  #aph .foot ul{list-style:none; padding:0; margin:14px 0 0}
+  #aph .foot li{margin:0 0 10px}
+  #aph .foot a{color:#fff !important; font-size:16px}
+  #aph .foot a:hover{color:var(--pink) !important}
+  #aph .foot-legal{grid-column:1/-1; border-top:1px solid var(--line); padding-top:24px; color:var(--mist); font-size:13px}
+
+  /* ---------- MOBILE ---------- */
+  @media (max-width:900px){
+    #aph .hero{padding:40px 0 110px; min-height:auto}
+    #aph .hero-bg{background-position:68% center}
+    #aph .hero-bg::after{background:linear-gradient(180deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,.82) 45%, var(--night) 100%)}
+    #aph .hero .wrap{grid-template-columns:1fr; gap:40px}
+    #aph .hero h1{max-width:none}
+    #aph .intro-phone{width:250px}
+    #aph .proof-card{grid-template-columns:repeat(3,1fr); padding:22px}
+    #aph .proof-clients{grid-column:1/-1; border-left:none; border-top:1px solid #ececf0; padding:18px 0 0}
+    #aph .how-grid{grid-template-columns:1fr}
+    #aph .finder-box{grid-template-columns:1fr; gap:28px}
+    #aph .meet .wrap{grid-template-columns:1fr; gap:36px}
+    #aph .faq .wrap{grid-template-columns:1fr; gap:10px}
+    #aph .foot .wrap{grid-template-columns:1fr 1fr}
+    #aph .foot-about{grid-column:1/-1}
+    #aph .all table{font-size:13px}
+    #aph .all th,#aph .all td{padding:10px 6px}
+  }
+  @media (max-width:520px){
+    #aph .wrap{padding:0 16px}
+    #aph .proof-num{font-size:26px}
+    #aph .proof-lbl{font-size:12px}
+    #aph .hero-cta .btn{width:100%}
+    #aph .work,#aph .how,#aph .finder,#aph .meet{padding-top:70px; padding-bottom:70px}
+  }
+  @media (prefers-reduced-motion:reduce){ #aph *{transition:none !important} }
+</style>
+
+<!-- HERO -->
+<section class="hero" aria-label="Alana Pro">
+  <div class="hero-bg" role="img" aria-label="Malia's hot pink Alana Pro car with the words be your Passion on the side"></div>
+  <div class="wrap">
+    <div>
+      <h1>Content that makes Keys businesses <span class="pink">impossible to scroll past.</span></h1>
+      <p class="hero-sub">I plan, film, edit and post your reels, so you can run your business while your page brings in customers.</p>
+      <div class="hero-cta">
+        <a class="btn btn-pink" href="/work-with-me">Work with me</a>
+        <a class="btn btn-ghost" href="#aph-work">See client work</a>
+      </div>
+      <a class="intern-link" href="/internship">Looking for the editing internship? Apply here</a>
+    </div>
+    <div class="intro">
+      <div class="intro-phone">
+        <div class="intro-island"></div>
+        <div class="intro-screen">
+          <video id="aph-intro" muted loop playsinline autoplay preload="metadata" poster="MEDIA/intro-poster.jpg">
+            <source src="MEDIA/intro.mp4" type="video/mp4">
+            <source src="RAW/media/intro.mp4" type="video/mp4">
+          </video>
+          <button class="intro-sound" id="aph-intro-sound" type="button" aria-label="Play intro with sound"></button>
+        </div>
+      </div>
+      <p class="intro-cap">Hi, I'm Malia. Tap for sound.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROOF -->
+<section class="proof" aria-label="Results">
+  <div class="wrap">
+    <div class="proof-card">
+      <div><div class="proof-num" id="aph-n-followers">43K+</div><div class="proof-lbl">followers across the accounts I manage</div></div>
+      <div><div class="proof-num" id="aph-n-views">98K+</div><div class="proof-lbl">views in the last 30 days</div></div>
+      <div><div class="proof-num" id="aph-n-brands">4</div><div class="proof-lbl">Keys brands on monthly plans</div></div>
+      <div class="proof-clients">
+        <p>Currently creating for</p>
+        <ul id="aph-client-list"><li>Rainbow Reef Dive Center</li><li>Shell World</li><li>Kahu Tribe</li><li>Island Community Church</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLIENT WORK (live slider) -->
+<section class="work" id="aph-work" aria-label="Client work">
+  <div data-ap-include="slider.html"></div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" aria-label="How it works">
+  <div class="wrap">
+    <h2 class="sec-title">You run the business. I handle the content.</h2>
+    <p class="sec-sub">Three steps from first hello to a page that posts itself.</p>
+    <div class="how-grid">
+      <div class="step">
+        <div class="step-n">1</div>
+        <h3>Apply</h3>
+        <p>Tell me about your business, your goals and how you feel on camera. It's a short form, no call needed to start.</p>
+        <span class="step-time">About 2 minutes</span>
+      </div>
+      <div class="step">
+        <div class="step-n">2</div>
+        <h3>Get your plan</h3>
+        <p>I send a custom proposal with your content strategy and package, then we hop on a quick call to lock it in.</p>
+        <span class="step-time">Within 1&ndash;2 business days</span>
+      </div>
+      <div class="step">
+        <div class="step-n">3</div>
+        <h3>One film day a month</h3>
+        <p>I script everything ahead of time, film it all in one day, then edit. You approve from your phone and it goes live.</p>
+        <span class="step-time">That's your whole time commitment</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PACKAGE FINDER -->
+<section class="finder" id="aph-finder" aria-label="Find your package">
+  <div class="wrap">
+    <div class="finder-box">
+      <div>
+        <h2 class="sec-title">Find your package in 30 seconds.</h2>
+        <p class="sec-sub">Answer three quick questions and see exactly what fits, and what it costs, before you apply.</p>
+
+        <div class="q" data-q="type">
+          <div class="q-label">What kind of business are you?</div>
+          <div class="q-opts">
+            <button class="opt" type="button" data-v="Real Estate">Real estate</button>
+            <button class="opt" type="button" data-v="Small Business">Local business or shop</button>
+            <button class="opt" type="button" data-v="Restaurant">Restaurant or food</button>
+            <button class="opt" type="button" data-v="Marine">Charter or marine</button>
+            <button class="opt" type="button" data-v="Wellness">Wellness or beauty</button>
+            <button class="opt" type="button" data-v="Creator">Creator or personal brand</button>
+            <button class="opt" type="button" data-v="Other">Something else</button>
+          </div>
+        </div>
+
+        <div class="q" data-q="freq">
+          <div class="q-label">How often do you want to post?</div>
+          <div class="q-opts">
+            <button class="opt" type="button" data-v="4">Once a week<small>4 videos a month</small></button>
+            <button class="opt" type="button" data-v="8">Twice a week<small>8 videos a month</small></button>
+            <button class="opt" type="button" data-v="12">3 times a week<small>12 videos a month</small></button>
+          </div>
+        </div>
+
+        <div class="q" data-q="post">
+          <div class="q-label">Who posts the videos?</div>
+          <div class="q-opts">
+            <button class="opt" type="button" data-v="self">I'll post them myself<small>You get finished videos and captions</small></button>
+            <button class="opt" type="button" data-v="me">Post them for me<small>I handle scheduling and posting too</small></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="result" id="aph-result" aria-live="polite">
+        <div class="result-empty"><b>Your match shows up here.</b>Pick an answer for each question and I'll show you the package that fits.</div>
+      </div>
+
+      <button class="all-toggle" type="button" id="aph-all-toggle" aria-expanded="false" aria-controls="aph-all">See all packages and prices</button>
+      <div class="all" id="aph-all">
+        <table>
+          <thead><tr><th>Videos a month</th><th>Content only<br><small style="font-weight:400;color:#6b6b76">I film and edit, you post</small></th><th>Full management<br><small style="font-weight:400;color:#6b6b76">I film, edit and post</small></th></tr></thead>
+          <tbody>
+            <tr><td>4 (once a week)</td><td><b>$1,100</b>/mo</td><td><b>$1,550</b>/mo</td></tr>
+            <tr><td>8 (twice a week)</td><td><b>$1,950</b>/mo</td><td><b>$2,400</b>/mo</td></tr>
+            <tr><td>12 (3 times a week)</td><td><b>$2,700</b>/mo</td><td><b>$3,200</b>/mo</td></tr>
+          </tbody>
+        </table>
+        <p class="all-extra">Every plan includes the Rella client membership ($45/mo) so you can see your calendar and approve videos from your phone. Filmed something yourself? I'll edit it for $50 a reel. One-time projects: a single filmed and edited reel is $250, event coverage starts at $650.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MEET MALIA -->
+<section class="meet" aria-label="Meet Malia">
+  <div class="wrap">
+    <div class="meet-photos">
+      <img class="p1" src="MEDIA/car-tall.jpg" alt="Malia's hot pink Alana Pro car on a rooftop at sunset" loading="lazy">
+      <img class="p2" src="MEDIA/car-detail.jpg" alt="Close-up of the be your Passion lettering on the car" loading="lazy">
+    </div>
+    <div>
+      <h2 class="sec-title">Hi, I'm Malia.</h2>
+      <p>I'm the person behind Alana Pro, a video producer and social media strategist based in Key Largo. I started with a camera and a love for telling people's stories, and I turned it into a business helping Keys brands show up online the way they deserve.</p>
+      <p>When you work with me, you work with me. I write your scripts, I'm behind the camera on film day, and I edit every reel. No hand-offs to someone you've never met.</p>
+      <div class="meet-facts">
+        <span>Adobe Certified in Premiere Pro</span>
+        <span>Based in Key Largo</span>
+        <span>On-site filming across the Keys</span>
+      </div>
+      <div class="sig">Be your passion.</div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS (appear automatically once added to content.json) -->
+<section class="quotes" id="aph-quotes" aria-label="What clients say">
+  <div class="wrap">
+    <h2 class="sec-title">What clients say.</h2>
+    <div class="q-grid" id="aph-quote-grid"></div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" aria-label="Questions">
+  <div class="wrap">
+    <div>
+      <h2 class="sec-title">Good questions.</h2>
+      <p class="sec-sub">Something else on your mind? Email me at <a href="mailto:malia@alanapro.com" style="color:#fd0182">malia@alanapro.com</a>.</p>
+    </div>
+    <div>
+      <details><summary>Do I have to be on camera?</summary><p>Not at all. Some clients love being on camera, some never want to be. I plan your content around whatever you're comfortable with, from behind-the-scenes and product reels to fully talking-head videos.</p></details>
+      <details><summary>How much of my time does this take?</summary><p>About one film day a month. I write the scripts before we film, so you just show up. After that, you approve finished videos from your phone.</p></details>
+      <details><summary>What's the Rella membership?</summary><p>Rella is where your content calendar lives. For $45 a month you can see what's coming up and approve videos from your phone, and you get a text when something new is ready, so nothing sits waiting.</p></details>
+      <details><summary>Am I locked into a long contract?</summary><p>No. Plans are month to month and billed at the start of each month. You can cancel with 30 days' written notice.</p></details>
+      <details><summary>Is ad spend included?</summary><p>No. Plans cover creating (and, with full management, posting) your content. Ad spend is separate, and ads management can be added once your page has a strong identity.</p></details>
+      <details><summary>What if I film something myself?</summary><p>Send it over. I'll edit it into a finished reel for $50, on top of your plan.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final" aria-label="Apply">
+  <div class="wrap">
+    <div class="final-box">
+      <h2>Ready to be your passion?</h2>
+      <p>I take on a small number of clients so every brand gets my full attention. Apply now and I'll be in touch within 1&ndash;2 business days.</p>
+      <a class="btn btn-pink" href="/work-with-me">Apply to work with me</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="foot" aria-label="Site footer">
+  <div class="wrap">
+    <div class="foot-about">
+      <div class="foot-brand">Alana Pro</div>
+      <p>Social media content and management for Florida Keys businesses. Based in Key Largo.</p>
+      <p><a href="mailto:malia@alanapro.com">malia@alanapro.com</a></p>
+    </div>
+    <div>
+      <h3>Explore</h3>
+      <ul>
+        <li><a href="/work-with-me">Work with me</a></li>
+        <li><a href="#aph-work">Client work</a></li>
+        <li><a href="#aph-finder">Packages</a></li>
+        <li><a href="/internship">Internship</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Follow</h3>
+      <ul>
+        <li><a href="https://www.instagram.com/alana_pro_/" target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href="https://www.youtube.com/@alana_productions" target="_blank" rel="noopener">YouTube</a></li>
+        <li><a href="https://dot.cards/a_pro" target="_blank" rel="noopener">Dot card</a></li>
+      </ul>
+    </div>
+    <div class="foot-legal">&copy; <span id="aph-year">2026</span> Alana Pro LLC. All rights reserved.</div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root = document.getElementById("aph");
+  var RAW = "https://raw.githubusercontent.com/theevestudio/alanapro-site-data/main/";
+  var CDN = "https://cdn.jsdelivr.net/gh/theevestudio/alanapro-site-data@main/";
+
+  /* media paths: CDN first, GitHub as a backup */
+  root.querySelectorAll("[src],[poster]").forEach(function(el){
+    ["src","poster"].forEach(function(a){
+      var v = el.getAttribute(a); if(!v) return;
+      if (v.indexOf("MEDIA/")===0) el.setAttribute(a, CDN + "media/" + v.slice(6));
+      else if (v.indexOf("RAW/")===0) el.setAttribute(a, RAW + v.slice(4));
+    });
+    if (el.tagName === "IMG") el.addEventListener("error", function once(){ el.removeEventListener("error", once); el.src = el.src.replace(CDN, RAW); });
+  });
+  var css = root.querySelector("style");
+  css.textContent = css.textContent.split('url("MEDIA/').join('url("' + CDN + 'media/');
+  var v = root.querySelector("#aph-intro"); if (v) v.load();
+
+  document.getElementById("aph-year").textContent = new Date().getFullYear();
+
+  /* intro video sound */
+  var ICON_OFF = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M23 9l-6 6M17 9l6 6"/></svg>';
+  var ICON_ON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 010 7M19 5a10 10 0 010 14"/></svg>';
+  var sb = document.getElementById("aph-intro-sound");
+  function setSound(){ sb.innerHTML = (v.muted ? ICON_OFF + " Tap for sound" : ICON_ON + " Sound on"); sb.setAttribute("aria-label", v.muted ? "Play intro with sound" : "Mute intro"); }
+  sb.addEventListener("click", function(){
+    v.muted = !v.muted;
+    if (!v.muted) { try { v.currentTime = 0; } catch(e){} }
+    var p = v.play(); if (p && p.catch) p.catch(function(){});
+    setSound();
+  });
+  setSound();
+  var pp = v.play(); if (pp && pp.catch) pp.catch(function(){});
+
+  /* live proof numbers from the monthly stats file */
+  function round(n){ if (n >= 1000) return Math.floor(n/1000) + "K+"; return n + "+"; }
+  fetch(RAW + "stats.json?t=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
+    var cs = d && d.clients ? d.clients : {}, names = Object.keys(cs), f = 0, vw = 0;
+    names.forEach(function(k){ f += cs[k].followers || 0; vw += cs[k].views || 0; });
+    if (f) document.getElementById("aph-n-followers").textContent = round(f);
+    if (vw) document.getElementById("aph-n-views").textContent = round(vw);
+    if (names.length) {
+      document.getElementById("aph-n-brands").textContent = names.length;
+      document.getElementById("aph-client-list").innerHTML = names.map(function(n){ return "<li>" + n.replace(/[<>&]/g,"") + "</li>"; }).join("");
+    }
+  }).catch(function(){});
+
+  /* testimonials from content.json (section stays hidden until there are some) */
+  fetch(RAW + "content.json?t=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
+    var qs = (d && d.testimonials) || []; if (!qs.length) return;
+    function e(s){ return String(s||"").replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+    document.getElementById("aph-quote-grid").innerHTML = qs.map(function(q){
+      return '<div class="quote"><p>&ldquo;' + e(q.quote) + '&rdquo;</p><b>' + e(q.name) + '</b><small>' + e(q.business) + '</small></div>';
+    }).join("");
+    document.getElementById("aph-quotes").classList.add("on");
+  }).catch(function(){});
+
+  /* package finder */
+  var PKG = {
+    self: { 4:["Content Starter",1100], 8:["Content Growth",1950], 12:["Content Premium",2700] },
+    me:   { 4:["Management Starter",1550], 8:["Management Growth",2400], 12:["Management Premium",3200] }
+  };
+  var INCL = {
+    self: ["I script, film and edit every video", "Captions and hashtags written for you", "Finished videos delivered for you to post", "Approve everything from your phone in Rella"],
+    me:   ["I script, film and edit every video", "Captions, hashtags and posting handled for you", "Scheduling across your platforms", "Monthly performance recap", "Approve everything from your phone in Rella"]
+  };
+  var TYPE = { "Real Estate":"agents", "Small Business":"local businesses", "Restaurant":"restaurants", "Marine":"charters and marine businesses", "Wellness":"wellness and beauty brands", "Creator":"creators", "Other":"businesses like yours" };
+  var ans = {};
+  root.querySelectorAll(".q").forEach(function(q){
+    q.querySelectorAll(".opt").forEach(function(b){
+      b.setAttribute("aria-pressed","false");
+      b.addEventListener("click", function(){
+        q.querySelectorAll(".opt").forEach(function(o){ o.setAttribute("aria-pressed","false"); });
+        b.setAttribute("aria-pressed","true");
+        ans[q.getAttribute("data-q")] = b.getAttribute("data-v");
+        showResult();
+      });
+    });
+  });
+  function money(n){ return "$" + n.toLocaleString("en-US"); }
+  function showResult(){
+    var box = document.getElementById("aph-result");
+    if (!ans.type || !ans.freq || !ans.post) {
+      var left = ["type","freq","post"].filter(function(k){ return !ans[k]; }).length;
+      box.innerHTML = '<div class="result-empty"><b>' + (left === 1 ? "One more answer." : left + " more answers.") + '</b>Your package shows up here as soon as you finish.</div>';
+      return;
+    }
+    var p = PKG[ans.post][ans.freq];
+    var list = (ans.freq === "12" && ans.post === "me") ? INCL.me.concat(["Stories and full account management", "Monthly strategy call"]) : INCL[ans.post];
+    if (ans.freq === "12" && ans.post === "self") list = list.concat(["Monthly content calendar and strategy call"]);
+    if (ans.freq === "8") list = list.concat(["Monthly content calendar"]);
+    try { localStorage.setItem("ap_pkg", p[0]); } catch(e){}
+    box.innerHTML =
+      '<div class="r-for">Recommended for ' + TYPE[ans.type] + '</div>' +
+      '<div class="r-name">' + p[0] + '</div>' +
+      '<div class="r-price">' + money(p[1]) + '<span>/month</span></div>' +
+      '<ul class="r-list">' + list.map(function(i){ return "<li>" + i + "</li>"; }).join("") + '</ul>' +
+      '<div class="r-note">Plus the Rella client membership, $45/month. Month to month, cancel with 30 days’ notice.</div>' +
+      '<div class="r-cta"><a class="btn btn-pink" href="/work-with-me">Apply for ' + p[0] + '</a></div>' +
+      '<div class="r-help">On the form, choose “' + p[0] + '” under package interest.</div>';
+  }
+  var tg = document.getElementById("aph-all-toggle"), all = document.getElementById("aph-all");
+  tg.addEventListener("click", function(){
+    var open = all.classList.toggle("open");
+    tg.setAttribute("aria-expanded", open ? "true" : "false");
+    tg.textContent = open ? "Hide the price table" : "See all packages and prices";
+  });
+
+  /* smooth scroll for in-page links */
+  root.querySelectorAll('a[href^="#aph-"]').forEach(function(a){
+    a.addEventListener("click", function(ev){
+      var t = document.getElementById(a.getAttribute("href").slice(1)); if (!t) return;
+      ev.preventDefault(); t.scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block:"start"});
+    });
+  });
+})();
+</script>
+</div>
