@@ -1,0 +1,50 @@
+<!-- SHARED SITE FOOTER (used on every page) -->
+<style>
+  #apf{--pink:#fd0182;--mist:#b4b4bc;--line:rgba(255,255,255,.12); position:relative; width:100vw; margin-left:calc(50% - 50vw); background:#141416; color:#fff;
+    font-family:"pragmatica","Pragmatica","Pragmatica Black","Helvetica Neue",Arial,sans-serif !important}
+  #apf *{box-sizing:border-box; font-family:inherit !important}
+  #apf h3,#apf p{margin:0; text-transform:none !important; letter-spacing:normal}
+  /* ---------- FOOTER ---------- */
+  #apf{border-top:1px solid var(--line); padding:56px 0 40px}
+  #apf .apf-wrap{display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:40px}
+  #apf .foot-brand{font-size:30px; font-weight:900}
+  #apf p{color:var(--mist); font-size:15px; margin-top:10px}
+  #apf h3{font-size:15px; color:var(--mist); font-weight:900 !important}
+  #apf ul{list-style:none; padding:0; margin:14px 0 0}
+  #apf li{margin:0 0 10px}
+  #apf a{color:#fff !important; font-size:16px}
+  #apf a:hover{color:var(--pink) !important}
+  #apf .foot-legal{grid-column:1/-1; border-top:1px solid var(--line); padding-top:24px; color:var(--mist); font-size:13px}
+
+  #apf .apf-wrap{max-width:1180px; margin:0 auto; padding:0 24px}
+  @media (max-width:900px){ #apf .apf-wrap{grid-template-columns:1fr 1fr} #apf .foot-about{grid-column:1/-1} }
+  @media (max-width:520px){ #apf .apf-wrap{padding:0 16px} }
+</style>
+<footer id="apf" aria-label="Site footer">
+  <div class="apf-wrap">
+    <div class="foot-about">
+      <div class="foot-brand">Alana Pro</div>
+      <p>Social media content and management for Florida Keys businesses. Based in Key Largo.</p>
+      <p><a href="mailto:malia@alanapro.com">malia@alanapro.com</a></p>
+    </div>
+    <div>
+      <h3>Explore</h3>
+      <ul>
+        <li><a href="/work-with-me">Work with me</a></li>
+        <li><a href="/#aph-work">Client work</a></li>
+        <li><a href="/#aph-finder">Packages</a></li>
+        <li><a href="/internship">Internship</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Follow</h3>
+      <ul>
+        <li><a href="https://www.instagram.com/alana_pro_/" target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href="https://www.youtube.com/@alana_productions" target="_blank" rel="noopener">YouTube</a></li>
+        <li><a href="https://dot.cards/a_pro" target="_blank" rel="noopener">Dot card</a></li>
+      </ul>
+    </div>
+    <div class="foot-legal">&copy; <span id="apf-year">2026</span> Alana Pro LLC. All rights reserved.</div>
+  </div>
+</footer>
+<script>document.getElementById("apf-year").textContent = new Date().getFullYear();</script>

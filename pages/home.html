@@ -157,18 +157,6 @@
   #aph .final p{color:#e6e6ea; font-size:18px; margin-top:18px; max-width:42ch}
   #aph .final .btn{margin-top:32px}
 
-  /* ---------- FOOTER ---------- */
-  #aph .foot{border-top:1px solid var(--line); padding:56px 0 40px}
-  #aph .foot .wrap{display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:40px}
-  #aph .foot-brand{font-size:30px; font-weight:900}
-  #aph .foot p{color:var(--mist); font-size:15px; margin-top:10px}
-  #aph .foot h3{font-size:15px; color:var(--mist); font-weight:900 !important}
-  #aph .foot ul{list-style:none; padding:0; margin:14px 0 0}
-  #aph .foot li{margin:0 0 10px}
-  #aph .foot a{color:#fff !important; font-size:16px}
-  #aph .foot a:hover{color:var(--pink) !important}
-  #aph .foot-legal{grid-column:1/-1; border-top:1px solid var(--line); padding-top:24px; color:var(--mist); font-size:13px}
-
   /* ---------- MOBILE ---------- */
   @media (max-width:900px){
     #aph .hero{padding:44px 0 110px; min-height:auto}
@@ -183,8 +171,6 @@
     #aph .finder-box{grid-template-columns:1fr; gap:28px}
     #aph .meet .wrap{grid-template-columns:1fr; gap:36px}
     #aph .faq .wrap{grid-template-columns:1fr; gap:10px}
-    #aph .foot .wrap{grid-template-columns:1fr 1fr}
-    #aph .foot-about{grid-column:1/-1}
     #aph .all table{font-size:13px}
     #aph .all th,#aph .all td{padding:10px 6px}
   }
@@ -392,34 +378,7 @@
   </div>
 </section>
 
-<!-- FOOTER -->
-<footer class="foot" aria-label="Site footer">
-  <div class="wrap">
-    <div class="foot-about">
-      <div class="foot-brand">Alana Pro</div>
-      <p>Social media content and management for Florida Keys businesses. Based in Key Largo.</p>
-      <p><a href="mailto:malia@alanapro.com">malia@alanapro.com</a></p>
-    </div>
-    <div>
-      <h3>Explore</h3>
-      <ul>
-        <li><a href="/work-with-me">Work with me</a></li>
-        <li><a href="#aph-work">Client work</a></li>
-        <li><a href="#aph-finder">Packages</a></li>
-        <li><a href="/internship">Internship</a></li>
-      </ul>
-    </div>
-    <div>
-      <h3>Follow</h3>
-      <ul>
-        <li><a href="https://www.instagram.com/alana_pro_/" target="_blank" rel="noopener">Instagram</a></li>
-        <li><a href="https://www.youtube.com/@alana_productions" target="_blank" rel="noopener">YouTube</a></li>
-        <li><a href="https://dot.cards/a_pro" target="_blank" rel="noopener">Dot card</a></li>
-      </ul>
-    </div>
-    <div class="foot-legal">&copy; <span id="aph-year">2026</span> Alana Pro LLC. All rights reserved.</div>
-  </div>
-</footer>
+<div data-ap-include="partials/footer.html"></div>
 
 <script>
 (function(){
@@ -438,7 +397,6 @@
   });
   var v = root.querySelector("#aph-intro");
 
-  document.getElementById("aph-year").textContent = new Date().getFullYear();
 
   /* intro video sound */
   var ICON_OFF = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M23 9l-6 6M17 9l6 6"/></svg>';
@@ -518,8 +476,8 @@
       '<div class="r-price">' + money(p[1]) + '<span>/month</span></div>' +
       '<ul class="r-list">' + list.map(function(i){ return "<li>" + i + "</li>"; }).join("") + '</ul>' +
       '<div class="r-note">Plus the Rella client membership, $45/month. Month to month, cancel with 30 days’ notice.</div>' +
-      '<div class="r-cta"><a class="btn btn-pink" href="/work-with-me">Apply for ' + p[0] + '</a></div>' +
-      '<div class="r-help">On the form, choose “' + p[0] + '” under package interest.</div>';
+      '<div class="r-cta"><a class="btn btn-pink" href="/work-with-me?package=' + encodeURIComponent(p[0]) + '">Apply for ' + p[0] + '</a></div>' +
+      '<div class="r-help">Your package will already be selected on the application.</div>';
   }
   var tg = document.getElementById("aph-all-toggle"), all = document.getElementById("aph-all");
   tg.addEventListener("click", function(){

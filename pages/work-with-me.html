@@ -1,0 +1,465 @@
+<!-- ALANA PRO — WORK WITH ME. Loaded automatically by the snippet in your Squarespace Code Block. -->
+<div id="apw">
+<style>
+  #apw{
+    --pink:#fd0182; --blush:#ffe3f0; --night:#141416; --ink:#1a1a1a; --paper:#fff;
+    --mist:#b4b4bc; --muted:#6b6b76; --line:rgba(255,255,255,.12); --field:#f4f4f7; --edge:#e3e3e8;
+    --display:"pragmatica","Pragmatica","Pragmatica Black","Helvetica Neue",Arial,sans-serif;
+    position:relative; width:100vw; margin-left:calc(50% - 50vw); background:var(--night); color:#fff;
+    font-family:var(--display) !important; -webkit-font-smoothing:antialiased;
+  }
+  #apw *{box-sizing:border-box; font-family:var(--display) !important}
+  #apw h1,#apw h2,#apw h3,#apw p{margin:0; text-transform:none !important; letter-spacing:normal}
+  #apw h1,#apw h2,#apw h3{font-weight:900 !important; line-height:1.04; color:#fff !important}
+  #apw p{font-weight:400; line-height:1.6}
+  #apw a{text-decoration:none}
+  #apw .wrap{max-width:1180px; margin:0 auto; padding:0 24px}
+  #apw button:focus-visible,#apw a:focus-visible,#apw input:focus-visible,#apw select:focus-visible,#apw textarea:focus-visible{outline:3px solid var(--pink); outline-offset:2px}
+
+  /* intro */
+  #apw .top{padding:70px 0 40px; display:grid; grid-template-columns:1.1fr .9fr; gap:56px; align-items:end}
+  #apw .top h1{font-size:clamp(42px,6vw,84px); line-height:.98; max-width:12ch}
+  #apw .top h1 span{color:var(--pink) !important}
+  #apw .top .sub{font-size:19px; color:#e3e3e8; margin-top:20px; max-width:46ch}
+  #apw .next{border:1px solid var(--line); border-radius:24px; padding:26px 26px 22px}
+  #apw .next h2{font-size:20px}
+  #apw .next ol{list-style:none; padding:0; margin:16px 0 0; counter-reset:n}
+  #apw .next li{counter-increment:n; position:relative; padding:0 0 16px 44px; color:var(--mist); font-size:15px; line-height:1.5}
+  #apw .next li b{display:block; color:#fff; font-size:16px}
+  #apw .next li::before{content:counter(n); position:absolute; left:0; top:0; width:30px; height:30px; border-radius:50%; background:var(--pink); color:#fff; display:grid; place-items:center; font-weight:900; font-size:14px}
+
+  /* form card */
+  #apw .card{background:var(--paper); color:var(--ink); border-radius:32px; padding:clamp(24px,4vw,52px); margin:10px 0 90px; box-shadow:0 30px 70px rgba(0,0,0,.45)}
+  #apw .progress{display:flex; gap:8px; margin-bottom:34px}
+  #apw .progress button{flex:1; border:none; background:none; padding:0; text-align:left; cursor:pointer; color:var(--muted); font-size:13px; font-weight:900 !important}
+  #apw .progress button::before{content:""; display:block; height:6px; border-radius:6px; background:var(--edge); margin-bottom:10px; transition:background .2s ease}
+  #apw .progress button.done::before,#apw .progress button.on::before{background:var(--pink)}
+  #apw .progress button.on{color:var(--ink)}
+  #apw .progress button:disabled{cursor:default}
+  #apw .step{display:none}
+  #apw .step.on{display:block}
+  #apw .step h2{font-size:clamp(28px,3.2vw,40px); color:var(--ink) !important}
+  #apw .step .lead{color:var(--muted); margin-top:8px; font-size:16px}
+  #apw .grid{display:grid; grid-template-columns:1fr 1fr; gap:18px 20px; margin-top:28px}
+  #apw .full{grid-column:1/-1}
+  #apw label.l{display:block; font-weight:900; font-size:15px; margin-bottom:8px; color:var(--ink)}
+  #apw .req{color:var(--pink)}
+  #apw .hint{font-weight:400; color:var(--muted); font-size:13px}
+  #apw input[type=text],#apw input[type=email],#apw input[type=tel],#apw select,#apw textarea{
+    width:100%; border:2px solid var(--edge); background:var(--field); color:var(--ink); border-radius:14px; padding:14px 16px; font-size:16px; font-weight:400 !important; appearance:none; -webkit-appearance:none}
+  #apw select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' fill='none' stroke='%23fd0182' stroke-width='2.4'%3E%3Cpath d='M1 1l6 6 6-6'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 16px center; padding-right:44px}
+  #apw textarea{min-height:110px; resize:vertical}
+  #apw input:focus,#apw select:focus,#apw textarea:focus{border-color:var(--pink); background:#fff; outline:none}
+  #apw .bad{border-color:#e5484d !important; background:#fff5f5 !important}
+  #apw .tiles{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:28px}
+  #apw .chip{border:2px solid var(--edge); background:#fff; color:var(--ink); border-radius:16px; padding:15px 16px; font-size:15px; font-weight:900 !important; cursor:pointer; text-align:left; transition:border-color .15s ease, background .15s ease}
+  #apw .chip:hover{border-color:#ffb3d7}
+  #apw .chip[aria-pressed="true"]{border-color:var(--pink); background:var(--blush)}
+  #apw .chips{display:flex; flex-wrap:wrap; gap:10px}
+  #apw .chips .chip{padding:12px 16px}
+  #apw .chips.bad-group .chip{border-color:#f3b0b2}
+  #apw .niche{display:none; margin-top:30px; padding-top:28px; border-top:1px solid #ececf0}
+  #apw .niche.on{display:block}
+  #apw .niche h3{font-size:22px; color:var(--ink) !important}
+  #apw .pkg-note{margin-top:14px; background:var(--blush); border-radius:14px; padding:14px 16px; font-size:14px; color:#8a0048; display:none}
+  #apw .pkg-note.on{display:block}
+  #apw .pkg-help{margin-top:12px; font-size:14px; color:var(--muted)}
+  #apw .pkg-help a{color:var(--pink) !important; font-weight:900}
+  #apw .nav{display:flex; justify-content:space-between; align-items:center; gap:12px; margin-top:36px; padding-top:26px; border-top:1px solid #ececf0}
+  #apw .btn{display:inline-flex; align-items:center; justify-content:center; height:56px; padding:0 30px; border-radius:999px; font-weight:900 !important; font-size:17px; cursor:pointer; border:2px solid transparent}
+  #apw .btn-pink{background:var(--pink); color:#fff !important; margin-left:auto}
+  #apw .btn-pink:hover{background:#ff2a98}
+  #apw .btn-pink:disabled{opacity:.6; cursor:wait}
+  #apw .btn-back{background:none; color:var(--ink); border-color:var(--edge)}
+  #apw .err{display:none; margin-top:18px; color:#c4161c; font-size:15px; font-weight:900}
+  #apw .err.on{display:block}
+  #apw .hp{position:absolute !important; left:-9999px !important; width:1px; height:1px; overflow:hidden}
+  #apw .fine{margin-top:16px; font-size:13px; color:var(--muted)}
+
+  /* thank-you */
+  #apw .done{display:none; padding:60px 0 100px}
+  #apw .done.on{display:grid; grid-template-columns:1.1fr .9fr; gap:56px; align-items:center}
+  #apw .done h1{font-size:clamp(40px,5.6vw,76px)}
+  #apw .done p{color:#e3e3e8; font-size:18px; margin-top:18px; max-width:48ch}
+  #apw .done ol{margin:26px 0 0; padding:0; list-style:none}
+  #apw .done li{border-top:1px solid var(--line); padding:14px 0; color:var(--mist); font-size:16px}
+  #apw .done li b{color:#fff}
+  #apw .done .btn{margin-top:28px; background:var(--pink); color:#fff !important}
+  #apw .done-phone{justify-self:center; width:270px; border-radius:40px; background:#0b0b0d; padding:10px; box-shadow:0 30px 80px rgba(0,0,0,.7), 0 0 0 2px #2c2c31 inset, 0 0 90px rgba(253,1,130,.25)}
+  #apw .done-phone div{aspect-ratio:9/17.06; border-radius:31px; overflow:hidden; background:#000}
+  #apw .done-phone video{width:100%; height:100%; object-fit:cover; display:block}
+
+  @media (max-width:900px){
+    #apw .top{grid-template-columns:1fr; gap:28px; padding-top:44px}
+    #apw .grid{grid-template-columns:1fr}
+    #apw .tiles{grid-template-columns:1fr 1fr}
+    #apw .done.on{grid-template-columns:1fr}
+  }
+  @media (max-width:520px){
+    #apw .wrap{padding:0 14px}
+    #apw .card{border-radius:24px; padding:22px 18px}
+    #apw .progress button{font-size:0}
+    #apw .tiles{grid-template-columns:1fr}
+    #apw .nav .btn{padding:0 22px}
+  }
+  @media (prefers-reduced-motion:reduce){ #apw *{transition:none !important} }
+</style>
+
+<div class="wrap" id="apw-main">
+  <section class="top" aria-label="Apply to work with Alana Pro">
+    <div>
+      <h1>Let's make your page <span>impossible to ignore.</span></h1>
+      <p class="sub">Tell me about your business and your goals. It takes about 2 minutes, and I personally read every application.</p>
+    </div>
+    <div class="next">
+      <h2>What happens after you apply</h2>
+      <ol>
+        <li><b>I review your answers</b>and get back to you within 1&ndash;2 business days.</li>
+        <li><b>You get a custom proposal</b>with your content strategy and package.</li>
+        <li><b>We lock in your first film day</b>after a quick call, and you're on your way.</li>
+      </ol>
+    </div>
+  </section>
+
+  <div class="card">
+    <div class="progress" role="tablist" aria-label="Application steps">
+      <button type="button" data-go="0" class="on">About you</button>
+      <button type="button" data-go="1" disabled>Your business</button>
+      <button type="button" data-go="2" disabled>Your vision</button>
+      <button type="button" data-go="3" disabled>Your package</button>
+    </div>
+
+    <form id="ap-form" novalidate>
+      <input type="hidden" name="_subject" value="AlanaPro Application">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_template" value="table">
+      <div class="hp" aria-hidden="true"><label>Leave this empty<input type="text" name="_honey" tabindex="-1" autocomplete="off"></label></div>
+
+      <!-- STEP 1: ABOUT YOU -->
+      <div class="step on" data-step="0">
+        <h2>About you</h2>
+        <p class="lead">So I know who I'm talking to and how to reach you.</p>
+        <div class="grid">
+          <div><label class="l" for="f-name">Full name <span class="req">*</span></label><input id="f-name" type="text" name="Full Name" required autocomplete="name" placeholder="Your full name"></div>
+          <div><label class="l" for="f-email">Email <span class="req">*</span></label><input id="f-email" type="email" name="Email" required autocomplete="email" placeholder="you@example.com"></div>
+          <div><label class="l" for="f-phone">Phone number <span class="req">*</span></label><input id="f-phone" type="tel" name="Phone Number" required autocomplete="tel" placeholder="(305) 555-0100"></div>
+          <div><label class="l" for="f-biz">Business name <span class="req">*</span></label><input id="f-biz" type="text" name="Business Name" required autocomplete="organization" placeholder="Your business name"></div>
+          <div class="full"><label class="l" for="f-ig">Instagram handle</label><input id="f-ig" type="text" name="Instagram" placeholder="@handle"></div>
+        </div>
+      </div>
+
+      <!-- STEP 2: YOUR BUSINESS -->
+      <div class="step" data-step="1">
+        <h2>Your business</h2>
+        <p class="lead">Pick the closest fit and I'll ask a few questions made for your type of business.</p>
+        <div class="tiles" id="apw-tiles" role="group" aria-label="Type of business">
+          <button type="button" class="chip" data-t="real-estate" data-label="Real Estate">Real estate</button>
+          <button type="button" class="chip" data-t="creator" data-label="General Creator">Creator or personal brand</button>
+          <button type="button" class="chip" data-t="biz-physical" data-label="Small Business — Physical Store">Local shop or business</button>
+          <button type="button" class="chip" data-t="biz-shopify" data-label="Small Business — Shopify / Online">Online store</button>
+          <button type="button" class="chip" data-t="wellness" data-label="Wellness &amp; Beauty">Wellness and beauty</button>
+          <button type="button" class="chip" data-t="marine" data-label="Marine &amp; Fishing">Charter, marine or fishing</button>
+          <button type="button" class="chip" data-t="vacation" data-label="Vacation Rental / Airbnb">Vacation rental</button>
+          <button type="button" class="chip" data-t="restaurant" data-label="Restaurant &amp; Food">Restaurant or food</button>
+          <button type="button" class="chip" data-t="events" data-label="Events &amp; Weddings">Events and weddings</button>
+        </div>
+        <input type="hidden" name="Business Type" id="bizType">
+
+        <div class="niche" id="n-real-estate"><h3>Tell me about your real estate business</h3><div class="grid">
+          <div><label class="l">What market or area do you work in?</label><input type="text" name="Market Area" placeholder="e.g. Key Largo, Islamorada, South Florida"></div>
+          <div><label class="l">Buyers, sellers, or both? Any specialty?</label><input type="text" name="Specialty" placeholder="e.g. luxury waterfront, first-time buyers"></div>
+          <div class="full"><label class="l">What makes you different from other agents in your area?</label><textarea name="Differentiator" placeholder="Why should someone choose you?"></textarea></div>
+          <div class="full"><label class="l">Do you have active listings available to film?</label><select name="Active Listings"><option value="">Select...</option><option>Yes — ready now</option><option>Yes — coming soon</option><option>Not yet but I will</option><option>I mainly want agent branding content</option></select></div>
+        </div></div>
+
+        <div class="niche" id="n-creator"><h3>Tell me about your content</h3><div class="grid">
+          <div><label class="l">What's your niche and content style?</label><input type="text" name="Niche &amp; Style" placeholder="e.g. lifestyle, fitness, travel, comedy"></div>
+          <div><label class="l">Platforms you're on and current following size?</label><input type="text" name="Platforms &amp; Following" placeholder="e.g. TikTok 5k, Instagram 2k"></div>
+          <div class="full"><label class="l">What content are you making now vs. what you want to make?</label><textarea name="Content Gap" placeholder="Where are you now and where do you want to go?"></textarea></div>
+          <div class="full"><label class="l">What's holding you back from growing right now?</label><textarea name="Growth Blocker" placeholder="Time, ideas, consistency, quality, all of the above..."></textarea></div>
+        </div></div>
+
+        <div class="niche" id="n-biz-physical"><h3>Tell me about your business</h3><div class="grid">
+          <div><label class="l">What do you sell, or what's your business?</label><input type="text" name="What You Sell" placeholder="e.g. boutique clothing, dive shop, salon"></div>
+          <div><label class="l">Who's your target customer?</label><input type="text" name="Target Customer" placeholder="e.g. local families, tourists"></div>
+          <div><label class="l">Trying to grow local foot traffic, online reach, or both?</label><select name="Growth Focus"><option value="">Select...</option><option>Local foot traffic</option><option>Online / social reach</option><option>Both equally</option></select></div>
+          <div><label class="l">Do you have a storefront or location to film in?</label><select name="Film Location"><option value="">Select...</option><option>Yes — great space</option><option>Yes — needs some setup</option><option>No — we'd need to find a location</option></select></div>
+        </div></div>
+
+        <div class="niche" id="n-biz-shopify"><h3>Tell me about your store</h3><div class="grid">
+          <div><label class="l">What products do you sell?</label><input type="text" name="Products" placeholder="e.g. skincare, fishing gear, handmade jewelry"></div>
+          <div><label class="l">Who's your target demographic?</label><input type="text" name="Target Demographic" placeholder="e.g. women 25–40 who love the outdoors"></div>
+          <div><label class="l">Where are you getting traffic and sales now?</label><select name="Traffic Source"><option value="">Select...</option><option>Mostly organic / social</option><option>Mostly paid ads</option><option>Both</option><option>Just starting out</option></select></div>
+          <div><label class="l">Do you have product inventory available to film?</label><select name="Inventory Available"><option value="">Select...</option><option>Yes — plenty</option><option>Limited but available</option><option>Need to coordinate</option></select></div>
+        </div></div>
+
+        <div class="niche" id="n-wellness"><h3>Tell me about your practice</h3><div class="grid">
+          <div><label class="l">What services do you offer?</label><input type="text" name="Services" placeholder="e.g. massage, lash extensions, yoga"></div>
+          <div><label class="l">Solo practitioner or do you have a team?</label><select name="Team Size"><option value="">Select...</option><option>Solo practitioner</option><option>Small team (2–5)</option><option>Larger team / multi-location</option></select></div>
+          <div class="full"><label class="l">Describe your ideal client.</label><textarea name="Ideal Client" placeholder="Who do you want to attract? What do they care about?"></textarea></div>
+          <div class="full"><label class="l">Mainly trying to get new clients, build authority, or both?</label><select name="Wellness Goal"><option value="">Select...</option><option>Get new clients</option><option>Build authority / education content</option><option>Both</option></select></div>
+        </div></div>
+
+        <div class="niche" id="n-marine"><h3>Tell me about your charter</h3><div class="grid">
+          <div><label class="l">What type of charter or service do you offer?</label><select name="Charter Type"><option value="">Select...</option><option>Deep sea / offshore</option><option>Reef / inshore</option><option>Flats / backcountry</option><option>Eco tour / nature</option><option>Multiple / all</option></select></div>
+          <div><label class="l">Who's your ideal customer?</label><input type="text" name="Ideal Customer" placeholder="e.g. serious anglers, families, tourists"></div>
+          <div><label class="l">Where do most of your bookings come from now?</label><select name="Booking Source"><option value="">Select...</option><option>Word of mouth / referrals</option><option>Social media</option><option>Website / Google</option><option>FishingBooker / charter sites</option><option>Mix of everything</option></select></div>
+          <div class="full"><label class="l">What do you want people to feel when they see your content?</label><textarea name="Content Feeling" placeholder="e.g. excited to book, trust your expertise, serious FOMO..."></textarea></div>
+        </div></div>
+
+        <div class="niche" id="n-vacation"><h3>Tell me about your rentals</h3><div class="grid">
+          <div><label class="l">How many properties do you manage?</label><select name="Property Count"><option value="">Select...</option><option>1</option><option>2–3</option><option>4–10</option><option>10+</option></select></div>
+          <div><label class="l">What platforms are you listed on?</label><input type="text" name="Listing Platforms" placeholder="e.g. Airbnb, VRBO, direct booking"></div>
+          <div class="full"><label class="l">What's unique about your properties?</label><textarea name="Property Uniqueness" placeholder="Location, views, amenities, vibe, story..."></textarea></div>
+          <div class="full"><label class="l">Who's your typical guest?</label><input type="text" name="Typical Guest" placeholder="e.g. couples, fishing groups, families"></div>
+        </div></div>
+
+        <div class="niche" id="n-restaurant"><h3>Tell me about your restaurant</h3><div class="grid">
+          <div><label class="l">What's your cuisine and vibe?</label><input type="text" name="Cuisine &amp; Vibe" placeholder="e.g. casual seafood shack, food truck"></div>
+          <div><label class="l">Service style?</label><select name="Service Style"><option value="">Select...</option><option>Dine-in</option><option>Takeout / delivery</option><option>Both</option><option>Food truck / pop-up</option></select></div>
+          <div><label class="l">Targeting locals, tourists, or both?</label><select name="Target Audience"><option value="">Select...</option><option>Mostly locals</option><option>Mostly tourists</option><option>Both</option></select></div>
+          <div class="full"><label class="l">Signature dishes, specials, or a story to feature?</label><textarea name="Signature Content" placeholder="What should people know about your food?"></textarea></div>
+        </div></div>
+
+        <div class="niche" id="n-events"><h3>Tell me about your events business</h3><div class="grid">
+          <div><label class="l">What's your role?</label><select name="Events Role"><option value="">Select...</option><option>Event planner / coordinator</option><option>Venue</option><option>Photographer / videographer</option><option>Caterer / florist / vendor</option><option>Multiple</option></select></div>
+          <div><label class="l">What types of events do you serve?</label><input type="text" name="Event Types" placeholder="e.g. weddings, corporate, private parties"></div>
+          <div><label class="l">Trying to get more bookings, build your brand, or both?</label><select name="Events Goal"><option value="">Select...</option><option>More bookings</option><option>Build brand / authority</option><option>Both</option></select></div>
+          <div><label class="l">What's your service area?</label><input type="text" name="Service Area" placeholder="e.g. Florida Keys, destination events"></div>
+        </div></div>
+      </div>
+
+      <!-- STEP 3: YOUR VISION -->
+      <div class="step" data-step="2">
+        <h2>Your vision</h2>
+        <p class="lead">This helps me plan content that actually feels like you.</p>
+        <div class="grid">
+          <div class="full">
+            <label class="l">How would you describe yourself on camera? <span class="req">*</span></label>
+            <div class="chips" id="pills-camera" role="group" aria-label="On camera comfort">
+              <button type="button" class="chip" data-v="Natural — I'm comfortable on camera">Natural and comfortable</button>
+              <button type="button" class="chip" data-v="I need some direction but I'm willing">Need some direction</button>
+              <button type="button" class="chip" data-v="Shy but I want to grow into it">Shy but willing to grow</button>
+              <button type="button" class="chip" data-v="I prefer to stay behind the camera">Prefer behind the camera</button>
+            </div>
+            <input type="hidden" name="On Camera" id="hCamera">
+          </div>
+          <div class="full">
+            <label class="l">How do you want to come across online? <span class="req">*</span> <span class="hint">Pick all that apply</span></label>
+            <div class="chips" id="pills-vibe" data-multi="1" role="group" aria-label="Online vibe">
+              <button type="button" class="chip" data-v="Professional">Professional</button>
+              <button type="button" class="chip" data-v="Relatable">Relatable</button>
+              <button type="button" class="chip" data-v="Fun &amp; energetic">Fun and energetic</button>
+              <button type="button" class="chip" data-v="Educational">Educational</button>
+              <button type="button" class="chip" data-v="Inspirational">Inspirational</button>
+              <button type="button" class="chip" data-v="Luxurious">Luxurious</button>
+              <button type="button" class="chip" data-v="Authentic &amp; raw">Authentic and raw</button>
+              <button type="button" class="chip" data-v="Local &amp; community-focused">Local and community</button>
+            </div>
+            <input type="hidden" name="Online Vibe" id="hVibe">
+          </div>
+          <div class="full"><label class="l" for="f-goal">What's your #1 goal with social media right now? <span class="req">*</span></label>
+            <select id="f-goal" name="Primary Goal" required><option value="">Select your main goal...</option><option>Get more leads / inquiries</option><option>Drive direct sales</option><option>Build brand awareness</option><option>Grow my following</option><option>Build credibility / authority</option><option>Stay consistent — I struggle to post</option><option>All of the above</option></select></div>
+          <div class="full"><label class="l" for="f-notes">Anything else you want me to know?</label><textarea id="f-notes" name="Additional Notes" placeholder="Goals, timeline, budget questions, anything on your mind..."></textarea></div>
+        </div>
+      </div>
+
+      <!-- STEP 4: PACKAGE -->
+      <div class="step" data-step="3">
+        <h2>Your package</h2>
+        <p class="lead">Not sure yet? Pick your best guess or "Not sure, let's talk." We'll finalize it together.</p>
+        <div class="grid">
+          <div class="full"><label class="l" for="f-pkg">Which package are you most interested in? <span class="req">*</span></label>
+            <select id="f-pkg" name="Package Interest" required>
+              <option value="">Select a package...</option>
+              <optgroup label="Content only: I film and edit, you post">
+                <option>Content Starter — $1,100/mo (4 pieces/mo)</option>
+                <option>Content Growth — $1,950/mo (8 pieces/mo)</option>
+                <option>Content Premium — $2,700/mo (12 pieces/mo)</option>
+              </optgroup>
+              <optgroup label="Full management: I film, edit and post">
+                <option>Management Starter — $1,550/mo (4 pieces + filming)</option>
+                <option>Management Growth — $2,400/mo (8 pieces + filming)</option>
+                <option>Management Premium — $3,200/mo (12 pieces + filming)</option>
+              </optgroup>
+              <optgroup label="One-time projects">
+                <option>Single Reel — Filmed + Edited ($250)</option>
+                <option>Event Coverage — Half Day ($650)</option>
+                <option>Event Coverage — Full Day ($1,200)</option>
+                <option>Not sure — let's talk</option>
+              </optgroup>
+            </select>
+            <div class="pkg-note" id="apw-pkg-note"></div>
+            <p class="pkg-help">Need help choosing? <a href="/#aph-finder">Use the 30-second package finder</a>. Every monthly plan includes the Rella client membership ($45/mo).</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="err" id="ap-err" role="alert"></div>
+      <div class="nav">
+        <button type="button" class="btn btn-back" id="apw-back" hidden>Back</button>
+        <button type="button" class="btn btn-pink" id="apw-next">Next</button>
+      </div>
+      <p class="fine">Your info only goes to Malia at Alana Pro. No spam, ever.</p>
+    </form>
+  </div>
+</div>
+
+<!-- THANK YOU -->
+<div class="wrap">
+  <section class="done" id="ap-success" aria-live="polite">
+    <div>
+      <h1 id="apw-thanks">Application received.</h1>
+      <p>Thank you for trusting me with your brand. I'll personally review everything and reach out within 1&ndash;2 business days.</p>
+      <ol>
+        <li><b>Check your inbox.</b> My reply comes from malia@alanapro.com.</li>
+        <li><b>Keep an eye on your phone.</b> I may text to set up a quick call.</li>
+        <li><b>Want a head start?</b> Follow along on Instagram to see what's filming this week.</li>
+      </ol>
+      <a class="btn" href="https://www.instagram.com/alana_pro_/" target="_blank" rel="noopener">Follow @alana_pro_</a>
+    </div>
+    <div class="done-phone"><div><video muted loop playsinline preload="none" poster="MEDIA/intro-poster.jpg"><source src="MEDIA/intro-2.mp4" type="video/mp4"><source src="RAW/media/intro-2.mp4" type="video/mp4"></video></div></div>
+  </section>
+</div>
+
+<div data-ap-include="partials/footer.html"></div>
+
+<script>
+(function(){
+  var root = document.getElementById("apw");
+  /* remove Squarespace section padding so the page sits flush under the header */
+  var cw = root.closest(".content-wrapper"); if (cw) { cw.style.paddingTop = "0"; cw.style.paddingBottom = "0"; cw.style.maxWidth = "none"; }
+  var sec = root.closest(".page-section"); if (sec) { sec.style.backgroundColor = "#141416"; var bgx = sec.querySelector(".section-background"); if (bgx) bgx.style.background = "#141416"; }
+
+  var form = document.getElementById("ap-form");
+  var steps = [].slice.call(form.querySelectorAll(".step"));
+  var tabs = [].slice.call(root.querySelectorAll(".progress button"));
+  var back = document.getElementById("apw-back"), next = document.getElementById("apw-next");
+  var err = document.getElementById("ap-err");
+  var cur = 0, maxReached = 0, loadedAt = Date.now();
+
+  /* single-select chips: business type */
+  var tiles = [].slice.call(root.querySelectorAll("#apw-tiles .chip"));
+  var bizInput = document.getElementById("bizType");
+  tiles.forEach(function(t){
+    t.setAttribute("aria-pressed","false");
+    t.addEventListener("click", function(){
+      tiles.forEach(function(o){ o.setAttribute("aria-pressed","false"); });
+      t.setAttribute("aria-pressed","true");
+      bizInput.value = t.getAttribute("data-label");
+      root.querySelectorAll(".niche").forEach(function(n){ n.classList.remove("on"); });
+      var n = document.getElementById("n-" + t.getAttribute("data-t")); if (n) n.classList.add("on");
+      document.getElementById("apw-tiles").classList.remove("bad-group");
+    });
+  });
+  /* camera (single) + vibe (multi) chips */
+  function chipGroup(id, hidden, multi){
+    var g = document.getElementById(id), h = document.getElementById(hidden);
+    var cs = [].slice.call(g.querySelectorAll(".chip"));
+    cs.forEach(function(c){
+      c.setAttribute("aria-pressed","false");
+      c.addEventListener("click", function(){
+        if (multi) c.setAttribute("aria-pressed", c.getAttribute("aria-pressed") === "true" ? "false" : "true");
+        else { cs.forEach(function(o){ o.setAttribute("aria-pressed","false"); }); c.setAttribute("aria-pressed","true"); }
+        h.value = cs.filter(function(o){ return o.getAttribute("aria-pressed") === "true"; }).map(function(o){ return o.getAttribute("data-v"); }).join(", ");
+        g.classList.remove("bad-group");
+      });
+    });
+  }
+  chipGroup("pills-camera","hCamera",false);
+  chipGroup("pills-vibe","hVibe",true);
+
+  /* package carried over from the homepage finder */
+  var sel = document.getElementById("f-pkg");
+  var want = "";
+  try { want = new URLSearchParams(location.search).get("package") || localStorage.getItem("ap_pkg") || ""; } catch(e){}
+  if (want) {
+    for (var i = 0; i < sel.options.length; i++) {
+      if (sel.options[i].text.indexOf(want) === 0) {
+        sel.selectedIndex = i;
+        var note = document.getElementById("apw-pkg-note");
+        note.textContent = "Selected from the package finder: " + want + ". You can change it anytime.";
+        note.classList.add("on");
+        break;
+      }
+    }
+  }
+
+  /* validation per step */
+  function val(n){ var el = form.querySelector('[name="' + n + '"]'); return el ? el.value.trim() : ""; }
+  var RULES = [
+    function(){ var bad = [];
+      ["Full Name","Email","Phone Number","Business Name"].forEach(function(n){ if (!val(n)) bad.push(n); });
+      if (val("Email") && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val("Email"))) bad.push("Email");
+      return { bad: bad, msg: bad.indexOf("Email") > -1 && val("Email") ? "Please enter a valid email address." : "Please fill in your name, email, phone and business name." }; },
+    function(){ return { bad: bizInput.value ? [] : ["#apw-tiles"], msg: "Please pick the type of business that fits best." }; },
+    function(){ var bad = [];
+      if (!document.getElementById("hCamera").value) bad.push("#pills-camera");
+      if (!document.getElementById("hVibe").value) bad.push("#pills-vibe");
+      if (!val("Primary Goal")) bad.push("Primary Goal");
+      return { bad: bad, msg: "Please answer the questions marked with a pink star." }; },
+    function(){ return { bad: val("Package Interest") ? [] : ["Package Interest"], msg: "Please choose a package, or pick “Not sure — let’s talk.”" }; }
+  ];
+  function check(i){
+    form.querySelectorAll(".bad").forEach(function(e){ e.classList.remove("bad"); });
+    var r = RULES[i]();
+    if (!r.bad.length) { err.classList.remove("on"); return true; }
+    r.bad.forEach(function(b){
+      if (b.charAt(0) === "#") { var g = root.querySelector(b); if (g) g.classList.add("bad-group"); }
+      else { var el = form.querySelector('[name="' + b + '"]'); if (el) el.classList.add("bad"); }
+    });
+    err.textContent = r.msg; err.classList.add("on");
+    return false;
+  }
+  function show(i){
+    cur = i; maxReached = Math.max(maxReached, i);
+    steps.forEach(function(s, k){ s.classList.toggle("on", k === i); });
+    tabs.forEach(function(t, k){ t.classList.toggle("on", k === i); t.classList.toggle("done", k < i); t.disabled = k > maxReached; });
+    back.hidden = i === 0;
+    next.textContent = i === steps.length - 1 ? "Send my application" : "Next";
+    err.classList.remove("on");
+    var card = root.querySelector(".card"); var top = card.getBoundingClientRect().top + window.scrollY - 120;
+    if (window.scrollY > top) window.scrollTo({ top: top, behavior: "smooth" });
+  }
+  tabs.forEach(function(t, k){ t.addEventListener("click", function(){ if (k <= maxReached && (k < cur || check(cur))) show(k); }); });
+  back.addEventListener("click", function(){ if (cur > 0) show(cur - 1); });
+  next.addEventListener("click", function(){
+    if (!check(cur)) return;
+    if (cur < steps.length - 1) { show(cur + 1); return; }
+    send();
+  });
+  form.addEventListener("submit", function(e){ e.preventDefault(); next.click(); });
+
+  /* submit through FormSubmit; the inbox address is put together here instead of sitting in the page for bots to scrape */
+  function send(){
+    if (form.querySelector('[name="_honey"]').value) return finish();       /* bot filled the hidden field */
+    if (Date.now() - loadedAt < 4000) return finish();                     /* too fast to be a person */
+    next.disabled = true; next.textContent = "Sending...";
+    var to = ["malia", "alanapro.com"].join("@");
+    var fd = new FormData(form);
+    fd.set("_subject", "AlanaPro Application");
+    fd.set("_replyto", val("Email"));
+    fetch("https://formsubmit.co/ajax/" + to, { method: "POST", headers: { "Accept": "application/json" }, body: fd })
+      .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(j){ return { ok: r.ok, j: j }; }); })
+      .then(function(res){
+        if (res.ok && String(res.j.success) === "true") return finish();
+        throw new Error((res.j && res.j.message) || "send failed");
+      })
+      .catch(function(){
+        next.disabled = false; next.textContent = "Send my application";
+        err.innerHTML = 'Your application didn’t send. Please try again, or email <a href="mailto:malia@alanapro.com" style="color:#fd0182">malia@alanapro.com</a>.';
+        err.classList.add("on");
+      });
+  }
+  function finish(){
+    try { localStorage.removeItem("ap_pkg"); } catch(e){}
+    var first = val("Full Name").split(" ")[0];
+    if (first) document.getElementById("apw-thanks").textContent = "Thanks, " + first + ". You're in.";
+    document.getElementById("apw-main").style.display = "none";
+    var done = document.getElementById("ap-success"); done.classList.add("on");
+    var v = done.querySelector("video"); if (v) { var p = v.play(); if (p && p.catch) p.catch(function(){}); }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+})();
+</script>
+</div>
