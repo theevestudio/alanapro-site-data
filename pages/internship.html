@@ -229,6 +229,10 @@
       return;
     }
     err.classList.remove("on");
+    if (/squarespace\.com$/i.test(location.hostname) || window.top !== window) {   /* editor preview: never send */
+      err.textContent = "Preview only. This form doesn\u2019t send from the Squarespace editor. Applications send from alanapro.com.";
+      err.classList.add("on"); return;
+    }
     if (val("_honey") || Date.now() - loadedAt < 4000) return finish();
     btn.disabled = true; btn.textContent = "Sending...";
     var fd = new FormData(form);

@@ -432,6 +432,10 @@
 
   /* submit through FormSubmit; the inbox address is put together here instead of sitting in the page for bots to scrape */
   function send(){
+    if (/squarespace\.com$/i.test(location.hostname) || window.top !== window) {   /* editor preview: never send */
+      err.innerHTML = "Preview only. This form doesn\u2019t send from the Squarespace editor. Applications send from alanapro.com.";
+      err.classList.add("on"); return;
+    }
     if (form.querySelector('[name="_honey"]').value) return finish();       /* bot filled the hidden field */
     if (Date.now() - loadedAt < 4000) return finish();                     /* too fast to be a person */
     next.disabled = true; next.textContent = "Sending...";
