@@ -1,0 +1,39 @@
+{
+  "updated": "2026-10-17",
+  "period": "2026-09-17 to 2026-10-16",
+  "note": "Stats: last 30 days across connected accounts. Engagement rate is Instagram engagement ÷ reach.",
+  "clients": {
+    "Rainbow Reef Dive Center": {
+      "followers": 32283,
+      "views": 38856,
+      "engagements": 1024,
+      "engagementRate": 3.8,
+      "growth": 147,
+      "video": ""
+    },
+    "Shell World": {
+      "followers": 6330,
+      "views": 23635,
+      "engagements": 897,
+      "engagementRate": 11.8,
+      "growth": 58,
+      "video": ""
+    },
+    "Kahu Tribe": {
+      "followers": 2339,
+      "views": 20803,
+      "engagements": 749,
+      "engagementRate": 12.5,
+      "growth": 14,
+      "video": ""
+    },
+    "Island Community Church": {
+      "followers": 2771,
+      "views": 14765,
+      "engagements": 1679,
+      "engagementRate": 29.6,
+      "growth": 32,
+      "video": ""
+    }
+  }
+}
