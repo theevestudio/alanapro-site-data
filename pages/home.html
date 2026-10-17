@@ -31,7 +31,7 @@
   #aph .sec-sub{font-size:18px; color:var(--mist); max-width:56ch; margin-top:16px}
 
   /* ---------- HERO ---------- */
-  #aph .hero{min-height:min(96vh,940px); display:flex; align-items:center; padding:150px 0 130px; isolation:isolate}
+  #aph .hero{min-height:min(96vh,940px); display:flex; align-items:center; padding:70px 0 130px; isolation:isolate}
   #aph .hero-bg{position:absolute; inset:0; z-index:-2; background:url("MEDIA/car-wide.jpg") center 62%/cover no-repeat;
     -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 52%,transparent 100%); mask-image:linear-gradient(180deg,#000 0%,#000 52%,transparent 100%)}
   #aph .hero-bg::after{content:""; position:absolute; inset:0;
@@ -171,7 +171,7 @@
 
   /* ---------- MOBILE ---------- */
   @media (max-width:900px){
-    #aph .hero{padding:120px 0 110px; min-height:auto}
+    #aph .hero{padding:44px 0 110px; min-height:auto}
     #aph .hero-bg{background-position:68% center}
     #aph .hero-bg::after{background:linear-gradient(180deg, rgba(20,20,22,.55) 0%, rgba(20,20,22,.85) 60%, rgba(20,20,22,.95) 100%)}
     #aph .hero .wrap{grid-template-columns:1fr; gap:40px}
@@ -424,6 +424,11 @@
 <script>
 (function(){
   var root = document.getElementById("aph");
+  /* remove Squarespace's section padding/background around this block so the page runs edge to edge */
+  (function(){
+    var cw = root.closest(".content-wrapper"); if (cw) { cw.style.paddingTop = "0"; cw.style.paddingBottom = "0"; cw.style.maxWidth = "none"; }
+    var sec = root.closest(".page-section"); if (sec) { sec.style.backgroundColor = "#141416"; var bg = sec.querySelector(".section-background"); if (bg) bg.style.background = "#141416"; }
+  })();
   var RAW = "https://raw.githubusercontent.com/theevestudio/alanapro-site-data/main/";
   var CDN = "https://cdn.jsdelivr.net/gh/theevestudio/alanapro-site-data@main/";
 
