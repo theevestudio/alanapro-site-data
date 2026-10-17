@@ -28,13 +28,13 @@
   #aph .sec-sub{font-size:18px; color:var(--mist); max-width:56ch; margin-top:16px}
 
   /* ---------- HERO ---------- */
-  #aph .hero{min-height:min(92vh,900px); display:flex; align-items:center; padding:64px 0 120px; isolation:isolate}
+  #aph .hero{min-height:min(96vh,940px); display:flex; align-items:center; padding:150px 0 130px; isolation:isolate}
   #aph .hero-bg{position:absolute; inset:0; z-index:-2; background:#000 url("MEDIA/car-wide.jpg") center 62%/cover no-repeat}
   #aph .hero-bg::after{content:""; position:absolute; inset:0;
     background:linear-gradient(90deg, rgba(0,0,0,.92) 0%, rgba(0,0,0,.72) 42%, rgba(0,0,0,.25) 75%, rgba(0,0,0,.55) 100%),
                linear-gradient(0deg, var(--night) 0%, transparent 28%)}
   #aph .hero .wrap{display:grid; grid-template-columns:1.25fr .75fr; gap:48px; align-items:center; width:100%}
-  #aph .hero h1{font-size:clamp(46px,7.4vw,104px); line-height:.95; max-width:11ch}
+  #aph .hero h1{font-size:clamp(42px,6.2vw,96px); line-height:.96; max-width:11ch}
   #aph .hero h1 .pink{color:var(--pink)}
   #aph .hero-sub{font-size:clamp(18px,1.6vw,21px); color:#e9e9ee; max-width:44ch; margin-top:26px}
   #aph .hero-cta{display:flex; flex-wrap:wrap; gap:14px; margin-top:36px}
@@ -168,7 +168,7 @@
 
   /* ---------- MOBILE ---------- */
   @media (max-width:900px){
-    #aph .hero{padding:40px 0 110px; min-height:auto}
+    #aph .hero{padding:120px 0 110px; min-height:auto}
     #aph .hero-bg{background-position:68% center}
     #aph .hero-bg::after{background:linear-gradient(180deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,.82) 45%, var(--night) 100%)}
     #aph .hero .wrap{grid-template-columns:1fr; gap:40px}
