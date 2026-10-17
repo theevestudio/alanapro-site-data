@@ -1,24 +1,32 @@
-<div id="alanapro-page" data-page="home" style="min-height:100vh;background:#141416"></div>
+<div id="alanapro-page" data-page="home" style="min-height:60vh;background:#141416"></div>
 <script>
 (function(){
   var RAW="https://raw.githubusercontent.com/theevestudio/alanapro-site-data/main/";
   var CDN="https://cdn.jsdelivr.net/gh/theevestudio/alanapro-site-data@main/";
   var box=document.getElementById("alanapro-page");
+  var inEditor=/squarespace\.com$/i.test(location.hostname) || window.top!==window;
   function run(el){
     el.querySelectorAll("script").forEach(function(s){
       var n=document.createElement("script"); n.textContent=s.textContent; s.parentNode.replaceChild(n,s);
     });
   }
-  function load(path,el){
-    return fetch(RAW+path+"?t="+Date.now()).then(function(r){ if(!r.ok) throw new Error(r.status); return r.text(); })
-      .then(function(h){
-        el.innerHTML=h.split("MEDIA/").join(CDN+"media/").split("RAW/").join(RAW);
-        run(el);
-        return Promise.all([].map.call(el.querySelectorAll("[data-ap-include]"),function(x){ return load(x.getAttribute("data-ap-include"),x); }));
-      });
+  function get(path){
+    return fetch(RAW+path+"?t="+Date.now()).then(function(r){ if(!r.ok) throw 0; return r.text(); })
+      .catch(function(){ return fetch(CDN+path).then(function(r){ if(!r.ok) throw 0; return r.text(); }); });
   }
+  function load(path,el){
+    return get(path).then(function(h){
+      el.innerHTML=h.split("MEDIA/").join(CDN+"media/").split("RAW/").join(RAW);
+      run(el);
+      return Promise.all([].map.call(el.querySelectorAll("[data-ap-include]"),function(x){ return load(x.getAttribute("data-ap-include"),x); }));
+    });
+  }
+  function note(html){ box.innerHTML='<div style="color:#fff;text-align:center;padding:90px 20px;font-family:Helvetica,Arial,sans-serif;font-size:17px;line-height:1.6">'+html+'</div>'; }
   load("pages/"+box.getAttribute("data-page")+".html",box)
     .then(function(){ box.style.minHeight=""; })
-    .catch(function(){ box.innerHTML='<p style="color:#fff;text-align:center;padding:80px 20px;font-family:sans-serif">This page didn’t load. Please refresh, or email <a style="color:#fd0182" href="mailto:malia@alanapro.com">malia@alanapro.com</a>.</p>'; });
+    .catch(function(){
+      if (inEditor) note('<b style="color:#fd0182;font-size:22px">Alana Pro '+box.getAttribute("data-page")+' page</b><br>This page shows on your live site. Save, then open alanapro.com in a new tab to see it.');
+      else note('This page didn’t load. Please refresh, or email <a style="color:#fd0182" href="mailto:malia@alanapro.com">malia@alanapro.com</a>.');
+    });
 })();
 </script>
