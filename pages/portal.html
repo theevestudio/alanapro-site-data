@@ -56,6 +56,17 @@
   #app-portal .note{font-size:13px; color:var(--mist); margin-top:10px; line-height:1.5}
   #app-portal .msg{text-align:center; padding:100px 20px; font-size:17px; line-height:1.6; color:#e3e3e8}
   #app-portal .msg b{display:block; font-size:24px; color:#fff; margin-bottom:8px}
+  #app-portal .paybtn{display:inline-block; background:var(--pink); color:#fff !important; font-weight:800; font-size:14px; padding:10px 16px; border-radius:10px; white-space:nowrap}
+  #app-portal .share{border:1px solid #2c2c32; border-radius:20px; padding:22px; display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap}
+  #app-portal .share b{font-size:17px; color:#fff}
+  #app-portal .share p{font-size:14px; color:var(--mist); margin-top:4px}
+  #app-portal .ghost{background:#fff; color:var(--ink); border:none; font-weight:800; font-size:15px; padding:13px 20px; border-radius:12px; cursor:pointer; min-height:46px}
+  #app-portal .ghost:hover{background:var(--blush)}
+  #app-portal .veil{position:fixed; inset:0; background:rgba(0,0,0,.6); display:flex; align-items:center; justify-content:center; padding:20px; z-index:9999}
+  #app-portal .pop{background:#fff; color:var(--ink); border-radius:20px; padding:26px; max-width:420px; width:100%}
+  #app-portal .pop h2{font-size:21px; font-weight:900 !important; color:var(--ink) !important}
+  #app-portal .pop p{font-size:15px; line-height:1.55; color:#33333a; margin-top:10px}
+  #app-portal .pop .btn{border:none; cursor:pointer; width:100%; margin-top:18px}
   @media (max-width:560px){
     #app-portal .approve .btn{width:100%; text-align:center}
     #app-portal .row{padding:15px 16px} #app-portal summary{padding:15px 16px} #app-portal .body{padding:0 16px 18px}
@@ -67,6 +78,8 @@
   var root=document.getElementById("app-portal-root");
   var BASES=["RAW/portal/","https://cdn.jsdelivr.net/gh/theevestudio/alanapro-site-data@main/portal/"];
   var PHONE="305-563-0713", EMAIL="malia@alanapro.com";
+  var CARD_LINK=""; // general card payment link (Stripe or Squarespace). Used when an invoice has no Pay Link of its own.
+  var KEY="";
 
   function el(tag,cls,text){var e=document.createElement(tag); if(cls) e.className=cls; if(text!=null) e.textContent=text; return e;}
   function add(p){for(var i=1;i<arguments.length;i++){ if(arguments[i]) p.appendChild(arguments[i]); } return p;}
@@ -87,6 +100,27 @@
   function linkRow(href,title,sub,right){ var a=el("a","row"); a.href=href; a.target="_blank"; a.rel="noopener";
     var l=el("div"); add(l,el("div","t",title),sub?el("div","s",sub):null); add(a,l,right); return a; }
   function row(title,sub,right){ var r=el("div","row"); var l=el("div"); add(l,el("div","t",title),sub?el("div","s",sub):null); add(r,l,right); return r; }
+
+  function copyLink(){
+    var link="https://alanapro.com/portal#k="+KEY;
+    function done(ok){ popup(ok?"Link copied":"Copy your link",ok?null:link); }
+    if(navigator.clipboard&&window.isSecureContext){ navigator.clipboard.writeText(link).then(function(){done(true);},function(){done(fallback(link));}); }
+    else done(fallback(link));
+  }
+  function fallback(t){ try{ var ta=document.createElement("textarea"); ta.value=t; ta.setAttribute("readonly",""); ta.style.position="fixed"; ta.style.opacity="0";
+    document.body.appendChild(ta); ta.select(); var ok=document.execCommand("copy"); document.body.removeChild(ta); return ok; }catch(e){ return false; } }
+  function popup(title,showLink){
+    var v=el("div","veil"); var p=el("div","pop"); p.setAttribute("role","dialog"); p.setAttribute("aria-modal","true"); p.setAttribute("aria-labelledby","app-portal-pop-t");
+    var h=el("h2",null,title); h.id="app-portal-pop-t"; p.appendChild(h);
+    if(showLink){ var lt=el("p",null,showLink); lt.style.cssText="word-break:break-all;background:#f4f4f7;padding:10px 12px;border-radius:10px;font-size:13px;user-select:all"; p.appendChild(lt); }
+    p.appendChild(el("p",null,"Only share this link with people you trust. Anyone who has it can see your invoices, payment details, contracts and content plans, and can approve posts in Rella."));
+    p.appendChild(el("p",null,"If it ends up with the wrong person, text Malia at "+PHONE+" and she'll turn off the old link and send you a new one."));
+    var ok=el("button","btn","Got it"); ok.type="button"; p.appendChild(ok);
+    function close(){ if(v.parentNode) v.parentNode.removeChild(v); document.removeEventListener("keydown",esc); }
+    function esc(e){ if(e.key==="Escape") close(); }
+    ok.addEventListener("click",close); v.addEventListener("click",function(e){ if(e.target===v) close(); }); document.addEventListener("keydown",esc);
+    v.appendChild(p); document.getElementById("app-portal").appendChild(v); ok.focus();
+  }
 
   function render(d){
     root.innerHTML="";
@@ -120,13 +154,19 @@
     var s3=section("3 · INVOICES"); var c3=el("div","card");
     var inv=d.invoices||[];
     if(!inv.length) c3.appendChild(el("div","empty","No invoices yet."));
-    inv.forEach(function(i){ c3.appendChild(row("#"+(i.num||"")+" · "+money(i.amount),"Issued "+date(i.issued,true)+(i.due?" · Due "+date(i.due,true):""),pill(i.status,"invoice"))); });
+    inv.forEach(function(i){
+      var right=el("div"); right.style.cssText="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end";
+      right.appendChild(pill(i.status,"invoice"));
+      var link=i.pay||CARD_LINK;
+      if(link && i.status!=="Paid"){ var pb=el("a","paybtn","Pay now"); pb.href=link; pb.target="_blank"; pb.rel="noopener"; pb.setAttribute("aria-label","Pay invoice "+(i.num||"")+" by card"); right.appendChild(pb); }
+      c3.appendChild(row("#"+(i.num||"")+" · "+money(i.amount),"Issued "+date(i.issued,true)+(i.due?" · Due "+date(i.due,true):""),right)); });
     s3.appendChild(c3);
     var pay=el("div","pay");
     var z=el("div"); add(z,el("b",null,"Zelle"),document.createTextNode(" · Alana.productions.co@gmail.com"));
     var ca=el("div"); add(ca,el("b",null,"Cash App"),document.createTextNode(" · $alanaprollc"));
-    var cd=el("div"); add(cd,el("b",null,"Card"),document.createTextNode(" · Squarespace payment link (processing fees apply). Text Malia for the link."));
-    add(pay,z,ca,cd); s3.appendChild(pay);
+    var ck=el("div"); add(ck,el("b",null,"Check or direct deposit"),document.createTextNode(" · text Malia for details"));
+    var cd=el("div"); add(cd,el("b",null,"Card"),document.createTextNode(CARD_LINK?" · tap Pay now on an invoice (processing fees apply)":" · text Malia for the card link (processing fees apply)"));
+    add(pay,z,ca,ck,cd); s3.appendChild(pay);
     s3.appendChild(el("p","note","Whenever possible, Zelle should be used as the primary method."));
 
     // 4. Contract & proposal
@@ -156,6 +196,11 @@
      ["Cancellation policy","Monthly retainers may be canceled with 30 days written notice. Work completed during the 30-day notice period remains billable."]
     ].forEach(function(t){ add(tb,el("h3",null,t[0]),el("p",null,t[1])); });
     td.appendChild(tb); terms.appendChild(td); s4.appendChild(terms);
+
+    var s5=section("SHARE ACCESS"); var sh=el("div","share"); var shl=el("div");
+    add(shl,el("b",null,"Want to share access?"),el("p",null,"Send your portal link to a business partner or manager."));
+    var cp=el("button","ghost","COPY LINK"); cp.type="button"; cp.addEventListener("click",copyLink);
+    add(sh,shl,cp); s5.appendChild(sh);
 
     if(d.updated) root.appendChild(el("p","note","Last updated "+new Date(d.updated).toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"})));
   }
@@ -197,7 +242,7 @@
       return tryBase(0).then(function(f){
         return crypto.subtle.importKey("raw",h[1],"AES-GCM",false,["decrypt"]).then(function(k){
           return crypto.subtle.decrypt({name:"AES-GCM",iv:unb64(f.iv)},k,unb64(f.ct)); });
-      }).then(function(buf){ remember(key); render(JSON.parse(new TextDecoder().decode(buf))); signOut(); });
+      }).then(function(buf){ remember(key); KEY=key; render(JSON.parse(new TextDecoder().decode(buf))); signOut(); });
     }).catch(function(){
       if(saved()===key) forget();
       ask(fromInput?"That link didn't work. Check it and try again, or text Malia at "+PHONE+".":"This link isn't working anymore. Text Malia at "+PHONE+" and she'll send you a fresh one.");
