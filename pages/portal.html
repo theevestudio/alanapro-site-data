@@ -160,19 +160,54 @@
     if(d.updated) root.appendChild(el("p","note","Last updated "+new Date(d.updated).toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"})));
   }
 
-  var m=(location.hash||"").match(/k=([A-Za-z0-9_-]{16,})/);
-  if(!m){ msg("Open your personal link","This page needs the private link Malia sent you. Text "+PHONE+" if you can't find it."); return; }
-  if(!window.crypto||!crypto.subtle){ msg("Please update your browser","Your browser can't open the portal. Try Safari or Chrome, or text Malia at "+PHONE+"."); return; }
-  var key=m[1];
-  Promise.all([sha("alanapro-portal-file:"+key),sha("alanapro-portal-enc:"+key)]).then(function(h){
-    var file=hex(h[0]).slice(0,32)+".json";
-    function tryBase(i){ if(i>=BASES.length) return Promise.reject("missing");
-      return fetch(BASES[i]+file+(i===0?"?t="+Date.now():"")).then(function(r){ if(!r.ok) throw 0; return r.json(); }).catch(function(){ return tryBase(i+1); }); }
-    return tryBase(0).then(function(f){
-      return crypto.subtle.importKey("raw",h[1],"AES-GCM",false,["decrypt"]).then(function(k){
-        return crypto.subtle.decrypt({name:"AES-GCM",iv:unb64(f.iv)},k,unb64(f.ct)); });
-    }).then(function(buf){ render(JSON.parse(new TextDecoder().decode(buf))); });
-  }).catch(function(){ msg("This link isn't working","Text Malia at "+PHONE+" and she'll send you a fresh one."); });
+  var SAVE="alanapro-portal-key";
+  function saved(){ try{ return localStorage.getItem(SAVE)||""; }catch(e){ return ""; } }
+  function remember(k){ try{ localStorage.setItem(SAVE,k); }catch(e){} }
+  function forget(){ try{ localStorage.removeItem(SAVE); }catch(e){} }
+  function grab(text){ var m=String(text||"").match(/(?:k=)?([A-Za-z0-9_-]{16,})\s*$/); return m?m[1]:""; }
+
+  function ask(note){
+    root.innerHTML="";
+    var box=el("div","msg"); box.style.maxWidth="520px"; box.style.margin="0 auto";
+    add(box,el("b",null,"Already a client?"),el("p",null,note||"Open the portal link Malia texted you. Once you've opened it on this phone or computer, this page will remember you."));
+    var f=el("form"); f.style.cssText="margin-top:24px;display:flex;flex-direction:column;gap:10px;text-align:left";
+    var lb=el("label",null,"Or paste your portal link here"); lb.setAttribute("for","app-portal-in"); lb.style.cssText="font-size:14px;color:#b4b4bc";
+    var inp=el("input"); inp.id="app-portal-in"; inp.type="text"; inp.autocomplete="off"; inp.placeholder="alanapro.com/portal#k=…";
+    inp.style.cssText="font-size:16px;padding:14px 16px;border-radius:12px;border:1px solid #2c2c32;background:#fff;color:#1a1a1a";
+    var go=el("button","btn","Open my portal"); go.type="submit"; go.style.border="none"; go.style.cursor="pointer";
+    add(f,lb,inp,go);
+    f.addEventListener("submit",function(e){ e.preventDefault(); var k=grab(inp.value); if(k) start(k,true); else inp.focus(); });
+    box.appendChild(f);
+    box.appendChild(el("p","note","Can't find your link? Text Malia at "+PHONE+"."));
+    root.appendChild(box);
+  }
+
+  function signOut(){
+    var p=el("p","note"); var a=el("a",null,"Not you? Sign out on this device"); a.href="#"; a.style.color="#ff7fbf";
+    a.addEventListener("click",function(e){ e.preventDefault(); forget(); ask("You're signed out on this device."); }); p.appendChild(a); root.appendChild(p);
+  }
+
+  function start(key,fromInput){
+    if(!window.crypto||!crypto.subtle){ msg("Please update your browser","Your browser can't open the portal. Try Safari or Chrome, or text Malia at "+PHONE+"."); return; }
+    root.innerHTML='<div class="msg">Loading your portal…</div>';
+    Promise.all([sha("alanapro-portal-file:"+key),sha("alanapro-portal-enc:"+key)]).then(function(h){
+      var file=hex(h[0]).slice(0,32)+".json";
+      function tryBase(i){ if(i>=BASES.length) return Promise.reject("missing");
+        return fetch(BASES[i]+file+(i===0?"?t="+Date.now():"")).then(function(r){ if(!r.ok) throw 0; return r.json(); }).catch(function(){ return tryBase(i+1); }); }
+      return tryBase(0).then(function(f){
+        return crypto.subtle.importKey("raw",h[1],"AES-GCM",false,["decrypt"]).then(function(k){
+          return crypto.subtle.decrypt({name:"AES-GCM",iv:unb64(f.iv)},k,unb64(f.ct)); });
+      }).then(function(buf){ remember(key); render(JSON.parse(new TextDecoder().decode(buf))); signOut(); });
+    }).catch(function(){
+      if(saved()===key) forget();
+      ask(fromInput?"That link didn't work. Check it and try again, or text Malia at "+PHONE+".":"This link isn't working anymore. Text Malia at "+PHONE+" and she'll send you a fresh one.");
+    });
+  }
+
+  var fromHash=grab((location.hash.match(/k=([A-Za-z0-9_-]+)/)||[])[1]);
+  if(fromHash){ try{ history.replaceState(null,"",location.pathname+location.search); }catch(e){} start(fromHash); }
+  else if(saved()) start(saved());
+  else ask();
 })();
 </script>
 </div>
