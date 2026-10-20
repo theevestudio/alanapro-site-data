@@ -1,0 +1,213 @@
+<!-- ALANA PRO — CLIENT PORTAL. Loaded by the snippet in the Squarespace Code Block on /portal.
+     Each client opens alanapro.com/portal#k=<their Portal Key>. The key never leaves their browser:
+     it finds and decrypts that client's file in /portal (synced from Notion). -->
+<div id="app-portal">
+<style>
+  #app-portal{
+    --pink:#fd0182; --blush:#ffe3f0; --night:#141416; --ink:#1a1a1a; --paper:#fff;
+    --mist:#b4b4bc; --muted:#6b6b76; --line:#e6e6ea; --field:#f4f4f7;
+    --display:"pragmatica","Pragmatica","Helvetica Neue",Arial,sans-serif;
+    position:relative; width:100vw; margin-left:calc(50% - 50vw); background:var(--night); color:#fff;
+    font-family:var(--display) !important; -webkit-font-smoothing:antialiased; min-height:70vh;
+  }
+  #app-portal *{box-sizing:border-box; font-family:var(--display) !important}
+  #app-portal h1,#app-portal h2,#app-portal h3,#app-portal p{margin:0; text-transform:none !important; letter-spacing:normal}
+  #app-portal a{text-decoration:none}
+  #app-portal a:focus-visible,#app-portal summary:focus-visible{outline:3px solid var(--pink); outline-offset:2px}
+  #app-portal .wrap{max-width:860px; margin:0 auto; padding:56px 20px 90px}
+  #app-portal .kick{font-size:12px; font-weight:700; letter-spacing:2px; color:var(--mist)}
+  #app-portal h1{font-size:clamp(34px,6vw,54px); font-weight:900 !important; line-height:1.02; color:#fff !important; margin-top:12px}
+  #app-portal .hi{font-size:18px; color:#e3e3e8; margin-top:14px; line-height:1.55}
+  #app-portal .help{font-size:14px; color:var(--mist); margin-top:8px}
+  #app-portal .help a{color:#ff7fbf}
+  #app-portal .sec{margin-top:44px}
+  #app-portal .label{font-size:12px; font-weight:700; letter-spacing:2px; color:var(--mist); margin-bottom:12px}
+  #app-portal .card{background:var(--paper); color:var(--ink); border-radius:20px; overflow:hidden}
+  #app-portal .row{display:flex; justify-content:space-between; align-items:center; gap:14px; padding:17px 22px; border-top:1px solid var(--line); color:var(--ink)}
+  #app-portal .row:first-child{border-top:none}
+  #app-portal a.row:hover{background:var(--field)}
+  #app-portal .row>div:first-child{min-width:0} #app-portal .row .t{overflow-wrap:anywhere; font-size:16px; font-weight:700; color:var(--ink)}
+  #app-portal .row .s{font-size:13px; color:var(--muted); margin-top:3px}
+  #app-portal .go{font-size:14px; font-weight:700; color:#c4006a; white-space:nowrap}
+  #app-portal .pill{font-size:12px; font-weight:700; padding:4px 10px; border-radius:6px; white-space:nowrap}
+  #app-portal .p-paid,#app-portal .p-signed,#app-portal .p-approved{background:#dcf0e2; color:#1d6b3a}
+  #app-portal .p-sent{background:#dbe9f8; color:#1d4f86}
+  #app-portal .p-due{background:#fde2e2; color:#9b1c1c}
+  #app-portal .p-part{background:#fbf0d6; color:#7a4f00}
+  #app-portal .p-new{background:var(--ink); color:#fff}
+  #app-portal .approve{background:var(--blush); color:var(--ink); border-radius:20px; padding:26px; display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap}
+  #app-portal .approve h2{font-size:22px; font-weight:900 !important; color:var(--ink) !important}
+  #app-portal .approve p{font-size:15px; color:#4a4a52; margin-top:6px; line-height:1.5}
+  #app-portal .btn{display:inline-block; background:var(--pink); color:#fff !important; font-weight:800; font-size:16px; padding:15px 24px; border-radius:12px; min-height:48px}
+  #app-portal .btn:hover{background:#e00074}
+  #app-portal .empty{padding:18px 22px; font-size:15px; color:var(--muted)}
+  #app-portal details{border-top:1px solid var(--line)}
+  #app-portal details:first-child{border-top:none}
+  #app-portal summary{cursor:pointer; list-style:none; padding:17px 22px; display:flex; justify-content:space-between; align-items:center; gap:14px; color:var(--ink)}
+  #app-portal summary::-webkit-details-marker{display:none}
+  #app-portal summary .t::before{content:"▸ "; color:#c4006a}
+  #app-portal details[open] summary .t::before{content:"▾ "}
+  #app-portal .body{padding:0 22px 20px; font-size:15px; line-height:1.6; color:#33333a}
+  #app-portal .body h3{font-size:13px; font-weight:800 !important; letter-spacing:1px; color:var(--muted) !important; margin:16px 0 4px; text-transform:uppercase !important}
+  #app-portal .body p{white-space:pre-line}
+  #app-portal .pay{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+  #app-portal .pay div{border:1px solid #2c2c32; border-radius:12px; padding:12px 16px; font-size:14px; color:#e3e3e8}
+  #app-portal .pay b{color:#fff}
+  #app-portal .note{font-size:13px; color:var(--mist); margin-top:10px; line-height:1.5}
+  #app-portal .msg{text-align:center; padding:100px 20px; font-size:17px; line-height:1.6; color:#e3e3e8}
+  #app-portal .msg b{display:block; font-size:24px; color:#fff; margin-bottom:8px}
+  @media (max-width:560px){
+    #app-portal .approve .btn{width:100%; text-align:center}
+    #app-portal .row{padding:15px 16px} #app-portal summary{padding:15px 16px} #app-portal .body{padding:0 16px 18px}
+  }
+</style>
+<div class="wrap" id="app-portal-root" aria-live="polite"><div class="msg">Loading your portal…</div></div>
+<script>
+(function(){
+  var root=document.getElementById("app-portal-root");
+  var BASES=["RAW/portal/","https://cdn.jsdelivr.net/gh/theevestudio/alanapro-site-data@main/portal/"];
+  var PHONE="305-563-0713", EMAIL="malia@alanapro.com";
+
+  function el(tag,cls,text){var e=document.createElement(tag); if(cls) e.className=cls; if(text!=null) e.textContent=text; return e;}
+  function add(p){for(var i=1;i<arguments.length;i++){ if(arguments[i]) p.appendChild(arguments[i]); } return p;}
+  function msg(title,body){root.innerHTML=""; var m=el("div","msg"); add(m,el("b",null,title),document.createTextNode(body)); root.appendChild(m);}
+  function hex(buf){return Array.prototype.map.call(new Uint8Array(buf),function(b){return ("0"+b.toString(16)).slice(-2);}).join("");}
+  function sha(s){return crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));}
+  function unb64(s){var b=atob(s),a=new Uint8Array(b.length); for(var i=0;i<b.length;i++) a[i]=b.charCodeAt(i); return a;}
+  function date(d,withYear){ if(!d) return ""; var p=d.slice(0,10).split("-"); var dt=new Date(+p[0],+p[1]-1,+p[2]);
+    return dt.toLocaleDateString("en-US",withYear?{month:"short",day:"numeric",year:"numeric"}:{month:"short",day:"numeric"}); }
+  function month(d){ if(!d) return ""; var p=d.slice(0,10).split("-"); return new Date(+p[0],+p[1]-1,1).toLocaleDateString("en-US",{month:"long",year:"numeric"}); }
+  function money(n){ return n==null?"":"$"+Number(n).toLocaleString("en-US",{minimumFractionDigits:Number(n)%1?2:0,maximumFractionDigits:2}); }
+  function pill(status,kind){ var s=(status||"").toLowerCase(), c="p-sent";
+    if(s==="paid"||s==="signed"||s==="approved"||s==="client approve") c="p-paid";
+    else if(s==="overdue"||s==="expired") c="p-due";
+    else if(s.indexOf("deposit")>-1) c="p-part";
+    var label=status==="Sent"?(kind==="contract"?"Awaiting signature":kind==="invoice"?"Awaiting payment":"Sent"):status; return el("span","pill "+c,label); }
+  function section(label){ var s=el("section","sec"); add(s,el("h2","label",label)); root.appendChild(s); return s; }
+  function linkRow(href,title,sub,right){ var a=el("a","row"); a.href=href; a.target="_blank"; a.rel="noopener";
+    var l=el("div"); add(l,el("div","t",title),sub?el("div","s",sub):null); add(a,l,right); return a; }
+  function row(title,sub,right){ var r=el("div","row"); var l=el("div"); add(l,el("div","t",title),sub?el("div","s",sub):null); add(r,l,right); return r; }
+
+  function render(d){
+    root.innerHTML="";
+    var head=el("header");
+    add(head,el("div","kick","ALANA PRO · CLIENT PORTAL"),el("h1",null,d.business||d.name||"Your portal"));
+    var first=(d.name||"").split(" ")[0];
+    add(head,el("p","hi",(first?"Hi "+first+"! ":"")+"Everything for your account is on this page, and it updates on its own. Bookmark it."));
+    var help=el("p","help"); help.appendChild(document.createTextNode("Questions? Text Malia at "+PHONE+" or email "));
+    var em=el("a",null,EMAIL); em.href="mailto:"+EMAIL; help.appendChild(em); head.appendChild(help);
+    root.appendChild(head);
+
+    // 1. Approvals
+    var s1=section("1 · APPROVE YOUR CONTENT");
+    var ap=el("div","approve"); var apl=el("div");
+    add(apl,el("h2",null,"Your posts are waiting for a thumbs up"),el("p",null,"Open Rella, tap a post, then tap Approve or leave a comment."));
+    ap.appendChild(apl);
+    if(d.rella){ var b=el("a","btn","Open Rella to approve →"); b.href=d.rella; b.target="_blank"; b.rel="noopener"; ap.appendChild(b); }
+    else ap.appendChild(el("p",null,"Your Rella link is on its way. Malia will text it to you."));
+    s1.appendChild(ap);
+
+    // 2. Content plans
+    var s2=section("2 · CONTENT PLANS"); var c2=el("div","card");
+    var plans=d.plans||[];
+    if(!plans.length) c2.appendChild(el("div","empty","Your first plan will show up here."));
+    plans.slice(0,2).forEach(function(p,i){ c2.appendChild(linkRow(p.url,p.title||month(p.month)+" plan",month(p.month),i===0?el("span","pill p-new","NEWEST"):el("span","go","Open →"))); });
+    if(plans.length>2){ var dt=el("details"); var sm=el("summary"); add(sm,el("span","t","Past months ("+(plans.length-2)+")")); dt.appendChild(sm);
+      plans.slice(2).forEach(function(p){ dt.appendChild(linkRow(p.url,p.title||month(p.month)+" plan",month(p.month),el("span","go","Open →"))); }); c2.appendChild(dt); }
+    s2.appendChild(c2);
+
+    // 3. Invoices
+    var s3=section("3 · INVOICES"); var c3=el("div","card");
+    var inv=d.invoices||[];
+    if(!inv.length) c3.appendChild(el("div","empty","No invoices yet."));
+    inv.forEach(function(i){ c3.appendChild(row("#"+(i.num||"")+" · "+money(i.amount),"Issued "+date(i.issued,true)+(i.due?" · Due "+date(i.due,true):""),pill(i.status,"invoice"))); });
+    s3.appendChild(c3);
+    var pay=el("div","pay");
+    var z=el("div"); add(z,el("b",null,"Zelle"),document.createTextNode(" · Alana.productions.co@gmail.com"));
+    var ca=el("div"); add(ca,el("b",null,"Cash App"),document.createTextNode(" · $alanaprollc"));
+    var cd=el("div"); add(cd,el("b",null,"Card"),document.createTextNode(" · Squarespace payment link (processing fees apply). Text Malia for the link."));
+    add(pay,z,ca,cd); s3.appendChild(pay);
+    s3.appendChild(el("p","note","Whenever possible, Zelle should be used as the primary method."));
+
+    // 4. Contract & proposal
+    var s4=section("4 · CONTRACT & PROPOSAL"); var c4=el("div","card");
+    var cons=d.contracts||[], pros=d.proposals||[];
+    if(!cons.length&&!pros.length) c4.appendChild(el("div","empty","Your contract and proposal will show up here."));
+    cons.forEach(function(k){
+      var sub=k.signed?"Signed "+date(k.signed,true):(k.start?"Starts "+date(k.start,true):"");
+      var right=el("div"); right.style.cssText="display:flex;gap:10px;align-items:center"; right.appendChild(pill(k.status,"contract")); var nm=(k.title||"Contract").replace(/_+/g," ").replace(/\s+/g," ").trim();
+      if(k.link) c4.appendChild(linkRow(k.link,"🔒 "+nm,sub?sub+" · Tap to open":"Tap to open",right));
+      else c4.appendChild(row("🔒 "+nm,(sub?sub+" · ":"")+"Ask Malia for a copy",right));
+    });
+    pros.forEach(function(p){
+      var dt=el("details"); var sm=el("summary"); add(sm,el("span","t","📄 "+(p.title||"Proposal")),pill(p.status)); dt.appendChild(sm);
+      var body=el("div","body");
+      (p.sections||[]).forEach(function(s){ add(body,el("h3",null,s[0]),el("p",null,s[1])); });
+      dt.appendChild(body); c4.appendChild(dt);
+    });
+    s4.appendChild(c4);
+
+    var terms=el("div","card"); terms.style.marginTop="12px";
+    var td=el("details"); var ts=el("summary"); add(ts,el("span","t","Payment terms")); td.appendChild(ts);
+    var tb=el("div","body");
+    [["Monthly retainers","Clients may choose one of two billing structures:\n1. Full monthly payment due at the beginning of each month, OR\n2. Split payment option: 50% due on the 1st and 50% due on the 15th.\nServices begin once the first payment is received. Ongoing work continues as long as payments remain current."],
+     ["One-time projects","50% deposit is required upfront to secure the project start date.\nRemaining 50% is due before final delivery.\nFinal invoices must be paid within 30 days of issuance.\nFinal deliverables will not be released until payment is completed."],
+     ["Late payments","Payments are due according to the agreed schedule. If payment is not received on time:\nServices may be temporarily paused until balance is paid.\nWork timelines may shift accordingly."],
+     ["Cancellation policy","Monthly retainers may be canceled with 30 days written notice. Work completed during the 30-day notice period remains billable."]
+    ].forEach(function(t){ add(tb,el("h3",null,t[0]),el("p",null,t[1])); });
+    td.appendChild(tb); terms.appendChild(td); s4.appendChild(terms);
+
+    if(d.updated) root.appendChild(el("p","note","Last updated "+new Date(d.updated).toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"})));
+  }
+
+  var SAVE="alanapro-portal-key";
+  function saved(){ try{ return localStorage.getItem(SAVE)||""; }catch(e){ return ""; } }
+  function remember(k){ try{ localStorage.setItem(SAVE,k); }catch(e){} }
+  function forget(){ try{ localStorage.removeItem(SAVE); }catch(e){} }
+  function grab(text){ var m=String(text||"").match(/(?:k=)?([A-Za-z0-9_-]{16,})\s*$/); return m?m[1]:""; }
+
+  function ask(note){
+    root.innerHTML="";
+    var box=el("div","msg"); box.style.maxWidth="520px"; box.style.margin="0 auto";
+    add(box,el("b",null,"Already a client?"),el("p",null,note||"Open the portal link Malia texted you. Once you've opened it on this phone or computer, this page will remember you."));
+    var f=el("form"); f.style.cssText="margin-top:24px;display:flex;flex-direction:column;gap:10px;text-align:left";
+    var lb=el("label",null,"Or paste your portal link here"); lb.setAttribute("for","app-portal-in"); lb.style.cssText="font-size:14px;color:#b4b4bc";
+    var inp=el("input"); inp.id="app-portal-in"; inp.type="text"; inp.autocomplete="off"; inp.placeholder="alanapro.com/portal#k=…";
+    inp.style.cssText="font-size:16px;padding:14px 16px;border-radius:12px;border:1px solid #2c2c32;background:#fff;color:#1a1a1a";
+    var go=el("button","btn","Open my portal"); go.type="submit"; go.style.border="none"; go.style.cursor="pointer";
+    add(f,lb,inp,go);
+    f.addEventListener("submit",function(e){ e.preventDefault(); var k=grab(inp.value); if(k) start(k,true); else inp.focus(); });
+    box.appendChild(f);
+    box.appendChild(el("p","note","Can't find your link? Text Malia at "+PHONE+"."));
+    root.appendChild(box);
+  }
+
+  function signOut(){
+    var p=el("p","note"); var a=el("a",null,"Not you? Sign out on this device"); a.href="#"; a.style.color="#ff7fbf";
+    a.addEventListener("click",function(e){ e.preventDefault(); forget(); ask("You're signed out on this device."); }); p.appendChild(a); root.appendChild(p);
+  }
+
+  function start(key,fromInput){
+    if(!window.crypto||!crypto.subtle){ msg("Please update your browser","Your browser can't open the portal. Try Safari or Chrome, or text Malia at "+PHONE+"."); return; }
+    root.innerHTML='<div class="msg">Loading your portal…</div>';
+    Promise.all([sha("alanapro-portal-file:"+key),sha("alanapro-portal-enc:"+key)]).then(function(h){
+      var file=hex(h[0]).slice(0,32)+".json";
+      function tryBase(i){ if(i>=BASES.length) return Promise.reject("missing");
+        return fetch(BASES[i]+file+(i===0?"?t="+Date.now():"")).then(function(r){ if(!r.ok) throw 0; return r.json(); }).catch(function(){ return tryBase(i+1); }); }
+      return tryBase(0).then(function(f){
+        return crypto.subtle.importKey("raw",h[1],"AES-GCM",false,["decrypt"]).then(function(k){
+          return crypto.subtle.decrypt({name:"AES-GCM",iv:unb64(f.iv)},k,unb64(f.ct)); });
+      }).then(function(buf){ remember(key); render(JSON.parse(new TextDecoder().decode(buf))); signOut(); });
+    }).catch(function(){
+      if(saved()===key) forget();
+      ask(fromInput?"That link didn't work. Check it and try again, or text Malia at "+PHONE+".":"This link isn't working anymore. Text Malia at "+PHONE+" and she'll send you a fresh one.");
+    });
+  }
+
+  var fromHash=grab((location.hash.match(/k=([A-Za-z0-9_-]+)/)||[])[1]);
+  if(fromHash){ try{ history.replaceState(null,"",location.pathname+location.search); }catch(e){} start(fromHash); }
+  else if(saved()) start(saved());
+  else ask();
+})();
+</script>
+</div>
