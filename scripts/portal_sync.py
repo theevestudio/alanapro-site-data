@@ -88,6 +88,7 @@ def build(raw):
                 "due": i.get("date:Due Date:start"),
                 "amount": i.get("Amount"),
                 "status": i.get("Status"),
+                "pay": clean(i.get("Pay Link")),
             } for i in inv],
             "contracts": [{
                 "title": clean(k.get("Contract")),
