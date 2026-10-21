@@ -15,6 +15,9 @@ Files for clients whose key was removed are deleted.
 Usage: python3 scripts/portal_sync.py raw.json
        python3 scripts/portal_sync.py --new-key "Business Name"   -> prints e.g. SHELLWORLD-7PgdIl8NIu8l
        python3 scripts/portal_sync.py --portal-id KEY              -> prints the Portal_ID a reset request carries
+       python3 scripts/portal_sync.py --store-plan <planner artifact URL> plan.json <Plans Key>
+           -> saves the read-only plan (from scripts/plan_export.mjs) so portals show it
+raw.json may also carry "plans_key" (from Malia's Portal Link page in Notion) to include those plans.
 Portal links look like https://alanapro.com/portal#SHELLWORLD-7PgdIl8NIu8l
 """
 import base64, hashlib, hmac, json, os, re, sys
@@ -23,6 +26,42 @@ from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(REPO, "portal")
+PLANDATA = os.path.join(REPO, "plandata")  # read-only plan copies, encrypted with the Plans Key
+
+
+def artifact_id(url):
+    m = re.search(r"/artifact/([A-Za-z0-9_-]+)", url or "")
+    return m.group(1) if m else None
+
+
+def plan_file(aid):
+    return os.path.join(PLANDATA, hashlib.sha256(("alanapro-plan:" + aid).encode()).hexdigest()[:32] + ".json")
+
+
+def load_plan(url, plans_key):
+    aid = artifact_id(url)
+    if not (aid and plans_key):
+        return None
+    f = plan_file(aid)
+    if not os.path.exists(f):
+        return None
+    try:
+        d = json.load(open(f))
+        return json.loads(AESGCM(enc_key(plans_key)).decrypt(base64.b64decode(d["iv"]), base64.b64decode(d["ct"]), None))
+    except Exception:
+        return None
+
+
+def store_plan(url, plan_path, plans_key):
+    """Save the read-only plan for one planner artifact (output of scripts/plan_export.mjs)."""
+    aid = artifact_id(url) or url
+    os.makedirs(PLANDATA, exist_ok=True)
+    body = open(plan_path, "rb").read()
+    json.loads(body)
+    iv = os.urandom(12)
+    ct = AESGCM(enc_key(plans_key)).encrypt(iv, body, None)
+    json.dump({"v": 1, "iv": b64(iv), "ct": b64(ct)}, open(plan_file(aid), "w"))
+    print("stored plan for", aid)
 
 HIDE_INVOICE = {"Draft", "Send", "VOID"}
 HIDE_CONTRACT = {"Draft"}
@@ -59,7 +98,7 @@ def clean(s):
     return (s or "").strip() or None
 
 
-def build(raw):
+def build(raw, plans_key=None):
     """Returns (client_portals, admin_clients).
     client_portals: {cid: (key, payload)} for clients with Website Portal on and a Portal Key.
     admin_clients: [payload, ...] for every Active client or client with a portal, for Malia's own link."""
@@ -91,7 +130,8 @@ def build(raw):
             "rella": clean(c.get("Access RELLA Space")),
             "email": clean(c.get("Email")),
             "card": c.get("Card Payments") == "__YES__",
-            "plans": [{"title": clean(p.get("Plan")), "month": p.get("date:Month:start"), "url": clean(p.get("Link"))} for p in pla],
+            "plans": [{"title": clean(p.get("Plan")), "month": p.get("date:Month:start"), "edit": clean(p.get("Link")),
+                       "plan": load_plan(clean(p.get("Link")), plans_key)} for p in pla],
             "invoices": [{
                 "num": clean(i.get("Invoice #")) or clean(i.get("Invoice")),
                 "issued": i.get("date:Issue Date:start"),
@@ -121,14 +161,17 @@ def build(raw):
                 ] if val],
             } for p in pro],
         })
+    admin = sorted((json.loads(json.dumps(v[1])) for v in out.values()), key=lambda p: (p.get("business") or p.get("name") or "").lower())
+    for key, payload in out.values():
+        for pl in payload["plans"]:
+            pl.pop("edit", None)  # clients never get the planner link, only the read-only plan
     portals = {cid: v for cid, v in out.items() if v[0]}
-    admin = sorted((v[1] for v in out.values()), key=lambda p: (p.get("business") or p.get("name") or "").lower())
     return portals, admin
 
 
 def main(path):
     raw = json.load(open(path))
-    portals, admin = build(raw)
+    portals, admin = build(raw, clean(raw.get("plans_key")))
     items = list(portals.values())
     admin_key = clean(raw.get("admin_key"))
     if admin_key:
@@ -169,6 +212,8 @@ def new_key(name):
 if __name__ == "__main__":
     if sys.argv[1] == "--new-key":
         print(new_key(" ".join(sys.argv[2:])))
+    elif sys.argv[1] == "--store-plan":
+        store_plan(sys.argv[2], sys.argv[3], sys.argv[4])
     elif sys.argv[1] == "--portal-id":
         print(file_id(sys.argv[2]))
     else:

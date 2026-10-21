@@ -103,6 +103,59 @@
     else if(s.indexOf("deposit")>-1) c="p-part";
     var label=status==="Sent"?(kind==="contract"?"Awaiting signature":kind==="invoice"?"Awaiting payment":"Sent"):status; return el("span","pill "+c,label); }
   function section(label){ var s=el("section","sec"); add(s,el("h2","label",label)); root.appendChild(s); return s; }
+  function planRow(p,newest){
+    var t=p.title||month(p.month)+" plan", sub=month(p.month);
+    if(p.plan){
+      var b=el("button","row"); b.type="button"; b.style.cssText="width:100%;border:none;background:#fff;text-align:left;cursor:pointer;font:inherit";
+      var l=el("div"); add(l,el("div","t",t),el("div","s",sub+" · "+p.plan.total+" posts"));
+      add(b,l,newest?el("span","pill p-new","NEWEST"):el("span","go","Open →"));
+      b.addEventListener("click",function(){ openPlan(p); }); return b;
+    }
+    if(p.edit) return linkRow(p.edit,t,sub+" · open in planner",el("span","go","Planner →"));
+    return row(t,sub+" · being finalized",el("span","pill p-sent","Coming soon"));
+  }
+  function openPlan(p){
+    var P=p.plan, v=el("div"); v.setAttribute("role","dialog"); v.setAttribute("aria-modal","true"); v.setAttribute("aria-label",P.title||"Content plan");
+    v.style.cssText="position:fixed;inset:0;z-index:9999;background:#141416;overflow-y:auto;-webkit-overflow-scrolling:touch";
+    var w=el("div"); w.style.cssText="max-width:860px;margin:0 auto;padding:18px 18px 80px";
+    var top=el("div"); top.style.cssText="position:sticky;top:0;background:#141416;padding:10px 0 12px;display:flex;justify-content:space-between;align-items:center;gap:12px;z-index:1";
+    var back=el("button","ghost","← Back to portal"); back.type="button"; back.style.cssText+=";background:transparent;color:#fff;border:1px solid #2c2c32";
+    top.appendChild(back);
+    if(ADMIN && p.edit){ var ed=el("a","btn","Open planner"); ed.href=p.edit; ed.target="_blank"; ed.rel="noopener"; ed.style.cssText="font-size:14px;padding:11px 16px;min-height:44px"; top.appendChild(ed); }
+    w.appendChild(top);
+    add(w,el("div","kick",(P.eyebrow||"").toUpperCase()),el("h1",null,(P.title||"").replace(/ Plan$/,"")+" plan"));
+    if(!ADMIN && P.pickedCount<P.total) w.appendChild(el("p","help","Some posts are still being finalized and may change."));
+    (P.weeks||[]).forEach(function(wk){
+      var sec=el("section","sec"); add(sec,el("h2","label","WEEK "+wk.n+" · "+(wk.name||"").toUpperCase()));
+      if(wk.note) sec.appendChild(el("p","help",wk.note));
+      (wk.slots||[]).forEach(function(sl){
+        var c=el("div"); c.style.cssText="background:#1f1f23;border:1px solid #2c2c32;border-radius:18px;padding:18px;margin-top:12px;display:flex;flex-direction:column;gap:10px;color:#e3e3e8";
+        var hd=el("div"); hd.style.cssText="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center";
+        var dt=el("b",null,sl.date); dt.style.cssText="color:#fff;font-size:15px";
+        var lb=el("span",null,sl.label); lb.style.cssText="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#b4b4bc;border:1px solid #2c2c32;border-radius:6px;padding:3px 8px";
+        add(hd,dt,lb); c.appendChild(hd);
+        var th=el("div",null,sl.theme); th.style.cssText="font-size:18px;font-weight:800;color:#fff"; c.appendChild(th);
+        if(sl.isStatic){ add(c,lab("Photo"),txt(sl.photo)); }
+        else {
+          var tc=el("div"); tc.style.cssText="background:linear-gradient(180deg,#3a3a40,#2b2b30);border-radius:12px;padding:16px 12px;text-align:center;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.6)";
+          var k=el("div",null,sl.kicker); k.style.cssText="font-size:11px;letter-spacing:3px;font-weight:600";
+          var t2=el("div",null,sl.title); t2.style.cssText="font-family:Georgia,'Times New Roman',serif !important;font-size:22px;font-weight:700;letter-spacing:1px;margin-top:4px";
+          add(tc,k,t2); c.appendChild(tc);
+          add(c,lab("Hook"),txt(sl.hook),lab(sl.talk?"Script":"What happens"),txt(sl.say));
+          if(sl.end) add(c,lab("End card"),txt(sl.end+" · "+(P.endName||"")));
+        }
+        sec.appendChild(c);
+      });
+      w.appendChild(sec);
+    });
+    function lab(t){ var e=el("div",null,t); e.style.cssText="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#8d8d96;margin-bottom:-6px"; return e; }
+    function txt(t){ var e=el("p",null,t); e.style.cssText="margin:0;font-size:15px;line-height:1.55;white-space:pre-line"; return e; }
+    v.appendChild(w); document.getElementById("app-portal").appendChild(v);
+    var y=window.scrollY; document.documentElement.style.overflow="hidden";
+    function close(){ if(v.parentNode) v.parentNode.removeChild(v); document.documentElement.style.overflow=""; document.removeEventListener("keydown",esc); window.scrollTo(0,y); }
+    function esc(e){ if(e.key==="Escape") close(); }
+    back.addEventListener("click",close); document.addEventListener("keydown",esc); back.focus();
+  }
   function linkRow(href,title,sub,right){ var a=el("a","row"); a.href=href; a.target="_blank"; a.rel="noopener";
     var l=el("div"); add(l,el("div","t",title),sub?el("div","s",sub):null); add(a,l,right); return a; }
   function row(title,sub,right){ var r=el("div","row"); var l=el("div"); add(l,el("div","t",title),sub?el("div","s",sub):null); add(r,l,right); return r; }
@@ -225,9 +278,9 @@
     var s2=section("2 · CONTENT PLANS"); var c2=el("div","card");
     var plans=d.plans||[];
     if(!plans.length) c2.appendChild(el("div","empty","Your first plan will show up here."));
-    plans.slice(0,2).forEach(function(p,i){ c2.appendChild(linkRow(p.url,p.title||month(p.month)+" plan",month(p.month),i===0?el("span","pill p-new","NEWEST"):el("span","go","Open →"))); });
+    plans.slice(0,2).forEach(function(p,i){ c2.appendChild(planRow(p,i===0)); });
     if(plans.length>2){ var dt=el("details"); var sm=el("summary"); add(sm,el("span","t","Past months ("+(plans.length-2)+")")); dt.appendChild(sm);
-      plans.slice(2).forEach(function(p){ dt.appendChild(linkRow(p.url,p.title||month(p.month)+" plan",month(p.month),el("span","go","Open →"))); }); c2.appendChild(dt); }
+      plans.slice(2).forEach(function(p){ dt.appendChild(planRow(p,false)); }); c2.appendChild(dt); }
     s2.appendChild(c2);
 
     // 3. Invoices
