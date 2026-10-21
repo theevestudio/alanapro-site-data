@@ -12,6 +12,9 @@ Files whose content has not changed are left alone, so git only sees real update
 Files for clients whose key was removed are deleted.
 
 Usage: python3 scripts/portal_sync.py raw.json
+       python3 scripts/portal_sync.py --new-key "Business Name"   -> prints e.g. SHELLWORLD-7PgdIl8NIu8l
+       python3 scripts/portal_sync.py --portal-id KEY              -> prints the Portal_ID a reset request carries
+Portal links look like https://alanapro.com/portal#SHELLWORLD-7PgdIl8NIu8l
 """
 import base64, hashlib, hmac, json, os, re, sys
 from datetime import datetime, timezone
@@ -146,5 +149,16 @@ def main(path):
     print(f"portals: {len(data)}  updated: {changed}  removed: {removed}")
 
 
+def new_key(name):
+    import secrets
+    slug = re.sub(r"[^A-Z0-9]", "", (name or "").upper())[:20] or "CLIENT"
+    return slug + "-" + secrets.token_urlsafe(9)
+
+
 if __name__ == "__main__":
-    main(sys.argv[1])
+    if sys.argv[1] == "--new-key":
+        print(new_key(" ".join(sys.argv[2:])))
+    elif sys.argv[1] == "--portal-id":
+        print(file_id(sys.argv[2]))
+    else:
+        main(sys.argv[1])

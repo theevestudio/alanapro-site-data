@@ -106,7 +106,7 @@
   function row(title,sub,right){ var r=el("div","row"); var l=el("div"); add(l,el("div","t",title),sub?el("div","s",sub):null); add(r,l,right); return r; }
 
   function copyLink(){
-    var link="https://alanapro.com/portal#k="+KEY;
+    var link="https://alanapro.com/portal#"+KEY;
     function done(ok){ popup(ok?"Link copied":"Copy your link",ok?null:link); }
     if(navigator.clipboard&&window.isSecureContext){ navigator.clipboard.writeText(link).then(function(){done(true);},function(){done(fallback(link));}); }
     else done(fallback(link));
@@ -150,6 +150,34 @@
     function esc(e){ if(e.key==="Escape") close(); }
     cx.addEventListener("click",close); v.addEventListener("click",function(e){ if(e.target===v) close(); }); document.addEventListener("keydown",esc);
     v.appendChild(p); document.getElementById("app-portal").appendChild(v); p.querySelector("input").focus();
+  }
+
+  function resetSheet(d){
+    var v=el("div","veil"); var p=el("div","pop"); p.setAttribute("role","dialog"); p.setAttribute("aria-modal","true"); p.setAttribute("aria-labelledby","app-portal-rs-t");
+    var h=el("h2",null,"Reset your portal link?"); h.id="app-portal-rs-t"; p.appendChild(h);
+    p.appendChild(el("p",null,"Your current link will stop working on every device, including anyone you shared it with."));
+    p.appendChild(el("p",null,"A new link will be emailed to you"+(d.email?" at "+d.email:"")+" and to Malia within the hour."));
+    var go=el("button","btn","Yes, reset my link"); go.type="button"; p.appendChild(go);
+    var cx=el("button",null,"Cancel"); cx.type="button"; cx.style.cssText="display:block;margin:12px auto 0;background:none;border:none;color:#6b6b76;font-size:15px;cursor:pointer;padding:8px"; p.appendChild(cx);
+    function close(){ if(v.parentNode) v.parentNode.removeChild(v); document.removeEventListener("keydown",esc); }
+    function esc(e){ if(e.key==="Escape") close(); }
+    cx.addEventListener("click",close); v.addEventListener("click",function(e){ if(e.target===v) close(); }); document.addEventListener("keydown",esc);
+    go.addEventListener("click",function(){
+      if(/squarespace\.com$/i.test(location.hostname)||window.top!==window){ go.textContent="Preview only: resets send from alanapro.com"; return; }
+      go.disabled=true; go.textContent="Sending…";
+      sha("alanapro-portal-file:"+KEY).then(function(h){
+        var fd=new FormData();
+        fd.set("_subject","Portal reset request");
+        fd.set("_captcha","false"); fd.set("_template","table");
+        fd.set("_cc",["alana.productions.co","gmail.com"].join("@"));
+        fd.set("Business",d.business||d.name||"");
+        fd.set("Portal_ID",hex(h).slice(0,32));
+        return fetch("https://formsubmit.co/ajax/"+["malia","alanapro.com"].join("@"),{method:"POST",headers:{"Accept":"application/json"},body:fd});
+      }).then(function(r){ return r.json().catch(function(){return {};}).then(function(j){ if(!r.ok||String(j.success)!=="true") throw 0; }); })
+      .then(function(){ close(); forget(); ask("Reset requested. Your old link is turned off within the hour, and your new link will be emailed to you."); })
+      .catch(function(){ go.disabled=false; go.textContent="Didn't send. Try again"; });
+    });
+    v.appendChild(p); document.getElementById("app-portal").appendChild(v); go.focus();
   }
 
   function popup(title,showLink){
@@ -247,7 +275,11 @@
     var s5=section("SHARE ACCESS"); var sh=el("div","share"); var shl=el("div");
     add(shl,el("b",null,"Want to share access?"),el("p",null,"Send your portal link to a business partner or manager."));
     var cp=el("button","ghost","COPY LINK"); cp.type="button"; cp.addEventListener("click",copyLink);
-    add(sh,shl,cp); s5.appendChild(sh);
+    var rs=el("button","ghost","RESET LINK"); rs.type="button"; rs.style.background="transparent"; rs.style.color="#fff"; rs.style.border="1px solid #2c2c32";
+    rs.addEventListener("click",function(){ resetSheet(d); });
+    var btns=el("div"); btns.style.cssText="display:flex;gap:10px;flex-wrap:wrap"; add(btns,cp,rs);
+    add(sh,shl,btns); s5.appendChild(sh);
+    s5.appendChild(el("p","note","Reset link signs out every phone and computer that has your portal, including anyone you shared it with. Your new link is emailed to you."));
 
     if(d.updated) root.appendChild(el("p","note","Last updated "+new Date(d.updated).toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"})));
   }
@@ -256,7 +288,7 @@
   function saved(){ try{ return localStorage.getItem(SAVE)||""; }catch(e){ return ""; } }
   function remember(k){ try{ localStorage.setItem(SAVE,k); }catch(e){} }
   function forget(){ try{ localStorage.removeItem(SAVE); }catch(e){} }
-  function grab(text){ var m=String(text||"").match(/(?:k=)?([A-Za-z0-9_-]{16,})\s*$/); return m?m[1]:""; }
+  function grab(text){ var m=String(text||"").match(/(?:#|k=)?([A-Za-z0-9_-]{16,})\s*$/); return m?m[1]:""; }
 
   function ask(note){
     root.innerHTML="";
@@ -264,7 +296,7 @@
     add(box,el("b",null,"Already a client?"),el("p",null,note||"Open the portal link Malia texted you. Once you've opened it on this phone or computer, this page will remember you."));
     var f=el("form"); f.style.cssText="margin-top:24px;display:flex;flex-direction:column;gap:10px;text-align:left";
     var lb=el("label",null,"Or paste your portal link here"); lb.setAttribute("for","app-portal-in"); lb.style.cssText="font-size:14px;color:#b4b4bc";
-    var inp=el("input"); inp.id="app-portal-in"; inp.type="text"; inp.autocomplete="off"; inp.placeholder="alanapro.com/portal#k=…";
+    var inp=el("input"); inp.id="app-portal-in"; inp.type="text"; inp.autocomplete="off"; inp.placeholder="alanapro.com/portal#YOURBUSINESS-…";
     inp.style.cssText="font-size:16px;padding:14px 16px;border-radius:12px;border:1px solid #2c2c32;background:#fff;color:#1a1a1a";
     var go=el("button","btn","Open my portal"); go.type="submit"; go.style.border="none"; go.style.cursor="pointer";
     add(f,lb,inp,go);
@@ -296,7 +328,7 @@
     });
   }
 
-  var fromHash=grab((location.hash.match(/k=([A-Za-z0-9_-]+)/)||[])[1]);
+  var fromHash=grab(decodeURIComponent((location.hash||"").replace(/^#/,"").replace(/^k=/,"")));
   if(fromHash){ try{ history.replaceState(null,"",location.pathname+location.search); }catch(e){} start(fromHash); }
   else if(saved()) start(saved());
   else ask();
