@@ -86,6 +86,7 @@ def build(raw):
             "business": clean(c.get("Business Name")),
             "rella": clean(c.get("Access RELLA Space")),
             "email": clean(c.get("Email")),
+            "card": c.get("Card Payments") == "__YES__",
             "plans": [{"title": clean(p.get("Plan")), "month": p.get("date:Month:start"), "url": clean(p.get("Link"))} for p in pla],
             "invoices": [{
                 "num": clean(i.get("Invoice #")) or clean(i.get("Invoice")),

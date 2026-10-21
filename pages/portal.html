@@ -83,6 +83,8 @@
   var PHONE="305-563-0713", EMAIL="malia@alanapro.com";
   var CARD_LINK=window.APP_PORTAL_CARD_LINK||"https://www.alanapro.com/pay-link/f0d3c7f8-afc6-4865-abe1-89adc7aaed13"; // Squarespace card payment link. Used when an invoice has no Pay Link of its own.
   var UNPAID={"Sent":1,"Overdue":1,"50% deposit":1};
+  var CARD_FEE=0.03; // 3% card fee added at checkout
+  function withFee(n){ return Math.round(n*(1+CARD_FEE)*100)/100; }
   var KEY="", LAST=null, EMAIL_ON_FILE="";
 
   function el(tag,cls,text){var e=document.createElement(tag); if(cls) e.className=cls; if(text!=null) e.textContent=text; return e;}
@@ -128,7 +130,10 @@
     function drawSteps(){ steps.innerHTML=""; var o=opts[pick];
       steps.style.cssText="background:#f4f4f7;border-radius:12px;padding:14px 16px;margin-top:14px;font-size:14px;line-height:1.7;color:#1a1a1a";
       add(steps,el("div",null,"At checkout:"));
-      var r1=el("div"); add(r1,el("b",null,"Enter amount  "),document.createTextNode(money(o[1])));
+      var fee=Math.round((withFee(o[1])-o[1])*100)/100;
+      var r0=el("div"); r0.textContent=money(o[1])+" + "+money(fee)+" card fee (3%)";
+      var r1=el("div"); add(r1,el("b",null,"Enter amount  "),document.createTextNode(money(withFee(o[1]))));
+      steps.appendChild(r0);
       var r2=null; if(EMAIL_ON_FILE){ r2=el("div"); add(r2,el("b",null,"Use email  "),document.createTextNode(EMAIL_ON_FILE)); }
       var r3=el("div"); r3.style.cssText="font-size:13px;color:#6b6b76;margin-top:4px"; r3.textContent="Using this exact amount and email lets your invoice update to "+(o[2]==="Full"||o[2]==="Remaining 50%"?"Paid":"50% paid")+" on its own.";
       add(steps,r1,r2,r3);
@@ -137,14 +142,14 @@
       var lab=el("label"); lab.style.cssText="display:flex;align-items:center;gap:10px;border:1px solid #d9d9df;border-radius:12px;padding:12px 14px;cursor:pointer;font-size:15px;color:#1a1a1a";
       var r=el("input"); r.type="radio"; r.name="app-portal-amt"; r.checked=n===0; r.style.cssText="width:20px;height:20px;accent-color:#fd0182";
       r.addEventListener("change",function(){ pick=n; drawSteps(); });
-      var tx=el("span"); add(tx,el("b",null,o[0]),document.createTextNode(" · "+money(o[1])));
+      var tx=el("span"); add(tx,el("b",null,o[0]),document.createTextNode(" · "+money(o[1])+" + 3% card fee"));
       add(lab,r,tx); fs.appendChild(lab);
     });
     p.appendChild(fs); drawSteps(); p.appendChild(steps);
     var go=el("a","btn","Continue to secure checkout →"); go.href=link; go.target="_blank"; go.rel="noopener"; go.style.cssText="display:block;text-align:center;margin-top:18px";
     go.addEventListener("click",function(){ markPending(i); setTimeout(function(){ close(); if(LAST) render(LAST), signOut(); },300); });
     p.appendChild(go);
-    p.appendChild(el("p",null,"Card payments include a processing fee. Already paid by check, Zelle or bank transfer? You don't need to do anything here."));
+    p.appendChild(el("p",null,"Card payments include a 3% card fee. Zelle, check and direct deposit have no fee. Already paid another way? You don't need to do anything here."));
     var cx=el("button",null,"Cancel"); cx.type="button"; cx.style.cssText="display:block;margin:12px auto 0;background:none;border:none;color:#6b6b76;font-size:15px;cursor:pointer;padding:8px"; p.appendChild(cx);
     function close(){ if(v.parentNode) v.parentNode.removeChild(v); document.removeEventListener("keydown",esc); }
     function esc(e){ if(e.key==="Escape") close(); }
@@ -229,7 +234,7 @@
       var right=el("div"); right.style.cssText="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end";
       right.appendChild(pill(i.status,"invoice"));
       var link=i.pay||CARD_LINK;
-      if(link && UNPAID[i.status]){
+      if(d.card && link && UNPAID[i.status]){
         if(pending(i)) right.appendChild(el("span","pill p-part","Payment started"));
         else { var pb=el("button","paybtn","Pay now"); pb.type="button"; pb.style.border="none"; pb.style.cursor="pointer";
           pb.setAttribute("aria-label","Pay invoice "+(i.num||"")+" by card"); pb.addEventListener("click",function(){ paySheet(i,link); }); right.appendChild(pb); }
@@ -240,7 +245,7 @@
     var z=el("div"); add(z,el("b",null,"Zelle"),document.createTextNode(" · Alana.productions.co@gmail.com"));
     var ca=el("div"); add(ca,el("b",null,"Cash App"),document.createTextNode(" · $alanaprollc"));
     var ck=el("div"); add(ck,el("b",null,"Check or direct deposit"),document.createTextNode(" · text Malia for details"));
-    var cd=el("div"); add(cd,el("b",null,"Card"),document.createTextNode(CARD_LINK?" · tap Pay now next to an unpaid invoice (processing fees apply)":" · text Malia for the card link (processing fees apply)"));
+    var cd=el("div"); add(cd,el("b",null,"Card"),document.createTextNode(d.card&&CARD_LINK?" · tap Pay now next to an unpaid invoice (3% card fee)":" · text Malia (3% card fee)"));
     add(pay,z,ca,ck,cd); s3.appendChild(pay);
     s3.appendChild(el("p","note","Whenever possible, Zelle should be used as the primary method."));
 
