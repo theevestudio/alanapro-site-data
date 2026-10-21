@@ -83,7 +83,7 @@
   var PHONE="305-563-0713", EMAIL="malia@alanapro.com";
   var CARD_LINK=window.APP_PORTAL_CARD_LINK||"https://www.alanapro.com/pay-link/f0d3c7f8-afc6-4865-abe1-89adc7aaed13"; // Squarespace card payment link. Used when an invoice has no Pay Link of its own.
   var UNPAID={"Sent":1,"Overdue":1,"50% deposit":1};
-  var KEY="", LAST=null;
+  var KEY="", LAST=null, EMAIL_ON_FILE="";
 
   function el(tag,cls,text){var e=document.createElement(tag); if(cls) e.className=cls; if(text!=null) e.textContent=text; return e;}
   function add(p){for(var i=1;i<arguments.length;i++){ if(arguments[i]) p.appendChild(arguments[i]); } return p;}
@@ -127,13 +127,10 @@
     var pick=0, steps=el("div");
     function drawSteps(){ steps.innerHTML=""; var o=opts[pick];
       steps.style.cssText="background:#f4f4f7;border-radius:12px;padding:14px 16px;margin-top:14px;font-size:14px;line-height:1.7;color:#1a1a1a";
-      add(steps,el("div",null,"At checkout, fill in:"));
-      var r1=el("div"); r1.appendChild(el("b",null,"Invoice #  ")); r1.appendChild(document.createTextNode(i.num||""));
-      var cpy=el("button",null,"Copy"); cpy.type="button"; cpy.style.cssText="margin-left:10px;border:1px solid #d9d9df;background:#fff;border-radius:8px;padding:3px 10px;font-size:13px;cursor:pointer";
-      cpy.addEventListener("click",function(){ (navigator.clipboard&&window.isSecureContext?navigator.clipboard.writeText(i.num||""):Promise.reject()).then(function(){cpy.textContent="Copied";},function(){ cpy.textContent=fallback(i.num||"")?"Copied":"Copy failed"; }); });
-      r1.appendChild(cpy);
-      var r2=el("div"); add(r2,el("b",null,"Payment  "),document.createTextNode(o[2]));
-      var r3=el("div"); add(r3,el("b",null,"Amount  "),document.createTextNode(money(o[1])));
+      add(steps,el("div",null,"At checkout:"));
+      var r1=el("div"); add(r1,el("b",null,"Enter amount  "),document.createTextNode(money(o[1])));
+      var r2=null; if(EMAIL_ON_FILE){ r2=el("div"); add(r2,el("b",null,"Use email  "),document.createTextNode(EMAIL_ON_FILE)); }
+      var r3=el("div"); r3.style.cssText="font-size:13px;color:#6b6b76;margin-top:4px"; r3.textContent="Using this exact amount and email lets your invoice update to "+(o[2]==="Full"||o[2]==="Remaining 50%"?"Paid":"50% paid")+" on its own.";
       add(steps,r1,r2,r3);
     }
     opts.forEach(function(o,n){
@@ -169,7 +166,7 @@
   }
 
   function render(d){
-    LAST=d; root.innerHTML="";
+    LAST=d; EMAIL_ON_FILE=d.email||""; root.innerHTML="";
     var head=el("header");
     add(head,el("div","kick","ALANA PRO · CLIENT PORTAL"),el("h1",null,d.business||d.name||"Your portal"));
     var first=(d.name||"").split(" ")[0];
