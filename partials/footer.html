@@ -16,9 +16,11 @@
   #apf a:hover{color:var(--pink) !important}
   #apf .foot-legal{grid-column:1/-1; border-top:1px solid var(--line); padding-top:24px; color:var(--mist); font-size:13px}
 
+  #apf .apf-portal-m{display:none; grid-column:1/-1; margin:0}
+  #apf .apf-portal-m a{font-size:15px}
   #apf .apf-wrap{max-width:1180px; margin:0 auto; padding:0 24px}
   @media (max-width:900px){ #apf .apf-wrap{grid-template-columns:1fr 1fr} #apf .foot-about{grid-column:1/-1} }
-  @media (max-width:520px){ #apf .apf-wrap{padding:0 16px} }
+  @media (max-width:520px){ #apf .apf-wrap{padding:0 16px} #apf .apf-portal-d{display:none} #apf .apf-portal-m{display:block} }
 </style>
 <footer id="apf" aria-label="Site footer">
   <div class="apf-wrap">
@@ -34,6 +36,7 @@
         <li><a href="/#aph-work">Client work</a></li>
         <li><a href="/#aph-finder">Packages</a></li>
         <li><a href="/internship">Internship</a></li>
+        <li class="apf-portal-d"><a href="/portal">Client portal</a></li>
       </ul>
     </div>
     <div>
@@ -44,6 +47,7 @@
         <li><a href="https://dot.cards/a_pro" target="_blank" rel="noopener">Dot card</a></li>
       </ul>
     </div>
+    <p class="apf-portal-m">Already a client? <a href="/portal">Client portal →</a></p>
     <div class="foot-legal">&copy; <span id="apf-year">2026</span> Alana Pro LLC. All rights reserved.</div>
   </div>
 </footer>

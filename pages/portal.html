@@ -76,10 +76,14 @@
 <script>
 (function(){
   var root=document.getElementById("app-portal-root");
+  (function flush(){ var me=document.getElementById("app-portal");
+    var cw=me.closest(".content-wrapper"); if(cw){ cw.style.paddingTop="0"; cw.style.paddingBottom="0"; cw.style.maxWidth="none"; }
+    var sec=me.closest(".page-section"); if(sec){ sec.style.backgroundColor="#141416"; var bg=sec.querySelector(".section-background"); if(bg) bg.style.background="#141416"; } })();
   var BASES=["RAW/portal/","https://cdn.jsdelivr.net/gh/theevestudio/alanapro-site-data@main/portal/"];
   var PHONE="305-563-0713", EMAIL="malia@alanapro.com";
-  var CARD_LINK=""; // general card payment link (Stripe or Squarespace). Used when an invoice has no Pay Link of its own.
-  var KEY="";
+  var CARD_LINK=window.APP_PORTAL_CARD_LINK||""; // Squarespace card payment link. Used when an invoice has no Pay Link of its own.
+  var UNPAID={"Sent":1,"Overdue":1,"50% deposit":1};
+  var KEY="", LAST=null;
 
   function el(tag,cls,text){var e=document.createElement(tag); if(cls) e.className=cls; if(text!=null) e.textContent=text; return e;}
   function add(p){for(var i=1;i<arguments.length;i++){ if(arguments[i]) p.appendChild(arguments[i]); } return p;}
@@ -109,6 +113,48 @@
   }
   function fallback(t){ try{ var ta=document.createElement("textarea"); ta.value=t; ta.setAttribute("readonly",""); ta.style.position="fixed"; ta.style.opacity="0";
     document.body.appendChild(ta); ta.select(); var ok=document.execCommand("copy"); document.body.removeChild(ta); return ok; }catch(e){ return false; } }
+  function pendKey(i){ return "alanapro-pay-"+(i.num||"")+"-"+(i.status||""); }
+  function pending(i){ try{ var t=+localStorage.getItem(pendKey(i)); return t && Date.now()-t < 3*864e5; }catch(e){ return false; } }
+  function markPending(i){ try{ localStorage.setItem(pendKey(i),String(Date.now())); }catch(e){} }
+
+  function paySheet(i,link){
+    var total=Number(i.amount)||0, half=Math.round(total*50)/100, partDone=i.status==="50% deposit";
+    var opts=partDone?[["Remaining 50%",half,"Remaining 50%"]]:[["Full payment",total,"Full"],["50% now, 50% later",half,"50% deposit"]];
+    var v=el("div","veil"); var p=el("div","pop"); p.setAttribute("role","dialog"); p.setAttribute("aria-modal","true"); p.setAttribute("aria-labelledby","app-portal-pay-t");
+    var h=el("h2",null,"Pay invoice #"+(i.num||"")); h.id="app-portal-pay-t"; p.appendChild(h);
+    var fs=el("fieldset"); fs.style.cssText="border:none;padding:0;margin:14px 0 0;display:flex;flex-direction:column;gap:8px";
+    var lg=el("legend",null,"How much are you paying?"); lg.style.cssText="font-size:14px;font-weight:700;color:#33333a;margin-bottom:6px"; fs.appendChild(lg);
+    var pick=0, steps=el("div");
+    function drawSteps(){ steps.innerHTML=""; var o=opts[pick];
+      steps.style.cssText="background:#f4f4f7;border-radius:12px;padding:14px 16px;margin-top:14px;font-size:14px;line-height:1.7;color:#1a1a1a";
+      add(steps,el("div",null,"At checkout, fill in:"));
+      var r1=el("div"); r1.appendChild(el("b",null,"Invoice #  ")); r1.appendChild(document.createTextNode(i.num||""));
+      var cpy=el("button",null,"Copy"); cpy.type="button"; cpy.style.cssText="margin-left:10px;border:1px solid #d9d9df;background:#fff;border-radius:8px;padding:3px 10px;font-size:13px;cursor:pointer";
+      cpy.addEventListener("click",function(){ (navigator.clipboard&&window.isSecureContext?navigator.clipboard.writeText(i.num||""):Promise.reject()).then(function(){cpy.textContent="Copied";},function(){ cpy.textContent=fallback(i.num||"")?"Copied":"Copy failed"; }); });
+      r1.appendChild(cpy);
+      var r2=el("div"); add(r2,el("b",null,"Payment  "),document.createTextNode(o[2]));
+      var r3=el("div"); add(r3,el("b",null,"Amount  "),document.createTextNode(money(o[1])));
+      add(steps,r1,r2,r3);
+    }
+    opts.forEach(function(o,n){
+      var lab=el("label"); lab.style.cssText="display:flex;align-items:center;gap:10px;border:1px solid #d9d9df;border-radius:12px;padding:12px 14px;cursor:pointer;font-size:15px;color:#1a1a1a";
+      var r=el("input"); r.type="radio"; r.name="app-portal-amt"; r.checked=n===0; r.style.cssText="width:20px;height:20px;accent-color:#fd0182";
+      r.addEventListener("change",function(){ pick=n; drawSteps(); });
+      var tx=el("span"); add(tx,el("b",null,o[0]),document.createTextNode(" · "+money(o[1])));
+      add(lab,r,tx); fs.appendChild(lab);
+    });
+    p.appendChild(fs); drawSteps(); p.appendChild(steps);
+    var go=el("a","btn","Continue to secure checkout →"); go.href=link; go.target="_blank"; go.rel="noopener"; go.style.cssText="display:block;text-align:center;margin-top:18px";
+    go.addEventListener("click",function(){ markPending(i); setTimeout(function(){ close(); if(LAST) render(LAST), signOut(); },300); });
+    p.appendChild(go);
+    p.appendChild(el("p",null,"Card payments include a processing fee. Already paid by check, Zelle or bank transfer? You don't need to do anything here."));
+    var cx=el("button",null,"Cancel"); cx.type="button"; cx.style.cssText="display:block;margin:12px auto 0;background:none;border:none;color:#6b6b76;font-size:15px;cursor:pointer;padding:8px"; p.appendChild(cx);
+    function close(){ if(v.parentNode) v.parentNode.removeChild(v); document.removeEventListener("keydown",esc); }
+    function esc(e){ if(e.key==="Escape") close(); }
+    cx.addEventListener("click",close); v.addEventListener("click",function(e){ if(e.target===v) close(); }); document.addEventListener("keydown",esc);
+    v.appendChild(p); document.getElementById("app-portal").appendChild(v); p.querySelector("input").focus();
+  }
+
   function popup(title,showLink){
     var v=el("div","veil"); var p=el("div","pop"); p.setAttribute("role","dialog"); p.setAttribute("aria-modal","true"); p.setAttribute("aria-labelledby","app-portal-pop-t");
     var h=el("h2",null,title); h.id="app-portal-pop-t"; p.appendChild(h);
@@ -123,7 +169,7 @@
   }
 
   function render(d){
-    root.innerHTML="";
+    LAST=d; root.innerHTML="";
     var head=el("header");
     add(head,el("div","kick","ALANA PRO · CLIENT PORTAL"),el("h1",null,d.business||d.name||"Your portal"));
     var first=(d.name||"").split(" ")[0];
@@ -158,14 +204,18 @@
       var right=el("div"); right.style.cssText="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end";
       right.appendChild(pill(i.status,"invoice"));
       var link=i.pay||CARD_LINK;
-      if(link && i.status!=="Paid"){ var pb=el("a","paybtn","Pay now"); pb.href=link; pb.target="_blank"; pb.rel="noopener"; pb.setAttribute("aria-label","Pay invoice "+(i.num||"")+" by card"); right.appendChild(pb); }
+      if(link && UNPAID[i.status]){
+        if(pending(i)) right.appendChild(el("span","pill p-part","Payment started"));
+        else { var pb=el("button","paybtn","Pay now"); pb.type="button"; pb.style.border="none"; pb.style.cursor="pointer";
+          pb.setAttribute("aria-label","Pay invoice "+(i.num||"")+" by card"); pb.addEventListener("click",function(){ paySheet(i,link); }); right.appendChild(pb); }
+      }
       c3.appendChild(row("#"+(i.num||"")+" · "+money(i.amount),"Issued "+date(i.issued,true)+(i.due?" · Due "+date(i.due,true):""),right)); });
     s3.appendChild(c3);
     var pay=el("div","pay");
     var z=el("div"); add(z,el("b",null,"Zelle"),document.createTextNode(" · Alana.productions.co@gmail.com"));
     var ca=el("div"); add(ca,el("b",null,"Cash App"),document.createTextNode(" · $alanaprollc"));
     var ck=el("div"); add(ck,el("b",null,"Check or direct deposit"),document.createTextNode(" · text Malia for details"));
-    var cd=el("div"); add(cd,el("b",null,"Card"),document.createTextNode(CARD_LINK?" · tap Pay now on an invoice (processing fees apply)":" · text Malia for the card link (processing fees apply)"));
+    var cd=el("div"); add(cd,el("b",null,"Card"),document.createTextNode(CARD_LINK?" · tap Pay now next to an unpaid invoice (processing fees apply)":" · text Malia for the card link (processing fees apply)"));
     add(pay,z,ca,ck,cd); s3.appendChild(pay);
     s3.appendChild(el("p","note","Whenever possible, Zelle should be used as the primary method."));
 
@@ -256,3 +306,4 @@
 })();
 </script>
 </div>
+<div data-ap-include="partials/footer.html"></div>
