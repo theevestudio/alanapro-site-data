@@ -5,7 +5,7 @@ Input: one JSON file holding the raw Notion query rows:
   {"clients": [...], "invoices": [...], "contracts": [...], "proposals": [...], "plans": [...]}
 (column names exactly as the Notion SQL queries return them).
 
-For every client with a "Portal Key", writes portal/<id>.json, encrypted with
+For every client with "Website Portal" checked and a "Portal Key", writes portal/<id>.json, encrypted with
 AES-256-GCM using a key derived from the Portal Key. The repo is public, but a
 file can only be found and read by someone holding that client's link.
 Files whose content has not changed are left alone, so git only sees real updates.
@@ -60,7 +60,8 @@ def build(raw):
     for c in raw.get("clients", []):
         key = clean(c.get("Portal Key"))
         cid = pid(c.get("url"))
-        if key and cid:
+        on = c.get("Website Portal", "__YES__") == "__YES__"  # the on/off switch in Notion
+        if on and key and cid:
             by_client[cid] = {"key": key, "row": c}
 
     out = {}
