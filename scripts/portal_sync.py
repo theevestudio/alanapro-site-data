@@ -2,7 +2,8 @@
 """Build the encrypted client-portal files for alanapro.com/portal.
 
 Input: one JSON file holding the raw Notion query rows:
-  {"clients": [...], "invoices": [...], "contracts": [...], "proposals": [...], "plans": [...]}
+  {"admin_key": "MALIA-…", "clients": [...], "invoices": [...], "contracts": [...], "proposals": [...], "plans": [...]}
+admin_key (optional) builds Malia's own link, which can switch between every Active client's portal.
 (column names exactly as the Notion SQL queries return them).
 
 For every client with "Website Portal" checked and a "Portal Key", writes portal/<id>.json, encrypted with
@@ -59,13 +60,16 @@ def clean(s):
 
 
 def build(raw):
+    """Returns (client_portals, admin_clients).
+    client_portals: {cid: (key, payload)} for clients with Website Portal on and a Portal Key.
+    admin_clients: [payload, ...] for every Active client or client with a portal, for Malia's own link."""
     by_client = {}
     for c in raw.get("clients", []):
         key = clean(c.get("Portal Key"))
         cid = pid(c.get("url"))
         on = c.get("Website Portal", "__YES__") == "__YES__"  # the on/off switch in Notion
-        if on and key and cid:
-            by_client[cid] = {"key": key, "row": c}
+        if cid and ((on and key) or c.get("Status") == "Active"):
+            by_client[cid] = {"key": key if on else None, "row": c}
 
     out = {}
     for cid, info in by_client.items():
@@ -117,15 +121,21 @@ def build(raw):
                 ] if val],
             } for p in pro],
         })
-    return out
+    portals = {cid: v for cid, v in out.items() if v[0]}
+    admin = sorted((v[1] for v in out.values()), key=lambda p: (p.get("business") or p.get("name") or "").lower())
+    return portals, admin
 
 
 def main(path):
     raw = json.load(open(path))
-    data = build(raw)
+    portals, admin = build(raw)
+    items = list(portals.values())
+    admin_key = clean(raw.get("admin_key"))
+    if admin_key:
+        items.append((admin_key, {"v": 1, "admin": True, "name": "Malia", "clients": admin}))
     os.makedirs(OUT, exist_ok=True)
     keep, changed = set(), 0
-    for cid, (key, payload) in data.items():
+    for key, payload in items:
         fid = file_id(key)
         keep.add(fid + ".json")
         plain = json.dumps(payload, sort_keys=True, ensure_ascii=False).encode()
@@ -147,7 +157,7 @@ def main(path):
     for f in os.listdir(OUT):
         if f.endswith(".json") and f not in keep:
             os.remove(os.path.join(OUT, f)); removed += 1
-    print(f"portals: {len(data)}  updated: {changed}  removed: {removed}")
+    print(f"portals: {len(portals)}  admin: {'yes' if admin_key else 'no'}  updated: {changed}  removed: {removed}")
 
 
 def new_key(name):
