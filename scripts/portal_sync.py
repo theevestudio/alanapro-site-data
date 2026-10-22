@@ -16,7 +16,14 @@ Usage: python3 scripts/portal_sync.py raw.json
        python3 scripts/portal_sync.py --new-key "Business Name"   -> prints e.g. SHELLWORLD-7PgdIl8NIu8l
        python3 scripts/portal_sync.py --portal-id KEY              -> prints the Portal_ID a reset request carries
        python3 scripts/portal_sync.py --store-plan <planner artifact URL> plan.json <Plans Key>
-           -> saves the read-only plan (from scripts/plan_export.mjs) so portals show it
+           -> saves the read-only plan (from scripts/plan_export.mjs) so portals show it, plus a plan-only copy
+              for its share link (prints the link)
+       python3 scripts/portal_sync.py --share-link <planner artifact URL> <Plans Key>  -> prints the plan-only link
+       python3 scripts/portal_sync.py --share-id <planner artifact URL> <Plans Key>    -> prints the Portal_ID that
+           picks / extra ideas sent from that plan-only link carry
+Plan-only links (https://alanapro.com/portal#PLAN-…) open just one month's plan, with no invoices, contracts or
+other months, so Malia can share a plan with a client's whole team. Each plan gets its own key (derived from the
+Plans Key), stored in planshare/.
 raw.json may also carry "plans_key" (from Malia's Portal Link page in Notion) to include those plans.
 Portal links look like https://alanapro.com/portal#SHELLWORLD-7PgdIl8NIu8l
 """
@@ -27,6 +34,14 @@ from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(REPO, "portal")
 PLANDATA = os.path.join(REPO, "plandata")  # read-only plan copies, encrypted with the Plans Key
+PLANSHARE = os.path.join(REPO, "planshare")  # plan-only copies, one key per plan (share links)
+SITE = "https://alanapro.com/portal#"
+
+
+def share_key(aid, plans_key):
+    """Stable per-plan key for the plan-only link. Can't be turned back into the Plans Key or another plan's key."""
+    d = hmac.new(plans_key.encode(), ("plan-share:" + aid).encode(), hashlib.sha256).digest()
+    return "PLAN-" + base64.urlsafe_b64encode(d).decode().rstrip("=")[:22]
 
 
 def artifact_id(url):
@@ -61,7 +76,14 @@ def store_plan(url, plan_path, plans_key):
     iv = os.urandom(12)
     ct = AESGCM(enc_key(plans_key)).encrypt(iv, body, None)
     json.dump({"v": 1, "iv": b64(iv), "ct": b64(ct)}, open(plan_file(aid), "w"))
-    print("stored plan for", aid)
+    # plan-only copy for the share link
+    sk = share_key(aid, plans_key)
+    os.makedirs(PLANSHARE, exist_ok=True)
+    share_body = json.dumps({"v": 1, "planOnly": True, "aid": aid, "plan": json.loads(body)}, ensure_ascii=False).encode()
+    iv2 = os.urandom(12)
+    ct2 = AESGCM(enc_key(sk)).encrypt(iv2, share_body, None)
+    json.dump({"v": 1, "iv": b64(iv2), "ct": b64(ct2)}, open(os.path.join(PLANSHARE, file_id(sk) + ".json"), "w"))
+    print("stored plan for", aid, "· plan-only link:", SITE + sk)
 
 HIDE_INVOICE = {"Draft", "Send", "VOID"}
 HIDE_CONTRACT = {"Draft"}
@@ -132,6 +154,7 @@ def build(raw, plans_key=None):
             "card": c.get("Card Payments") == "__YES__",
             "plans": [{"title": clean(p.get("Plan")), "month": p.get("date:Month:start"), "edit": clean(p.get("Link")),
                        "aid": artifact_id(clean(p.get("Link"))),
+                       "share": (SITE + share_key(artifact_id(clean(p.get("Link"))), plans_key)) if (plans_key and artifact_id(clean(p.get("Link")))) else None,
                        "plan": load_plan(clean(p.get("Link")), plans_key)} for p in pla],
             "invoices": [{
                 "num": clean(i.get("Invoice #")) or clean(i.get("Invoice")),
@@ -215,6 +238,10 @@ if __name__ == "__main__":
         print(new_key(" ".join(sys.argv[2:])))
     elif sys.argv[1] == "--store-plan":
         store_plan(sys.argv[2], sys.argv[3], sys.argv[4])
+    elif sys.argv[1] == "--share-link":
+        print(SITE + share_key(artifact_id(sys.argv[2]) or sys.argv[2], sys.argv[3]))
+    elif sys.argv[1] == "--share-id":
+        print(file_id(share_key(artifact_id(sys.argv[2]) or sys.argv[2], sys.argv[3])))
     elif sys.argv[1] == "--portal-id":
         print(file_id(sys.argv[2]))
     else:

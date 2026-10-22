@@ -10,6 +10,13 @@
     position:relative; width:100vw; margin-left:calc(50% - 50vw); background:var(--night); color:#fff;
     font-family:var(--display) !important; -webkit-font-smoothing:antialiased; min-height:70vh;
   }
+  /* overlays (plans, popups) live outside #app-portal, so they need the same colors */
+  #app-portal-ov{
+    --pink:#fd0182; --blush:#ffe3f0; --night:#141416; --ink:#1a1a1a; --paper:#fff;
+    --mist:#b4b4bc; --muted:#6b6b76; --line:#e6e6ea; --field:#f4f4f7;
+    --display:"pragmatica","Pragmatica","Helvetica Neue",Arial,sans-serif;
+    color:#fff; -webkit-font-smoothing:antialiased;
+  }
   :is(#app-portal,#app-portal-ov) *{box-sizing:border-box; font-family:var(--display) !important}
   :is(#app-portal,#app-portal-ov) h1,:is(#app-portal,#app-portal-ov) h2,:is(#app-portal,#app-portal-ov) h3,:is(#app-portal,#app-portal-ov) p{margin:0; text-transform:none !important; letter-spacing:normal}
   :is(#app-portal,#app-portal-ov) a{text-decoration:none}
@@ -126,9 +133,14 @@
     v.style.cssText="position:fixed;top:0;left:0;right:0;bottom:0;z-index:2147483000;background:#141416;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-top:env(safe-area-inset-top,0px)";
     var w=el("div"); w.style.cssText="max-width:860px;margin:0 auto;padding:18px 18px 80px";
     var top=el("div"); top.style.cssText="position:sticky;top:0;background:#141416;padding:10px 0 12px;display:flex;justify-content:space-between;align-items:center;gap:12px;z-index:1";
-    var back=el("button","ghost","← Back to portal"); back.type="button"; back.style.cssText+=";background:transparent;color:#fff;border:1px solid #2c2c32";
-    top.appendChild(back);
-    if(ADMIN && p.edit){ var ed=el("a","btn","Open planner"); ed.href=p.edit; ed.target="_blank"; ed.rel="noopener"; ed.style.cssText="font-size:14px;padding:11px 16px;min-height:44px"; top.appendChild(ed); }
+    var back=null;
+    if(!p.standalone){ back=el("button","ghost","← Back to portal"); back.type="button"; back.style.cssText+=";background:transparent;color:#fff;border:1px solid #2c2c32"; top.appendChild(back); }
+    else top.appendChild(el("div","kick","ALANA PRO · CONTENT PLAN"));
+    var acts=el("div"); acts.style.cssText="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end";
+    if(p.share){ var shb=el("button","btn","SHARE PLAN"); shb.type="button"; shb.style.cssText+=";border:none;cursor:pointer;font-size:14px;padding:11px 16px;min-height:44px";
+      shb.addEventListener("click",function(){ sharePlan(p.share); }); acts.appendChild(shb); }
+    top.appendChild(acts);
+    if(ADMIN && p.edit){ var ed=el("a","btn","Open planner"); ed.href=p.edit; ed.target="_blank"; ed.rel="noopener"; ed.style.cssText="font-size:14px;padding:11px 16px;min-height:44px;background:transparent;color:#fff;border:1px solid #2c2c32"; acts.appendChild(ed); }
     w.appendChild(top);
     add(w,el("div","kick",(P.eyebrow||"").toUpperCase()),el("h1",null,(P.title||"").replace(/ Plan$/,"")+" plan"));
     w.appendChild(el("p","help","Each post has a few versions. Tap A, B or C to see them, then tap Pick this version. Your pick goes straight to Malia's planner."));
@@ -150,7 +162,23 @@
     var y=window.scrollY; document.documentElement.style.overflow="hidden";
     function close(){ if(v.parentNode) v.parentNode.removeChild(v); document.documentElement.style.overflow=""; document.removeEventListener("keydown",esc); window.scrollTo(0,y); }
     function esc(e){ if(e.key==="Escape") close(); }
-    back.addEventListener("click",close); document.addEventListener("keydown",esc); back.focus();
+    if(back){ back.addEventListener("click",close); document.addEventListener("keydown",esc); back.focus(); }
+  }
+  // Plan-only link: copies a link that opens just this plan (no invoices, contracts or other months).
+  function sharePlan(link){
+    function done(ok){
+      var v=el("div","veil"); var pp=el("div","pop"); pp.setAttribute("role","dialog"); pp.setAttribute("aria-modal","true"); pp.setAttribute("aria-labelledby","app-portal-sp-t");
+      var h=el("h2",null,ok?"Plan link copied":"Copy this plan link"); h.id="app-portal-sp-t"; pp.appendChild(h);
+      if(!ok){ var lt=el("p",null,link); lt.style.cssText="word-break:break-all;background:#f4f4f7;padding:10px 12px;border-radius:10px;font-size:13px;user-select:all"; pp.appendChild(lt); }
+      pp.appendChild(el("p",null,"Share it with anyone on your team. It opens just this month's plan, where they can see every version, pick favorites and add extra ideas to film day. It doesn't show invoices, contracts or anything else in your portal."));
+      var okb=el("button","btn","Got it"); okb.type="button"; pp.appendChild(okb);
+      function close(){ if(v.parentNode) v.parentNode.removeChild(v); document.removeEventListener("keydown",esc); }
+      function esc(e){ if(e.key==="Escape") close(); }
+      okb.addEventListener("click",close); v.addEventListener("click",function(e){ if(e.target===v) close(); }); document.addEventListener("keydown",esc);
+      v.style.zIndex="2147483600"; v.appendChild(pp); overlayRoot().appendChild(v); okb.focus();
+    }
+    if(navigator.clipboard&&window.isSecureContext){ navigator.clipboard.writeText(link).then(function(){done(true);},function(){done(fallback(link));}); }
+    else done(fallback(link));
   }
   var PEND="alanapro-plan-picks";
   function pend(){ try{ return JSON.parse(localStorage.getItem(PEND)||"{}"); }catch(e){ return {}; } }
@@ -498,7 +526,26 @@
     a.addEventListener("click",function(e){ e.preventDefault(); forget(); ask("You're signed out on this device."); }); p.appendChild(a); root.appendChild(p);
   }
 
+  function startPlan(key){
+    root.innerHTML='<div class="msg">Loading the plan…</div>';
+    Promise.all([sha("alanapro-portal-file:"+key),sha("alanapro-portal-enc:"+key)]).then(function(h){
+      var file=hex(h[0]).slice(0,32)+".json";
+      function tryBase(i){ if(i>=BASES.length) return Promise.reject("missing");
+        return fetch(BASES[i].replace(/\/portal\/$/,"/planshare/")+file+(i===0?"?t="+Date.now():"")).then(function(r){ if(!r.ok) throw 0; return r.json(); }).catch(function(){ return tryBase(i+1); }); }
+      return tryBase(0).then(function(f){
+        return crypto.subtle.importKey("raw",h[1],"AES-GCM",false,["decrypt"]).then(function(k){
+          return crypto.subtle.decrypt({name:"AES-GCM",iv:unb64(f.iv)},k,unb64(f.ct)); });
+      }).then(function(buf){
+        var d=JSON.parse(new TextDecoder().decode(buf)); KEY=key;
+        LAST={business:((d.plan&&d.plan.eyebrow)||"").split("·")[0].trim()};
+        root.innerHTML="";
+        openPlan({aid:d.aid,plan:d.plan,standalone:true,share:"https://alanapro.com/portal#"+key});
+      });
+    }).catch(function(){ msg("This plan link isn't working","Text Malia at "+PHONE+" for a fresh link."); });
+  }
+
   function start(key,fromInput){
+    if(/^PLAN-/.test(key)) return startPlan(key);
     if(!window.crypto||!crypto.subtle){ msg("Please update your browser","Your browser can't open the portal. Try Safari or Chrome, or text Malia at "+PHONE+"."); return; }
     root.innerHTML='<div class="msg">Loading your portal…</div>';
     Promise.all([sha("alanapro-portal-file:"+key),sha("alanapro-portal-enc:"+key)]).then(function(h){
@@ -516,7 +563,8 @@
   }
 
   var fromHash=grab(decodeURIComponent((location.hash||"").replace(/^#/,"").replace(/^k=/,"")));
-  if(fromHash){ try{ history.replaceState(null,"",location.pathname+location.search); }catch(e){} start(fromHash); }
+  if(fromHash && /^PLAN-/.test(fromHash)){ if(!window.crypto||!crypto.subtle) msg("Please update your browser","Try Safari or Chrome to open this plan."); else startPlan(fromHash); }
+  else if(fromHash){ try{ history.replaceState(null,"",location.pathname+location.search); }catch(e){} start(fromHash); }
   else if(saved()) start(saved());
   else ask();
 })();
