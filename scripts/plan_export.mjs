@@ -2,8 +2,8 @@
 // into the read-only plan clients see in their portal.
 // Usage: node scripts/plan_export.mjs <planner.html> <picks-dir> > plan.json
 //   picks-dir holds one <slotId>.json per pick ({"version":"B"}), as ArtifactData list out_dir writes them.
-// Keeps: dates, post type, theme, picked version (or A), title/kicker, end card, hook, script / what happens, photo.
-// Leaves out internal stuff: notes, shot lists, example links, unpicked versions, the film-day list.
+// Keeps: dates, post type, theme, every version (A/B/C…) with title/kicker, end card, hook, script / what happens, photo,
+// and which version is picked. Leaves out internal stuff: notes, shot lists, example links, the film-day list.
 import fs from "node:fs";
 import path from "node:path";
 import vm from "node:vm";
@@ -37,17 +37,17 @@ const out = {
     n: w.n, name: w.name, note: w.note,
     slots: SLOTS.filter(s => s.week === w.n).map(s => {
       const picked = s.v.find(v => v.k === picks[s.id]);
-      const v = picked || s.v[0];
-      const kind = v.fmt || s.kind;
-      const isStatic = kind === "ST";
-      const label = isStatic ? "Static post" : "Reel · " + ((TYPE[kind] || [kind])[0]);
-      const o = { id: s.id, date: s.date, day: s.day, label, isStatic, theme: s.theme, picked: !!picked, name: v.name };
-      if (isStatic) o.photo = v.shot;
-      else Object.assign(o, { kicker: v.kicker, title: v.title, end: v.end, hook: v.hook, say: v.say, talk: kind === "TH" });
-      return o;
+      const ver = v => {
+        const kind = v.fmt || s.kind, isStatic = kind === "ST";
+        const o = { k: v.k, name: v.name, isStatic, label: isStatic ? "Static post" : "Reel · " + ((TYPE[kind] || [kind])[0]) };
+        if (isStatic) o.photo = v.shot;
+        else Object.assign(o, { kicker: v.kicker, title: v.title, end: v.end, hook: v.hook, say: v.say, talk: kind === "TH" });
+        return o;
+      };
+      return { id: s.id, date: s.date, day: s.day, theme: s.theme, pick: picked ? picked.k : null, versions: s.v.map(ver) };
     })
   }))
 };
 out.total = out.weeks.reduce((n, w) => n + w.slots.length, 0);
-out.pickedCount = out.weeks.reduce((n, w) => n + w.slots.filter(s => s.picked).length, 0);
+out.pickedCount = out.weeks.reduce((n, w) => n + w.slots.filter(s => s.pick).length, 0);
 process.stdout.write(JSON.stringify(out));

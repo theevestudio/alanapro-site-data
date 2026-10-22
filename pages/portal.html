@@ -124,28 +124,11 @@
     if(ADMIN && p.edit){ var ed=el("a","btn","Open planner"); ed.href=p.edit; ed.target="_blank"; ed.rel="noopener"; ed.style.cssText="font-size:14px;padding:11px 16px;min-height:44px"; top.appendChild(ed); }
     w.appendChild(top);
     add(w,el("div","kick",(P.eyebrow||"").toUpperCase()),el("h1",null,(P.title||"").replace(/ Plan$/,"")+" plan"));
-    if(!ADMIN && P.pickedCount<P.total) w.appendChild(el("p","help","Some posts are still being finalized and may change."));
+    w.appendChild(el("p","help","Each post has a few versions. Tap A, B or C to see them, then tap Pick this version. Your pick goes straight to Malia's planner."));
     (P.weeks||[]).forEach(function(wk){
       var sec=el("section","sec"); add(sec,el("h2","label","WEEK "+wk.n+" · "+(wk.name||"").toUpperCase()));
       if(wk.note) sec.appendChild(el("p","help",wk.note));
-      (wk.slots||[]).forEach(function(sl){
-        var c=el("div"); c.style.cssText="background:#1f1f23;border:1px solid #2c2c32;border-radius:18px;padding:18px;margin-top:12px;display:flex;flex-direction:column;gap:10px;color:#e3e3e8";
-        var hd=el("div"); hd.style.cssText="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center";
-        var dt=el("b",null,sl.date); dt.style.cssText="color:#fff;font-size:15px";
-        var lb=el("span",null,sl.label); lb.style.cssText="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#b4b4bc;border:1px solid #2c2c32;border-radius:6px;padding:3px 8px";
-        add(hd,dt,lb); c.appendChild(hd);
-        var th=el("div",null,sl.theme); th.style.cssText="font-size:18px;font-weight:800;color:#fff"; c.appendChild(th);
-        if(sl.isStatic){ add(c,lab("Photo"),txt(sl.photo)); }
-        else {
-          var tc=el("div"); tc.style.cssText="background:linear-gradient(180deg,#3a3a40,#2b2b30);border-radius:12px;padding:16px 12px;text-align:center;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.6)";
-          var k=el("div",null,sl.kicker); k.style.cssText="font-size:11px;letter-spacing:3px;font-weight:600";
-          var t2=el("div",null,sl.title); t2.style.cssText="font-family:Georgia,'Times New Roman',serif !important;font-size:22px;font-weight:700;letter-spacing:1px;margin-top:4px";
-          add(tc,k,t2); c.appendChild(tc);
-          add(c,lab("Hook"),txt(sl.hook),lab(sl.talk?"Script":"What happens"),txt(sl.say));
-          if(sl.end) add(c,lab("End card"),txt(sl.end+" · "+(P.endName||"")));
-        }
-        sec.appendChild(c);
-      });
+      (wk.slots||[]).forEach(function(sl){ sec.appendChild(slotCard(p,P,sl)); });
       w.appendChild(sec);
     });
     function lab(t){ var e=el("div",null,t); e.style.cssText="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#8d8d96;margin-bottom:-6px"; return e; }
@@ -155,6 +138,71 @@
     function close(){ if(v.parentNode) v.parentNode.removeChild(v); document.documentElement.style.overflow=""; document.removeEventListener("keydown",esc); window.scrollTo(0,y); }
     function esc(e){ if(e.key==="Escape") close(); }
     back.addEventListener("click",close); document.addEventListener("keydown",esc); back.focus();
+  }
+  var PEND="alanapro-plan-picks";
+  function pend(){ try{ return JSON.parse(localStorage.getItem(PEND)||"{}"); }catch(e){ return {}; } }
+  function setPend(k,v){ try{ var m=pend(); m[k]={v:v,t:Date.now()}; localStorage.setItem(PEND,JSON.stringify(m)); }catch(e){} }
+  function currentPick(p,sl){ var m=pend()[p.aid+":"+sl.id]; if(m && Date.now()-m.t<2*36e5) return m.v; return sl.pick; }
+  function slotCard(p,P,sl){
+    var c=el("div"); c.style.cssText="background:#1f1f23;border:1px solid #2c2c32;border-radius:18px;padding:18px;margin-top:12px;display:flex;flex-direction:column;gap:10px;color:#e3e3e8";
+    var view=currentPick(p,sl)||sl.versions[0].k;
+    function draw(){
+      c.innerHTML="";
+      var picked=currentPick(p,sl), v=sl.versions.filter(function(x){return x.k===view;})[0]||sl.versions[0];
+      var hd=el("div"); hd.style.cssText="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center";
+      var dt=el("b",null,sl.date); dt.style.cssText="color:#fff;font-size:15px";
+      var lb=el("span",null,v.label); lb.style.cssText="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#b4b4bc;border:1px solid #2c2c32;border-radius:6px;padding:3px 8px";
+      add(hd,dt,lb); c.appendChild(hd);
+      var th=el("div",null,sl.theme); th.style.cssText="font-size:18px;font-weight:800;color:#fff"; c.appendChild(th);
+      if(sl.versions.length>1){
+        var bar=el("div"); bar.setAttribute("role","group"); bar.setAttribute("aria-label","Versions"); bar.style.cssText="display:flex;gap:8px;flex-wrap:wrap";
+        sl.versions.forEach(function(x){
+          var on=x.k===view, isPick=x.k===picked;
+          var pb=el("button",null,x.k+(isPick?" ✓":"")); pb.type="button"; pb.setAttribute("aria-pressed",on?"true":"false");
+          pb.setAttribute("aria-label","Version "+x.k+": "+x.name+(isPick?" (picked)":""));
+          pb.style.cssText="min-width:48px;min-height:44px;border-radius:12px;font-weight:800;font-size:15px;cursor:pointer;border:1px solid "+(on?"#fd0182":"#2c2c32")+";background:"+(on?"#3a0a24":"transparent")+";color:#fff";
+          pb.addEventListener("click",function(){ view=x.k; draw(); }); bar.appendChild(pb);
+        });
+        c.appendChild(bar);
+      }
+      var nm=el("div",null,"Version "+v.k+": "+v.name); nm.style.cssText="font-weight:700;color:#fff"; c.appendChild(nm);
+      if(v.isStatic){ add(c,lab("Photo"),txt(v.photo)); }
+      else {
+        var tc=el("div"); tc.style.cssText="background:linear-gradient(180deg,#3a3a40,#2b2b30);border-radius:12px;padding:16px 12px;text-align:center;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.6)";
+        var k=el("div",null,v.kicker); k.style.cssText="font-size:11px;letter-spacing:3px;font-weight:600";
+        var t2=el("div",null,v.title); t2.style.cssText="font-family:Georgia,'Times New Roman',serif !important;font-size:22px;font-weight:700;letter-spacing:1px;margin-top:4px";
+        add(tc,k,t2); c.appendChild(tc);
+        add(c,lab("Hook"),txt(v.hook),lab(v.talk?"Script":"What happens"),txt(v.say));
+        if(v.end) add(c,lab("End card"),txt(v.end+" · "+(P.endName||"")));
+      }
+      var st=el("div"); st.style.cssText="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:4px";
+      if(view===picked){ var ok=el("span","pill p-paid","✓ Picked"); st.appendChild(ok); }
+      else if(sl.versions.length>1 && p.aid){
+        var go=el("button","btn","Pick version "+view); go.type="button"; go.style.cssText+=";border:none;cursor:pointer;font-size:15px;padding:12px 18px";
+        go.addEventListener("click",function(){ sendPick(p,sl,view,go,draw); }); st.appendChild(go);
+        if(!picked) st.appendChild(el("span","help","Not picked yet"));
+      }
+      c.appendChild(st);
+    }
+    function lab(t){ var e=el("div",null,t); e.style.cssText="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#8d8d96;margin-bottom:-6px"; return e; }
+    function txt(t){ var e=el("p",null,t); e.style.cssText="margin:0;font-size:15px;line-height:1.55;white-space:pre-line"; return e; }
+    draw(); return c;
+  }
+  function sendPick(p,sl,k,btn,redraw){
+    if(/squarespace\.com$/i.test(location.hostname)||window.top!==window){ btn.textContent="Preview only: picks send from alanapro.com"; return; }
+    btn.disabled=true; btn.textContent="Saving…";
+    sha("alanapro-portal-file:"+KEY).then(function(h){
+      var fd=new FormData();
+      fd.set("_subject","Plan pick: "+(LAST&&(LAST.business||LAST.name)||"")+" "+sl.date);
+      fd.set("_captcha","false"); fd.set("_template","table");
+      fd.set("_cc",["alana.productions.co","gmail.com"].join("@"));
+      fd.set("Business",LAST&&(LAST.business||LAST.name)||""); fd.set("Portal_ID",hex(h).slice(0,32));
+      fd.set("Plan",p.aid); fd.set("Slot",sl.id); fd.set("Date",sl.date); fd.set("Version",k);
+      var v=sl.versions.filter(function(x){return x.k===k;})[0]; fd.set("Version_Name",v?v.name:"");
+      return fetch("https://formsubmit.co/ajax/"+["malia","alanapro.com"].join("@"),{method:"POST",headers:{"Accept":"application/json"},body:fd});
+    }).then(function(r){ return r.json().catch(function(){return {};}).then(function(j){ if(!r.ok||String(j.success)!=="true") throw 0; }); })
+    .then(function(){ setPend(p.aid+":"+sl.id,k); redraw(); })
+    .catch(function(){ btn.disabled=false; btn.textContent="Didn't save. Try again"; });
   }
   function linkRow(href,title,sub,right){ var a=el("a","row"); a.href=href; a.target="_blank"; a.rel="noopener";
     var l=el("div"); add(l,el("div","t",title),sub?el("div","s",sub):null); add(a,l,right); return a; }

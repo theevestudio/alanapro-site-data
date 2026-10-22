@@ -131,6 +131,7 @@ def build(raw, plans_key=None):
             "email": clean(c.get("Email")),
             "card": c.get("Card Payments") == "__YES__",
             "plans": [{"title": clean(p.get("Plan")), "month": p.get("date:Month:start"), "edit": clean(p.get("Link")),
+                       "aid": artifact_id(clean(p.get("Link"))),
                        "plan": load_plan(clean(p.get("Link")), plans_key)} for p in pla],
             "invoices": [{
                 "num": clean(i.get("Invoice #")) or clean(i.get("Invoice")),
