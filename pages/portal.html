@@ -131,6 +131,12 @@
       (wk.slots||[]).forEach(function(sl){ sec.appendChild(slotCard(p,P,sl)); });
       w.appendChild(sec);
     });
+    if(P.extras && P.extras.length){
+      var xs=el("section","sec"); add(xs,el("h2","label","EXTRA IDEAS · NOT ON THE CALENDAR"));
+      xs.appendChild(el("p","help","Like one of these? Tap Add to film day and Malia will plan to shoot it for a future Reel."));
+      P.extras.forEach(function(x){ xs.appendChild(extraCard(p,x)); });
+      w.appendChild(xs);
+    }
     function lab(t){ var e=el("div",null,t); e.style.cssText="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#8d8d96;margin-bottom:-6px"; return e; }
     function txt(t){ var e=el("p",null,t); e.style.cssText="margin:0;font-size:15px;line-height:1.55;white-space:pre-line"; return e; }
     v.appendChild(w); document.getElementById("app-portal").appendChild(v);
@@ -170,7 +176,7 @@
       else {
         var tc=el("div"); tc.style.cssText="background:linear-gradient(180deg,#3a3a40,#2b2b30);border-radius:12px;padding:16px 12px;text-align:center;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.6)";
         var k=el("div",null,v.kicker); k.style.cssText="font-size:11px;letter-spacing:3px;font-weight:600";
-        var t2=el("div",null,v.title); t2.style.cssText="font-family:Georgia,'Times New Roman',serif !important;font-size:22px;font-weight:700;letter-spacing:1px;margin-top:4px";
+        var t2=el("div",null,v.title); t2.style.cssText=titleCss(P.titleStyle);
         add(tc,k,t2); c.appendChild(tc);
         add(c,lab("Hook"),txt(v.hook),lab(v.talk?"Script":"What happens"),txt(v.say));
         if(v.end) add(c,lab("End card"),txt(v.end+" · "+(P.endName||"")));
@@ -202,6 +208,48 @@
       return fetch("https://formsubmit.co/ajax/"+["malia","alanapro.com"].join("@"),{method:"POST",headers:{"Accept":"application/json"},body:fd});
     }).then(function(r){ return r.json().catch(function(){return {};}).then(function(j){ if(!r.ok||String(j.success)!=="true") throw 0; }); })
     .then(function(){ setPend(p.aid+":"+sl.id,k); redraw(); })
+    .catch(function(){ btn.disabled=false; btn.textContent="Didn't save. Try again"; });
+  }
+  // Main-title look per client (exported from their planner's CSS). Pragmatica is the site font, so use it when the plan asks for it.
+  function titleCss(ts){
+    ts=ts||{}; var fam=ts["font-family"]||"Georgia,'Times New Roman',serif";
+    if(/pragmatica/i.test(fam)) fam="pragmatica,"+fam;
+    var css="font-family:"+fam+" !important;font-size:"+(ts["font-size"]||"22px")+";font-weight:"+(ts["font-weight"]||"700")+";letter-spacing:"+(ts["letter-spacing"]||"1px")+";line-height:"+(ts["line-height"]||"1.1")+";margin-top:"+(ts["text-shadow"]?"1px":"4px");
+    if(ts.color) css+=";color:"+ts.color; if(ts["text-shadow"]) css+=";text-shadow:"+ts["text-shadow"];
+    return css;
+  }
+  function currentExtra(p,x){ var m=pend()[p.aid+":x"+x.i]; if(m && Date.now()-m.t<2*36e5) return !!m.v; return !!x.added; }
+  function extraCard(p,x){
+    var c=el("div"); c.style.cssText="background:#1f1f23;border:1px solid #2c2c32;border-radius:18px;padding:18px;margin-top:12px;display:flex;flex-direction:column;gap:10px;color:#e3e3e8";
+    function draw(){
+      c.innerHTML=""; var on=currentExtra(p,x);
+      var th=el("div",null,x.title); th.style.cssText="font-size:18px;font-weight:800;color:#fff"; c.appendChild(th);
+      if(x.desc){ var d=el("p",null,x.desc); d.style.cssText="margin:0;font-size:15px;line-height:1.55"; c.appendChild(d); }
+      var st=el("div"); st.style.cssText="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:4px";
+      if(x.link){ var a=el("a","ghost","See example ↗"); a.href=x.link; a.target="_blank"; a.rel="noopener"; a.style.cssText+=";background:transparent;color:#fff;border:1px solid #2c2c32"; st.appendChild(a); }
+      if(p.aid){
+        var go=el("button",on?"ghost":"btn",on?"✓ Added to film day · tap to remove":"Add to film day"); go.type="button";
+        go.setAttribute("aria-pressed",on?"true":"false");
+        go.style.cssText+=";cursor:pointer;font-size:15px;padding:12px 18px"+(on?";background:#3a0a24;color:#fff;border:1px solid #fd0182":";border:none");
+        go.addEventListener("click",function(){ sendExtra(p,x,!on,go,draw); }); st.appendChild(go);
+      }
+      c.appendChild(st);
+    }
+    draw(); return c;
+  }
+  function sendExtra(p,x,addIt,btn,redraw){
+    if(/squarespace\.com$/i.test(location.hostname)||window.top!==window){ btn.textContent="Preview only: sends from alanapro.com"; return; }
+    btn.disabled=true; btn.textContent="Saving…";
+    sha("alanapro-portal-file:"+KEY).then(function(h){
+      var fd=new FormData();
+      fd.set("_subject","Plan extra: "+(LAST&&(LAST.business||LAST.name)||"")+" "+(addIt?"added":"removed")+" "+x.title);
+      fd.set("_captcha","false"); fd.set("_template","table");
+      fd.set("_cc",["alana.productions.co","gmail.com"].join("@"));
+      fd.set("Business",LAST&&(LAST.business||LAST.name)||""); fd.set("Portal_ID",hex(h).slice(0,32));
+      fd.set("Plan",p.aid); fd.set("Idea",String(x.i)); fd.set("Idea_Title",x.title||""); fd.set("Action",addIt?"add":"remove");
+      return fetch("https://formsubmit.co/ajax/"+["malia","alanapro.com"].join("@"),{method:"POST",headers:{"Accept":"application/json"},body:fd});
+    }).then(function(r){ return r.json().catch(function(){return {};}).then(function(j){ if(!r.ok||String(j.success)!=="true") throw 0; }); })
+    .then(function(){ setPend(p.aid+":x"+x.i,addIt); redraw(); })
     .catch(function(){ btn.disabled=false; btn.textContent="Didn't save. Try again"; });
   }
   function linkRow(href,title,sub,right){ var a=el("a","row"); a.href=href; a.target="_blank"; a.rel="noopener";
