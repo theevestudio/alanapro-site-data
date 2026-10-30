@@ -193,7 +193,7 @@
   var PEND="alanapro-plan-picks";
   function pend(){ try{ return JSON.parse(localStorage.getItem(PEND)||"{}"); }catch(e){ return {}; } }
   function setPend(k,v){ try{ var m=pend(); m[k]={v:v,t:Date.now()}; localStorage.setItem(PEND,JSON.stringify(m)); }catch(e){} }
-  function currentPick(p,sl){ var m=pend()[p.aid+":"+sl.id]; if(m && Date.now()-m.t<2*36e5) return m.v; return sl.pick; }
+  function currentPick(p,sl){ var qd=queued(p.aid+":"+sl.id); if(qd) return qd.v; var m=pend()[p.aid+":"+sl.id]; if(m && Date.now()-m.t<2*36e5) return m.v; return sl.pick; }
   function slotCard(p,P,sl){
     var c=el("div"); c.style.cssText="background:#1f1f23;border:1px solid #2c2c32;border-radius:18px;padding:18px;margin-top:12px;display:flex;flex-direction:column;gap:10px;color:#e3e3e8";
     var view=currentPick(p,sl)||sl.versions[0].k;
@@ -259,21 +259,36 @@
     function txt(t){ var e=el("p",null,t); e.style.cssText="margin:0;font-size:15px;line-height:1.55;white-space:pre-line"; return e; }
     draw(); return c;
   }
-  function sendPick(p,sl,k,btn,redraw){
-    if(/squarespace\.com$/i.test(location.hostname)||window.top!==window){ btn.textContent="Preview only: picks send from alanapro.com"; return; }
+  // Outbox: if the form service is down, picks are saved on this device and retried automatically.
+  var QKEY="alanapro-portal-outbox", FORM_URL="https://formsubmit.co/ajax/"+["malia","alanapro.com"].join("@");
+  function outbox(){ try{ return JSON.parse(localStorage.getItem(QKEY)||"[]").filter(function(q){ return Date.now()-q.t<7*864e5; }); }catch(e){ return []; } }
+  function setOutbox(a){ try{ localStorage.setItem(QKEY,JSON.stringify(a)); }catch(e){} }
+  function queued(key){ var q=outbox().filter(function(x){ return x.key===key; })[0]; return q?{v:q.v}:null; }
+  function postEntries(entries){
+    var fd=new FormData(); entries.forEach(function(e){ fd.set(e[0],e[1]); });
+    return fetch(FORM_URL,{method:"POST",headers:{"Accept":"application/json"},body:fd})
+      .then(function(r){ return r.json().catch(function(){return {};}).then(function(j){ if(!r.ok||String(j.success)!=="true") throw 0; }); });
+  }
+  function enqueue(key,v,entries){ var a=outbox().filter(function(q){ return q.key!==key; }); a.push({key:key,v:v,entries:entries,t:Date.now()}); setOutbox(a); }
+  var flushing=false;
+  function flushOutbox(){
+    if(flushing) return; var a=outbox(); if(!a.length) return; flushing=true; var q=a[0];
+    postEntries(q.entries).then(function(){ setPend(q.key,q.v); setOutbox(outbox().filter(function(x){ return !(x.key===q.key&&x.t===q.t); })); flushing=false; flushOutbox(); })
+      .catch(function(){ flushing=false; });
+  }
+  setInterval(flushOutbox,60000); setTimeout(flushOutbox,3000);
+  function send(key,v,entries,btn,redraw){
+    if(/squarespace\.com$/i.test(location.hostname)||window.top!==window){ btn.textContent="Preview only: sends from alanapro.com"; return; }
     btn.disabled=true; btn.textContent="Saving…";
+    postEntries(entries).then(function(){ setPend(key,v); redraw(); })
+      .catch(function(){ enqueue(key,v,entries); setPend(key,v); redraw(); toast("Saved. It'll reach Malia automatically"); });
+  }
+  function sendPick(p,sl,k,btn,redraw){
     sha("alanapro-portal-file:"+KEY).then(function(h){
-      var fd=new FormData();
-      fd.set("_subject","Plan pick: "+(LAST&&(LAST.business||LAST.name)||"")+" "+sl.date);
-      fd.set("_captcha","false"); fd.set("_template","table");
-      fd.set("_cc",["alana.productions.co","gmail.com"].join("@"));
-      fd.set("Business",LAST&&(LAST.business||LAST.name)||""); fd.set("Portal_ID",hex(h).slice(0,32));
-      fd.set("Plan",p.aid); fd.set("Slot",sl.id); fd.set("Date",sl.date); fd.set("Version",k);
-      var v=sl.versions.filter(function(x){return x.k===k;})[0]; fd.set("Version_Name",v?v.name:"");
-      return fetch("https://formsubmit.co/ajax/"+["malia","alanapro.com"].join("@"),{method:"POST",headers:{"Accept":"application/json"},body:fd});
-    }).then(function(r){ return r.json().catch(function(){return {};}).then(function(j){ if(!r.ok||String(j.success)!=="true") throw 0; }); })
-    .then(function(){ setPend(p.aid+":"+sl.id,k); redraw(); })
-    .catch(function(){ btn.disabled=false; btn.textContent="Didn't save. Try again"; });
+      var v=sl.versions.filter(function(x){return x.k===k;})[0], who=LAST&&(LAST.business||LAST.name)||"";
+      send(p.aid+":"+sl.id,k,[["_subject","Plan pick: "+who+" "+sl.date],["_captcha","false"],["_template","table"],["_cc",["alana.productions.co","gmail.com"].join("@")],
+        ["Business",who],["Portal_ID",hex(h).slice(0,32)],["Plan",p.aid],["Slot",sl.id],["Date",sl.date],["Version",k],["Version_Name",v?v.name:""]],btn,redraw);
+    });
   }
   // Main-title look per client (exported from their planner's CSS). Pragmatica is the site font, so use it when the plan asks for it.
   function titleCss(ts){
@@ -283,7 +298,7 @@
     if(ts.color) css+=";color:"+ts.color; if(ts["text-shadow"]) css+=";text-shadow:"+ts["text-shadow"];
     return css;
   }
-  function currentExtra(p,x){ var m=pend()[p.aid+":x"+x.i]; if(m && Date.now()-m.t<2*36e5) return !!m.v; return !!x.added; }
+  function currentExtra(p,x){ var qd=queued(p.aid+":x"+x.i); if(qd) return !!qd.v; var m=pend()[p.aid+":x"+x.i]; if(m && Date.now()-m.t<2*36e5) return !!m.v; return !!x.added; }
   function extraCard(p,x){
     var c=el("div"); c.style.cssText="background:#1f1f23;border:1px solid #2c2c32;border-radius:18px;padding:18px;margin-top:12px;display:flex;flex-direction:column;gap:10px;color:#e3e3e8";
     function draw(){
@@ -303,19 +318,11 @@
     draw(); return c;
   }
   function sendExtra(p,x,addIt,btn,redraw){
-    if(/squarespace\.com$/i.test(location.hostname)||window.top!==window){ btn.textContent="Preview only: sends from alanapro.com"; return; }
-    btn.disabled=true; btn.textContent="Saving…";
     sha("alanapro-portal-file:"+KEY).then(function(h){
-      var fd=new FormData();
-      fd.set("_subject","Plan extra: "+(LAST&&(LAST.business||LAST.name)||"")+" "+(addIt?"added":"removed")+" "+x.title);
-      fd.set("_captcha","false"); fd.set("_template","table");
-      fd.set("_cc",["alana.productions.co","gmail.com"].join("@"));
-      fd.set("Business",LAST&&(LAST.business||LAST.name)||""); fd.set("Portal_ID",hex(h).slice(0,32));
-      fd.set("Plan",p.aid); fd.set("Idea",String(x.i)); fd.set("Idea_Title",x.title||""); fd.set("Action",addIt?"add":"remove");
-      return fetch("https://formsubmit.co/ajax/"+["malia","alanapro.com"].join("@"),{method:"POST",headers:{"Accept":"application/json"},body:fd});
-    }).then(function(r){ return r.json().catch(function(){return {};}).then(function(j){ if(!r.ok||String(j.success)!=="true") throw 0; }); })
-    .then(function(){ setPend(p.aid+":x"+x.i,addIt); redraw(); })
-    .catch(function(){ btn.disabled=false; btn.textContent="Didn't save. Try again"; });
+      var who=LAST&&(LAST.business||LAST.name)||"";
+      send(p.aid+":x"+x.i,addIt,[["_subject","Plan extra: "+who+" "+(addIt?"added":"removed")+" "+x.title],["_captcha","false"],["_template","table"],["_cc",["alana.productions.co","gmail.com"].join("@")],
+        ["Business",who],["Portal_ID",hex(h).slice(0,32)],["Plan",p.aid],["Idea",String(x.i)],["Idea_Title",x.title||""],["Action",addIt?"add":"remove"]],btn,redraw);
+    });
   }
   function linkRow(href,title,sub,right){ var a=el("a","row"); a.href=href; a.target="_blank"; a.rel="noopener";
     var l=el("div"); add(l,el("div","t",title),sub?el("div","s",sub):null); add(a,l,right); return a; }
