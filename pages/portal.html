@@ -143,7 +143,7 @@
     if(ADMIN && p.edit){ var ed=el("a","btn","Open planner"); ed.href=p.edit; ed.target="_blank"; ed.rel="noopener"; ed.style.cssText="font-size:14px;padding:11px 16px;min-height:44px;background:transparent;color:#fff;border:1px solid #2c2c32"; acts.appendChild(ed); }
     w.appendChild(top);
     add(w,el("div","kick",(P.eyebrow||"").toUpperCase()),el("h1",null,(P.title||"").replace(/ Plan$/,"")+" plan"));
-    w.appendChild(el("p","help","Each post has a few versions. Tap A, B or C to see them, then tap Pick this version. Your pick goes straight to Malia's planner."));
+    w.appendChild(el("p","help","Each post has a few versions. Tap A, B or C to see them, then tap Pick this version. Your pick goes straight to Malia's planner. Changed your mind? Tap Change version anytime before film day."));
     (P.weeks||[]).forEach(function(wk){
       var sec=el("section","sec"); add(sec,el("h2","label","WEEK "+wk.n+" · "+(wk.name||"").toUpperCase()));
       if(wk.note) sec.appendChild(el("p","help",wk.note));
@@ -227,14 +227,34 @@
         if(v.end) add(c,lab("End card"),txt(v.end+" · "+(P.endName||"")));
       }
       var st=el("div"); st.style.cssText="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:4px";
-      if(view===picked){ var ok=el("span","pill p-paid","✓ Picked"); st.appendChild(ok); }
-      else if(sl.versions.length>1 && p.aid){
-        var go=el("button","btn","Pick version "+view); go.type="button"; go.style.cssText+=";border:none;cursor:pointer;font-size:15px;padding:12px 18px";
-        go.addEventListener("click",function(){ sendPick(p,sl,view,go,draw); }); st.appendChild(go);
-        if(!picked) st.appendChild(el("span","help","Not picked yet"));
+      var canPick=sl.versions.length>1 && p.aid;
+      if(view===picked){
+        var ok=el("span","pill p-paid","✓ Version "+picked+" picked"); st.appendChild(ok);
+        if(canPick){
+          // Change version: jump to the next version so they can compare and pick another.
+          var ch=el("button","ghost","Change version"); ch.type="button";
+          ch.style.cssText+=";cursor:pointer;font-size:15px;padding:12px 18px;background:transparent;color:#fff;border:1px solid #2c2c32";
+          ch.addEventListener("click",function(){ var ks=sl.versions.map(function(x){return x.k;}); view=ks[(ks.indexOf(picked)+1)%ks.length]; changing=true; draw(); var b=c.querySelector('[role="group"]'); if(b) b.scrollIntoView({block:"center",behavior:"smooth"}); });
+          st.appendChild(ch);
+        }
+      }
+      else if(canPick){
+        var go=el("button","btn",picked?"Switch to version "+view:"Pick version "+view); go.type="button"; go.style.cssText+=";border:none;cursor:pointer;font-size:15px;padding:12px 18px";
+        go.addEventListener("click",function(){ changing=false; sendPick(p,sl,view,go,draw); }); st.appendChild(go);
+        if(picked){
+          var keep=el("button","ghost","Keep version "+picked); keep.type="button";
+          keep.style.cssText+=";cursor:pointer;font-size:15px;padding:12px 18px;background:transparent;color:#fff;border:1px solid #2c2c32";
+          keep.addEventListener("click",function(){ changing=false; view=picked; draw(); }); st.appendChild(keep);
+        }
+        else st.appendChild(el("span","help","Not picked yet"));
       }
       c.appendChild(st);
+      if(changing && picked && canPick && view!==picked){
+        var hint=el("p","help","You picked version "+picked+". Tap A, B or C above to compare, then tap Switch to change your pick.");
+        hint.style.marginTop="0"; c.appendChild(hint);
+      }
     }
+    var changing=false;
     function lab(t){ var e=el("div",null,t); e.style.cssText="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#8d8d96;margin-bottom:-6px"; return e; }
     function txt(t){ var e=el("p",null,t); e.style.cssText="margin:0;font-size:15px;line-height:1.55;white-space:pre-line"; return e; }
     draw(); return c;
