@@ -203,7 +203,29 @@
       var hd=el("div"); hd.style.cssText="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center";
       var dt=el("b",null,sl.date); dt.style.cssText="color:#fff;font-size:15px";
       var lb=el("span",null,v.label); lb.style.cssText="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#b4b4bc;border:1px solid #2c2c32;border-radius:6px;padding:3px 8px";
-      add(hd,dt,lb); c.appendChild(hd);
+      var rt=el("div"); rt.style.cssText="display:flex;gap:8px;align-items:center;flex-wrap:wrap";
+      rt.appendChild(lb);
+      if(p.aid){ var nb=el("button",null,editingNote?"Close notes":"✎ Notes"); nb.type="button"; nb.setAttribute("aria-expanded",editingNote?"true":"false");
+        nb.setAttribute("aria-label",(editingNote?"Close":"Edit")+" notes for "+sl.date);
+        nb.style.cssText="font-size:12px;font-weight:700;color:#fff;background:transparent;border:1px solid #2c2c32;border-radius:8px;padding:6px 10px;min-height:32px;cursor:pointer";
+        nb.addEventListener("click",function(){ editingNote=!editingNote; draw(); if(editingNote){ var ta=c.querySelector("textarea"); if(ta) ta.focus(); } }); rt.appendChild(nb); }
+      add(hd,dt,rt); c.appendChild(hd);
+      var note=currentNote(p,sl);
+      if(editingNote){
+        var box=el("div"); box.style.cssText="display:flex;flex-direction:column;gap:8px;background:#141416;border:1px solid #2c2c32;border-radius:12px;padding:12px";
+        var nl=el("label",null,"Notes for Malia"); nl.setAttribute("for","note-"+sl.id); nl.style.cssText="font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#b4b4bc";
+        var ta=el("textarea"); ta.id="note-"+sl.id; ta.value=note; ta.maxLength=1000; ta.rows=3; ta.placeholder="Who's on camera, changes, anything Malia should know…";
+        ta.style.cssText="width:100%;font-size:16px;line-height:1.45;padding:10px 12px;border-radius:10px;border:1px solid #2c2c32;background:#fff;color:#1a1a1a;resize:vertical";
+        var row2=el("div"); row2.style.cssText="display:flex;gap:8px;flex-wrap:wrap";
+        var sv=el("button","btn","Save notes"); sv.type="button"; sv.style.cssText+=";border:none;cursor:pointer;font-size:15px;padding:10px 16px";
+        sv.addEventListener("click",function(){ var t=ta.value.trim(); sendNote(p,sl,t,sv,function(){ editingNote=false; draw(); toast("Notes saved"); }); });
+        var cx=el("button","ghost","Cancel"); cx.type="button"; cx.style.cssText+=";cursor:pointer;font-size:15px;padding:10px 16px;background:transparent;color:#fff;border:1px solid #2c2c32";
+        cx.addEventListener("click",function(){ editingNote=false; draw(); });
+        add(row2,sv,cx); add(box,nl,ta,row2); c.appendChild(box);
+      } else if(note){
+        var nv=el("div"); nv.style.cssText="background:#141416;border:1px solid #2c2c32;border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.5;color:#e3e3e8;white-space:pre-line";
+        add(nv,el("b",null,"Your notes: "),document.createTextNode(note)); c.appendChild(nv);
+      }
       var th=el("div",null,sl.theme); th.style.cssText="font-size:18px;font-weight:800;color:#fff"; c.appendChild(th);
       if(sl.versions.length>1){
         var bar=el("div"); bar.setAttribute("role","group"); bar.setAttribute("aria-label","Versions"); bar.style.cssText="display:flex;gap:8px;flex-wrap:wrap";
@@ -254,7 +276,7 @@
         hint.style.marginTop="0"; c.appendChild(hint);
       }
     }
-    var changing=false;
+    var changing=false, editingNote=false;
     function lab(t){ var e=el("div",null,t); e.style.cssText="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#8d8d96;margin-bottom:-6px"; return e; }
     function txt(t){ var e=el("p",null,t); e.style.cssText="margin:0;font-size:15px;line-height:1.55;white-space:pre-line"; return e; }
     draw(); return c;
@@ -282,6 +304,14 @@
     btn.disabled=true; btn.textContent="Saving…";
     postEntries(entries).then(function(){ setPend(key,v); redraw(); })
       .catch(function(){ enqueue(key,v,entries); setPend(key,v); redraw(); toast("Saved. It'll reach Malia automatically"); });
+  }
+  function currentNote(p,sl){ var key=p.aid+":n"+sl.id, qd=queued(key); if(qd) return qd.v||""; var m=pend()[key]; if(m && Date.now()-m.t<2*36e5) return m.v||""; return sl.note||""; }
+  function sendNote(p,sl,text,btn,done){
+    sha("alanapro-portal-file:"+KEY).then(function(h){
+      var who=LAST&&(LAST.business||LAST.name)||"";
+      send(p.aid+":n"+sl.id,text,[["_subject","Plan note: "+who+" "+sl.date],["_captcha","false"],["_template","table"],["_cc",["alana.productions.co","gmail.com"].join("@")],
+        ["Business",who],["Portal_ID",hex(h).slice(0,32)],["Plan",p.aid],["Slot",sl.id],["Date",sl.date],["Note",text||"(cleared)"]],btn,done);
+    });
   }
   function sendPick(p,sl,k,btn,redraw){
     sha("alanapro-portal-file:"+KEY).then(function(h){

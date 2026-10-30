@@ -1,7 +1,8 @@
 // Turn a monthly film-day planner page (claude.ai artifact HTML) + its saved picks
 // into the read-only plan clients see in their portal.
 // Usage: node scripts/plan_export.mjs <planner.html> <picks-dir> [<filmday-dir>] > plan.json
-//   picks-dir holds one <slotId>.json per pick ({"version":"B"}), as ArtifactData list out_dir writes them.
+//   picks-dir holds one <slotId>.json per pick ({"version":"B","clientNote":"…"}), as ArtifactData list out_dir writes them.
+//   clientNote = the client's own notes for that post (who's on camera, changes), sent from the portal.
 //   filmday-dir (optional) holds extras.json ({"added":{"<idea index>":true}}): extra ideas added to film day.
 // Also exports the "Extra ideas" list (only for planners that have the Add to film day checkbox)
 // and the planner's main-title style, so the portal matches the client's title look.
@@ -25,10 +26,12 @@ vm.runInContext(head + "\n;globalThis.__out={S:typeof S!=='undefined'?S:{},TYPE:
 const { TYPE, WEEKS, SLOTS, BONUS, IG } = ctx.__out;
 const docData = o => (o && typeof o.data === "object" && o.data) ? o.data : o;
 
-const picks = {};
+const picks = {}, clientNotes = {};
 if (picksDir && fs.existsSync(picksDir)) {
   for (const f of fs.readdirSync(picksDir)) if (f.endsWith(".json")) {
-    try { const d = docData(JSON.parse(fs.readFileSync(path.join(picksDir, f), "utf8"))); picks[f.replace(/\.json$/, "")] = typeof d.version === "string" ? d.version : ""; } catch {}
+    try { const d = docData(JSON.parse(fs.readFileSync(path.join(picksDir, f), "utf8"))); const id = f.replace(/\.json$/, "");
+      picks[id] = typeof d.version === "string" ? d.version : "";
+      if (typeof d.clientNote === "string" && d.clientNote.trim()) clientNotes[id] = d.clientNote.trim().slice(0, 1000); } catch {}
   }
 }
 let added = {};
@@ -59,7 +62,7 @@ const out = {
         else Object.assign(o, { kicker: v.kicker, title: v.title, end: v.end, hook: v.hook, say: v.say, talk: kind === "TH" });
         return o;
       };
-      return { id: s.id, date: s.date, day: s.day, theme: s.theme, pick: picked ? picked.k : null, versions: s.v.map(ver) };
+      return { id: s.id, date: s.date, day: s.day, theme: s.theme, pick: picked ? picked.k : null, note: clientNotes[s.id] || "", versions: s.v.map(ver) };
     })
   }))
 };
