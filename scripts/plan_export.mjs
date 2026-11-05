@@ -3,7 +3,8 @@
 // Usage: node scripts/plan_export.mjs <planner.html> <picks-dir> [<filmday-dir>] > plan.json
 //   picks-dir holds one <slotId>.json per pick ({"version":"B","clientNote":"…"}), as ArtifactData list out_dir writes them.
 //   clientNote = the client's own notes for that post (who's on camera, changes), sent from the portal.
-//   filmday-dir (optional) holds extras.json ({"added":{"<idea index>":true}}): extra ideas added to film day.
+//   filmday-dir (optional) holds extras.json ({"added":{"<idea index>":true}}): extra ideas added to film day,
+//   and checks.json ({"checked":{"<slot>-<version>-<i>":true}}): shots ticked off, used for each post's Filmed state.
 // Also exports the "Extra ideas" list (only for planners that have the Add to film day checkbox)
 // and the planner's main-title style, so the portal matches the client's title look.
 // Keeps: dates, post type, theme, every version (A/B/C…) with title/kicker, end card, hook, script / what happens, photo,
@@ -36,6 +37,9 @@ if (picksDir && fs.existsSync(picksDir)) {
 }
 let added = {};
 if (filmdayDir) { try { added = docData(JSON.parse(fs.readFileSync(path.join(filmdayDir, "extras.json"), "utf8"))).added || {}; } catch {} }
+// shot ticks from the planner's film-day list (filmday/checks: {"checked":{"<slot>-<version>-<i>":true}})
+let checked = {};
+if (filmdayDir) { try { checked = docData(JSON.parse(fs.readFileSync(path.join(filmdayDir, "checks.json"), "utf8"))).checked || {}; } catch {} }
 const hasExtras = src.includes("addextra");
 // main title look from the planner's CSS (.titlecard .t{...})
 const titleCss = (html.match(/\.titlecard \.t\{([^}]*)\}/) || [])[1] || "";
@@ -57,12 +61,15 @@ const out = {
       const picked = s.v.find(v => v.k === picks[s.id]);
       const ver = v => {
         const kind = v.fmt || s.kind, isStatic = kind === "ST";
-        const o = { k: v.k, name: v.name, isStatic, label: isStatic ? "Static post" : "Reel · " + ((TYPE[kind] || [kind])[0]) };
+        const o = { k: v.k, name: v.name, isStatic, label: isStatic ? "Static post" : "Reel · " + ((TYPE[kind] || [kind])[0]), shots: (v.shots || []).length };
         if (isStatic) o.photo = v.shot;
         else Object.assign(o, { kicker: v.kicker, title: v.title, end: v.end, hook: v.hook, say: v.say, talk: kind === "TH" });
         return o;
       };
-      return { id: s.id, date: s.date, day: s.day, theme: s.theme, pick: picked ? picked.k : null, note: clientNotes[s.id] || "", versions: s.v.map(ver) };
+      // "Filmed" = every shot of the version in use (the pick, or A) is ticked, same rule as the planner's Filmed box
+      const inUse = picked || s.v[0], n = (inUse.shots || []).length;
+      const filmed = n > 0 && Array.from({ length: n }, (_, i) => checked[`${s.id}-${inUse.k}-${i}`]).every(Boolean);
+      return { id: s.id, date: s.date, day: s.day, theme: s.theme, pick: picked ? picked.k : null, filmed, note: clientNotes[s.id] || "", versions: s.v.map(ver) };
     })
   }))
 };

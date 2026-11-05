@@ -205,6 +205,14 @@
       var lb=el("span",null,v.label); lb.style.cssText="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#b4b4bc;border:1px solid #2c2c32;border-radius:6px;padding:3px 8px";
       var rt=el("div"); rt.style.cssText="display:flex;gap:8px;align-items:center;flex-wrap:wrap";
       rt.appendChild(lb);
+      var inUseV=sl.versions.filter(function(x){return x.k===(picked||sl.versions[0].k);})[0]||sl.versions[0];
+      if(ADMIN && p.aid && inUseV.shots>0){
+        var inUse=inUseV.k, fm=currentFilmed(p,sl,inUse);
+        var fl=el("label"); fl.style.cssText="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:#fff;border:1px solid "+(fm?"#fd0182":"#2c2c32")+";background:"+(fm?"#3a0a24":"transparent")+";border-radius:999px;padding:5px 12px;min-height:32px;cursor:pointer";
+        var fc=el("input"); fc.type="checkbox"; fc.checked=fm; fc.style.cssText="width:18px;height:18px;margin:0;accent-color:#fd0182"; fc.setAttribute("aria-label","Filmed: "+sl.date);
+        fc.addEventListener("change",function(){ sendFilmed(p,sl,inUse,fc.checked,function(){ draw(); toast(fc.checked?"Marked filmed":"Unmarked"); }); });
+        add(fl,fc,document.createTextNode("Filmed")); rt.appendChild(fl);
+      }
       if(p.aid){ var nb=el("button",null,editingNote?"Close notes":"✎ Notes"); nb.type="button"; nb.setAttribute("aria-expanded",editingNote?"true":"false");
         nb.setAttribute("aria-label",(editingNote?"Close":"Edit")+" notes for "+sl.date);
         nb.style.cssText="font-size:12px;font-weight:700;color:#fff;background:transparent;border:1px solid #2c2c32;border-radius:8px;padding:6px 10px;min-height:32px;cursor:pointer";
@@ -304,6 +312,20 @@
     btn.disabled=true; btn.textContent="Saving…";
     postEntries(entries).then(function(){ setPend(key,v); redraw(); })
       .catch(function(){ enqueue(key,v,entries); setPend(key,v); redraw(); toast("Saved. It'll reach Malia automatically"); });
+  }
+  function currentFilmed(p,sl,k){ var key=p.aid+":f"+sl.id+":"+k, qd=queued(key); if(qd) return !!qd.v; var m=pend()[key]; if(m && Date.now()-m.t<2*36e5) return !!m.v; return !!sl.filmed && (sl.pick||sl.versions[0].k)===k; }
+  function sendFilmed(p,sl,k,on,done){
+    var v=sl.versions.filter(function(x){return x.k===k;})[0]||{}, keys=[];
+    for(var i=0;i<(v.shots||0);i++) keys.push(sl.id+"-"+k+"-"+i);
+    var key=p.aid+":f"+sl.id+":"+k;
+    if(/squarespace\.com$/i.test(location.hostname)||window.top!==window){ toast("Preview only: sends from alanapro.com"); return; }
+    setPend(key,on); done();
+    sha("alanapro-portal-file:"+KEY).then(function(h){
+      var who=LAST&&(LAST.business||LAST.name)||"";
+      var entries=[["_subject","Plan filmed: "+who+" "+sl.date],["_captcha","false"],["_template","table"],["_cc",["alana.productions.co","gmail.com"].join("@")],
+        ["Business",who],["Portal_ID",hex(h).slice(0,32)],["Plan",p.aid],["Slot",sl.id],["Date",sl.date],["Version",k],["Filmed",on?"yes":"no"],["Shot_Keys",keys.join(",")]];
+      postEntries(entries).catch(function(){ enqueue(key,on,entries); });
+    });
   }
   function currentNote(p,sl){ var key=p.aid+":n"+sl.id, qd=queued(key); if(qd) return qd.v||""; var m=pend()[key]; if(m && Date.now()-m.t<2*36e5) return m.v||""; return sl.note||""; }
   function sendNote(p,sl,text,btn,done){
