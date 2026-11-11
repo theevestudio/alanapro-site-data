@@ -494,14 +494,16 @@
     else ap.appendChild(el("p",null,"Your Rella link is on its way. Malia will text it to you."));
     s1.appendChild(ap);
 
-    // 2. Finished videos (Shade link to their 06 COMPLETED MEDIA folder)
-    if(d.assets){
-      var sa=section("2 · YOUR FINISHED VIDEOS"); var ca=el("div","card");
-      var ab=el("a","btn","View Assets →"); ab.href=d.assets; ab.target="_blank"; ab.rel="noopener";
-      ca.appendChild(row("All your finished videos, sorted by month","Watch or download anytime. No sign-in needed.",ab));
+    // 2. Files: finished videos (Shade link to 06 COMPLETED MEDIA) + upload link (Shade link to 04 CLIENT UPLOADS)
+    if(d.assets||d.uploads){
+      var sa=section("2 · YOUR FILES"); var ca=el("div","card");
+      if(d.assets){ var ab=el("a","btn","View Assets →"); ab.href=d.assets; ab.target="_blank"; ab.rel="noopener"; ab.style.whiteSpace="nowrap";
+        ca.appendChild(row("Your finished videos, sorted by month","Watch or download anytime. No sign-in needed.",ab)); }
+      if(d.uploads){ var ub=el("a","btn","Upload →"); ub.href=d.uploads; ub.target="_blank"; ub.rel="noopener"; ub.style.whiteSpace="nowrap";
+        ca.appendChild(row("Send us your photos and videos","Drop in your own clips, photos or logos for us to use. No sign-in needed.",ub)); }
       sa.appendChild(ca);
     }
-    var N=d.assets?1:0;
+    var N=(d.assets||d.uploads)?1:0;
 
     // 3. Content plans
     var s2=section((2+N)+" · CONTENT PLANS"); var c2=el("div","card");
@@ -516,7 +518,9 @@
     var s3=section((3+N)+" · INVOICES"); var c3=el("div","card");
     var inv=d.invoices||[];
     if(!inv.length) c3.appendChild(el("div","empty","No invoices yet."));
-    inv.forEach(function(i){
+    // newest invoice up top (plus anything still unpaid); everything else under "Past invoices"
+    var curInv=inv.filter(function(i,n){ return n===0 || UNPAID[i.status]; }), pastInv=inv.filter(function(i){ return curInv.indexOf(i)<0; });
+    function invRow(i){
       var right=el("div"); right.style.cssText="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end";
       right.appendChild(pill(i.status,"invoice"));
       var link=i.pay||CARD_LINK;
@@ -525,7 +529,10 @@
         else { var pb=el("button","paybtn","Pay now"); pb.type="button"; pb.style.border="none"; pb.style.cursor="pointer";
           pb.setAttribute("aria-label","Pay invoice "+(i.num||"")+" by card"); pb.addEventListener("click",function(){ paySheet(i,link); }); right.appendChild(pb); }
       }
-      c3.appendChild(row("#"+(i.num||"")+" · "+money(i.amount),"Issued "+date(i.issued,true)+(i.due?" · Due "+date(i.due,true):""),right)); });
+      return row("#"+(i.num||"")+" · "+money(i.amount),"Issued "+date(i.issued,true)+(i.due?" · Due "+date(i.due,true):""),right); }
+    curInv.forEach(function(i){ c3.appendChild(invRow(i)); });
+    if(pastInv.length){ var pd=el("details"); var ps=el("summary"); add(ps,el("span","t","Past invoices ("+pastInv.length+")")); pd.appendChild(ps);
+      pastInv.forEach(function(i){ pd.appendChild(invRow(i)); }); c3.appendChild(pd); }
     s3.appendChild(c3);
     var pay=el("div","pay");
     var z=el("div"); add(z,el("b",null,"Zelle"),document.createTextNode(" · Alana.productions.co@gmail.com"));

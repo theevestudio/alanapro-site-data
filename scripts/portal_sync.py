@@ -151,6 +151,7 @@ def build(raw, plans_key=None):
             "business": clean(c.get("Business Name")),
             "rella": clean(c.get("Access RELLA Space")),
             "assets": clean(c.get("Completed Media (Shade)")),
+            "uploads": clean(c.get("Client Uploads (Shade)")),
             "email": clean(c.get("Email")),
             "card": c.get("Card Payments") == "__YES__",
             "plans": [{"title": clean(p.get("Plan")), "month": p.get("date:Month:start"), "edit": clean(p.get("Link")),
