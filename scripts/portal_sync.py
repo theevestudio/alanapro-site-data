@@ -150,6 +150,7 @@ def build(raw, plans_key=None):
             "name": clean(c.get("Client Name")),
             "business": clean(c.get("Business Name")),
             "rella": clean(c.get("Access RELLA Space")),
+            "rellaOn": c.get("RELLA Active") == "__YES__",  # off -> portal shows a full-management note instead of approvals
             "assets": clean(c.get("Completed Media (Shade)")),
             "uploads": clean(c.get("Client Uploads (Shade)")),
             "email": clean(c.get("Email")),

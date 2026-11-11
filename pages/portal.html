@@ -458,11 +458,12 @@
     v.appendChild(p); overlayRoot().appendChild(v); go.focus();
   }
 
+  var RELLA_OFF=false;
   function popup(title,showLink){
     var v=el("div","veil"); var p=el("div","pop"); p.setAttribute("role","dialog"); p.setAttribute("aria-modal","true"); p.setAttribute("aria-labelledby","app-portal-pop-t");
     var h=el("h2",null,title); h.id="app-portal-pop-t"; p.appendChild(h);
     if(showLink){ var lt=el("p",null,showLink); lt.style.cssText="word-break:break-all;background:#f4f4f7;padding:10px 12px;border-radius:10px;font-size:13px;user-select:all"; p.appendChild(lt); }
-    p.appendChild(el("p",null,"Only share this link with people you trust. Anyone who has it can see your invoices, payment details, contracts and content plans, and can approve posts in Rella."));
+    p.appendChild(el("p",null,"Only share this link with people you trust. Anyone who has it can see your invoices, payment details, contracts and content plans"+(RELLA_OFF?".":", and can approve posts in Rella.")));
     p.appendChild(el("p",null,"If it ends up with the wrong person, text Malia at "+PHONE+" and she'll turn off the old link and send you a new one."));
     var ok=el("button","btn","Got it"); ok.type="button"; p.appendChild(ok);
     function close(){ if(v.parentNode) v.parentNode.removeChild(v); document.removeEventListener("keydown",esc); }
@@ -476,6 +477,7 @@
     ADMIN=null; renderClient(d);
   }
   function renderClient(d){
+    RELLA_OFF=(d.rellaOn===false);
     LAST=d; EMAIL_ON_FILE=d.email||""; root.innerHTML="";
     var head=el("header");
     add(head,el("div","kick","ALANA PRO · CLIENT PORTAL"),el("h1",null,d.business||d.name||"Your portal"));
@@ -486,6 +488,15 @@
     root.appendChild(head);
 
     // 1. Approvals
+    // RELLA Active off in Notion -> no approvals; a note about full management instead
+    if(d.rellaOn===false){
+      var s1=section("1 · FULL MANAGEMENT");
+      var ap=el("div","approve"); var apl=el("div");
+      add(apl,el("h2",null,"Interested in full management?"),el("p",null,"Contact Malia for more information on Rella: we plan, schedule and post your content for you, and you approve each post in one tap."));
+      ap.appendChild(apl);
+      var fb=el("a","btn","Contact Malia →"); fb.href="mailto:"+EMAIL+"?subject="+encodeURIComponent("Full management with Rella"); ap.appendChild(fb);
+      s1.appendChild(ap);
+    } else {
     var s1=section("1 · APPROVE YOUR CONTENT");
     var ap=el("div","approve"); var apl=el("div");
     add(apl,el("h2",null,"Your posts are waiting for a thumbs up"),el("p",null,"Open Rella, tap a post, then tap Approve or leave a comment."));
@@ -493,6 +504,7 @@
     if(d.rella){ var b=el("a","btn","Open Rella to approve →"); b.href=d.rella; b.target="_blank"; b.rel="noopener"; ap.appendChild(b); }
     else ap.appendChild(el("p",null,"Your Rella link is on its way. Malia will text it to you."));
     s1.appendChild(ap);
+    }
 
     // 2. Files: finished videos (Shade link to 06 COMPLETED MEDIA) + upload link (Shade link to 04 CLIENT UPLOADS)
     if(d.assets||d.uploads){
