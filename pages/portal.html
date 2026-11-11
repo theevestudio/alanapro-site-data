@@ -494,8 +494,17 @@
     else ap.appendChild(el("p",null,"Your Rella link is on its way. Malia will text it to you."));
     s1.appendChild(ap);
 
-    // 2. Content plans
-    var s2=section("2 · CONTENT PLANS"); var c2=el("div","card");
+    // 2. Finished videos (Shade link to their 06 COMPLETED MEDIA folder)
+    if(d.assets){
+      var sa=section("2 · YOUR FINISHED VIDEOS"); var ca=el("div","card");
+      var ab=el("a","btn","View Assets →"); ab.href=d.assets; ab.target="_blank"; ab.rel="noopener";
+      ca.appendChild(row("All your finished videos, sorted by month","Watch or download anytime. No sign-in needed.",ab));
+      sa.appendChild(ca);
+    }
+    var N=d.assets?1:0;
+
+    // 3. Content plans
+    var s2=section((2+N)+" · CONTENT PLANS"); var c2=el("div","card");
     var plans=d.plans||[];
     if(!plans.length) c2.appendChild(el("div","empty","Your first plan will show up here."));
     plans.slice(0,2).forEach(function(p,i){ c2.appendChild(planRow(p,i===0)); });
@@ -504,7 +513,7 @@
     s2.appendChild(c2);
 
     // 3. Invoices
-    var s3=section("3 · INVOICES"); var c3=el("div","card");
+    var s3=section((3+N)+" · INVOICES"); var c3=el("div","card");
     var inv=d.invoices||[];
     if(!inv.length) c3.appendChild(el("div","empty","No invoices yet."));
     inv.forEach(function(i){
@@ -527,7 +536,7 @@
     s3.appendChild(el("p","note","Whenever possible, Zelle should be used as the primary method."));
 
     // 4. Contract & proposal
-    var s4=section("4 · CONTRACT & PROPOSAL"); var c4=el("div","card");
+    var s4=section((4+N)+" · CONTRACT & PROPOSAL"); var c4=el("div","card");
     var cons=d.contracts||[], pros=d.proposals||[];
     if(!cons.length&&!pros.length) c4.appendChild(el("div","empty","Your contract and proposal will show up here."));
     cons.forEach(function(k){
